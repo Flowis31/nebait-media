@@ -1,0 +1,47 @@
+function mascotSVG(id) {
+  let knobs = '';
+  for (let k = 0; k < 10; k++) { const a = k * Math.PI / 5 + 0.3, x1 = 200 + 128 * Math.cos(a), y1 = 200 + 128 * Math.sin(a), x2 = 200 + 172 * Math.cos(a), y2 = 200 + 172 * Math.sin(a);
+    knobs += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#0a130d" stroke-width="26" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#8fdc2a" stroke-width="12" stroke-linecap="round"/><circle cx="${x2}" cy="${y2}" r="19" fill="#b8ff3d" stroke="#0a130d" stroke-width="8"/>`; }
+  return `<svg viewBox="0 0 400 400" style="overflow:visible;left:0;top:0;width:100%;height:100%">
+  <defs><radialGradient id="mg${id}" cx="40%" cy="32%" r="75%"><stop offset="0" stop-color="#e2ff8a"/><stop offset="1" stop-color="#74c81c"/></radialGradient></defs>
+  <g class="armL" style="transform-origin:90px 230px"><line x1="90" y1="230" x2="10" y2="290" stroke="#0a130d" stroke-width="30" stroke-linecap="round"/><line x1="90" y1="230" x2="10" y2="290" stroke="#8fdc2a" stroke-width="14" stroke-linecap="round"/><circle cx="10" cy="290" r="22" fill="#b8ff3d" stroke="#0a130d" stroke-width="8"/></g>
+  <g class="armR" style="transform-origin:310px 230px"><line x1="310" y1="230" x2="390" y2="290" stroke="#0a130d" stroke-width="30" stroke-linecap="round"/><line x1="310" y1="230" x2="390" y2="290" stroke="#8fdc2a" stroke-width="14" stroke-linecap="round"/><circle cx="390" cy="290" r="22" fill="#b8ff3d" stroke="#0a130d" stroke-width="8"/></g>
+  ${knobs}
+  <circle cx="200" cy="200" r="132" fill="url(#mg${id})" stroke="#0a130d" stroke-width="12"/>
+  <circle cx="150" cy="190" r="50" fill="#fff" stroke="#0a130d" stroke-width="11"/><circle cx="250" cy="190" r="50" fill="#fff" stroke="#0a130d" stroke-width="11"/>
+  <g class="pup"><circle cx="156" cy="194" r="20" fill="#0a130d"/><circle cx="256" cy="194" r="20" fill="#0a130d"/><circle cx="163" cy="186" r="7" fill="#fff"/><circle cx="263" cy="186" r="7" fill="#fff"/></g>
+  <path class="brL" style="transform-origin:150px 125px" d="M108 128 Q150 104 190 122" fill="none" stroke="#0a130d" stroke-width="12" stroke-linecap="round"/>
+  <path class="brR" style="transform-origin:250px 125px" d="M212 120 L290 112" fill="none" stroke="#0a130d" stroke-width="12" stroke-linecap="round"/>
+  <path class="mouth" style="transform-origin:200px 268px" d="M160 262 Q205 296 248 258" fill="none" stroke="#0a130d" stroke-width="12" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function robotSVG(id) {
+  return `<svg viewBox="0 0 400 400" style="overflow:visible;left:0;top:0;width:100%;height:100%">
+  <defs><linearGradient id="rg${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c3d3e2"/><stop offset="1" stop-color="#6d8499"/></linearGradient></defs>
+  <g class="rarmL" style="transform-origin:76px 240px"><line x1="76" y1="240" x2="6" y2="300" stroke="#0a130d" stroke-width="30" stroke-linecap="round"/><line x1="76" y1="240" x2="6" y2="300" stroke="#8ea3b7" stroke-width="14" stroke-linecap="round"/><circle cx="6" cy="300" r="20" fill="#c3d3e2" stroke="#0a130d" stroke-width="8"/></g>
+  <g class="rarmR" style="transform-origin:324px 240px"><line x1="324" y1="240" x2="394" y2="300" stroke="#0a130d" stroke-width="30" stroke-linecap="round"/><line x1="324" y1="240" x2="394" y2="300" stroke="#8ea3b7" stroke-width="14" stroke-linecap="round"/><circle cx="394" cy="300" r="20" fill="#c3d3e2" stroke="#0a130d" stroke-width="8"/></g>
+  <line x1="200" y1="44" x2="200" y2="96" stroke="#0a130d" stroke-width="12"/><circle class="rant" cx="200" cy="36" r="18" fill="#ff3b5c" stroke="#0a130d" stroke-width="8"/>
+  <rect x="66" y="92" width="268" height="230" rx="44" fill="url(#rg${id})" stroke="#0a130d" stroke-width="12"/>
+  <circle cx="146" cy="186" r="38" fill="#0a130d"/><circle cx="254" cy="186" r="38" fill="#0a130d"/>
+  <g class="reye"><circle cx="146" cy="186" r="16" fill="#6fe3ff"/><circle cx="254" cy="186" r="16" fill="#6fe3ff"/></g>
+  <rect x="126" y="250" width="148" height="40" rx="12" fill="#0a130d"/><path d="M156 256 V284 M186 256 V284 M216 256 V284 M246 256 V284" stroke="#8ea3b7" stroke-width="6"/>
+  </svg>`;
+}
+const IC = {
+  light: `<rect x="32" y="4" width="36" height="92" rx="12" fill="#1b2a22" stroke="#0a130d" stroke-width="5"/><circle cx="50" cy="24" r="10" fill="#ff3b5c"/><circle cx="50" cy="50" r="10" fill="#ffc83d"/><circle cx="50" cy="76" r="10" fill="#6ee05a"/>`,
+  cross: `<rect x="2" y="2" width="96" height="96" rx="10" fill="#3b4750"/>${[0, 1, 2, 3, 4].map(k => `<rect x="${10 + k * 17}" y="20" width="11" height="60" fill="#f4ecd9"/>`).join('')}`,
+  house: `<rect x="2" y="2" width="96" height="96" rx="10" fill="#9fc3d9"/><path d="M14 52 L50 20 L86 52 Z" fill="#c9553a" stroke="#0a130d" stroke-width="4" stroke-linejoin="round"/><rect x="24" y="52" width="52" height="40" fill="#f4ecd9" stroke="#0a130d" stroke-width="4"/><rect x="34" y="58" width="32" height="20" rx="4" fill="#1b2a22"/><text x="50" y="74" font-family="JB" font-weight="800" font-size="16" text-anchor="middle" fill="#f4ecd9">27</text>`,
+  cat: `<rect x="2" y="2" width="96" height="96" rx="10" fill="#d9c7f0"/><path d="M24 40 L28 14 L46 30 Z M76 40 L72 14 L54 30 Z" fill="#ffb347" stroke="#0a130d" stroke-width="4" stroke-linejoin="round"/><circle cx="50" cy="54" r="30" fill="#ffb347" stroke="#0a130d" stroke-width="4"/><circle cx="39" cy="50" r="5" fill="#0a130d"/><circle cx="61" cy="50" r="5" fill="#0a130d"/><path d="M45 62 Q50 68 55 62" fill="none" stroke="#0a130d" stroke-width="4" stroke-linecap="round"/>`,
+  turkey: `<rect x="2" y="2" width="96" height="96" rx="10" fill="#f0e2c0"/>${[-60, -30, 0, 30, 60].map((a, k) => `<ellipse cx="50" cy="28" rx="9" ry="24" fill="${['#c9553a', '#e09a3a', '#8a5a2b', '#e09a3a', '#c9553a'][k]}" stroke="#0a130d" stroke-width="3" transform="rotate(${a} 50 62)"/>`).join('')}<circle cx="50" cy="66" r="22" fill="#8a5a2b" stroke="#0a130d" stroke-width="4"/><circle cx="50" cy="44" r="11" fill="#a9713a" stroke="#0a130d" stroke-width="4"/><circle cx="46" cy="42" r="2.5" fill="#0a130d"/><path d="M52 46 L60 48 L52 51 Z" fill="#ffc83d"/><path d="M52 52 q4 8 -1 12" fill="none" stroke="#ff3b5c" stroke-width="4" stroke-linecap="round"/>`,
+  cookie: `<circle cx="50" cy="50" r="44" fill="#c98a4b" stroke="#0a130d" stroke-width="6"/>${[[34, 34], [62, 30], [70, 58], [42, 66], [52, 48]].map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="7" fill="#5b3418"/>`).join('')}`,
+  clock: `<circle cx="50" cy="50" r="44" fill="#f4ecd9" stroke="#0a130d" stroke-width="7"/><path d="M50 50 V22 M50 50 L70 60" stroke="#0a130d" stroke-width="7" stroke-linecap="round"/>`,
+  bulb: `<path d="M50 6 C22 6 12 30 24 48 C32 60 34 62 34 72 H66 C66 62 68 60 76 48 C88 30 78 6 50 6 Z" fill="#ffe14d" stroke="#0a130d" stroke-width="6"/><rect x="36" y="74" width="28" height="18" rx="5" fill="#8ea3b7" stroke="#0a130d" stroke-width="5"/>`,
+  shield: `<path d="M50 6 L88 20 V50 C88 74 70 88 50 96 C30 88 12 74 12 50 V20 Z" fill="#6fd3ff" stroke="#0a130d" stroke-width="6" stroke-linejoin="round"/>`,
+  cursor: `<path d="M18 6 L18 78 L38 60 L52 92 L66 86 L52 54 L80 54 Z" fill="#fff" stroke="#0a130d" stroke-width="7" stroke-linejoin="round"/>`,
+  cap: `<path d="M50 20 L96 40 L50 60 L4 40 Z" fill="#1b2a22" stroke="#0a130d" stroke-width="5" stroke-linejoin="round"/><path d="M26 52 V70 Q50 84 74 70 V52" fill="#1b2a22" stroke="#0a130d" stroke-width="5"/><path d="M92 42 V70" stroke="#ffc83d" stroke-width="5"/><circle cx="92" cy="74" r="6" fill="#ffc83d"/>`,
+  mag: `<line x1="62" y1="62" x2="92" y2="92" stroke="#0a130d" stroke-width="16" stroke-linecap="round"/><line x1="62" y1="62" x2="92" y2="92" stroke="#c98a4b" stroke-width="8" stroke-linecap="round"/><circle cx="40" cy="40" r="32" fill="rgba(111,227,255,.25)" stroke="#0a130d" stroke-width="9"/><circle cx="40" cy="40" r="32" fill="none" stroke="#f4ecd9" stroke-width="4"/>`,
+  medal: `<path d="M34 4 L50 40 L66 4" fill="none" stroke="#ff3b5c" stroke-width="12"/><circle cx="50" cy="62" r="30" fill="#ffc83d" stroke="#0a130d" stroke-width="6"/><text x="50" y="74" font-family="Unb" font-weight="900" font-size="34" text-anchor="middle" fill="#0a130d">1</text>`,
+  eye: `<path d="M4 50 Q50 4 96 50 Q50 96 4 50 Z" fill="#f4ecd9" stroke="#0a130d" stroke-width="6"/><circle cx="50" cy="50" r="18" fill="#0a130d"/><circle cx="56" cy="44" r="6" fill="#fff"/>`,
+};
+function ic(n) { return `<svg viewBox="0 0 100 100" style="overflow:visible;left:0;top:0;width:100%;height:100%">${IC[n]}</svg>`; }
