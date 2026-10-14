@@ -14,7 +14,7 @@ import json, sys, functools, numpy as np
 from scipy.io import wavfile
 from scipy import signal
 
-DEFAULT_STYLE = 'pop'
+DEFAULT_STYLE = 'tech'     # chosen by the owner 15.10.2026 (marimba)
 MUSIC_BELOW_VOICE_LU = 17.0     # ducked music sits this many LU under the voice (old skill beat: ~16.3)
 
 args = sys.argv[1:]
