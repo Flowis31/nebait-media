@@ -3,7 +3,7 @@
 //  * SMOOTH mode (on by default, window.SMOOTH=false turns it off): every tween with ease out/out5/back/back2/elastic is
 //    re-eased to glide/expo/spring/spring2/wobble and lengthened x1.6 (at most +0.4 s), but never past the start of the next tween
 //    on the same element and property, so chained moves stay continuous. Objects glide to a stop instead of halting.
-//  * slideIn(sel, t, from, d) for panels/cards, default .panel / .chip styles, softer caption pop.
+//  * slideIn(sel, t, from, d) for panels/cards, default .nb-panel / .nb-chip styles, softer caption pop.
 // Deterministic timeline: every frame is a pure function of t (no CSS animations, no rAF, no Math.random).
 const TOTAL = TIMING.total, W2 = 2 * Math.PI / TOTAL;   // use W2*k*t (integer k) for idle motion -> seamless loop
 const E = {
@@ -71,9 +71,9 @@ function slideOut(sel, t, to = 'left', d = 0.35, dist = 220) {
   tw(sel, t, d, { x: [0, dx], y: [0, dy], o: [1, 0] }, 'in');
 }
 document.head.insertAdjacentHTML('beforeend', `<style>
-.panel{background:linear-gradient(180deg,rgba(22,44,30,.92),rgba(10,22,15,.92));border:3px solid rgba(184,255,61,.28);border-left:12px solid var(--acc);border-radius:30px;box-shadow:0 26px 60px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.08)}
-.panel.red{border-left-color:var(--red);border-color:rgba(255,59,92,.3)}
-.chip{background:rgba(10,22,15,.88);border:3px solid rgba(184,255,61,.35);border-radius:999px;box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.nb-panel{background:linear-gradient(180deg,rgba(22,44,30,.92),rgba(10,22,15,.92));border:3px solid rgba(184,255,61,.28);border-left:12px solid var(--acc);border-radius:30px;box-shadow:0 26px 60px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.08)}
+.nb-panel.red{border-left-color:var(--red);border-color:rgba(255,59,92,.3)}
+.nb-chip{background:rgba(10,22,15,.88);border:3px solid rgba(184,255,61,.35);border-radius:999px;box-shadow:0 14px 34px rgba(0,0,0,.45)}
 </style>`);
 function hide(sel) { tw(sel, 0, 0.001, { o: [0, 0] }); }
 function stamp(sel, t, rot = -9, amp = 26) { tw(sel, t, 0.15, { s: [3.2, 1], o: [0, 1], r: [rot - 17, rot] }, 'in'); shake(t + 0.15, 0.32, amp); sfx('slam', t + 0.13, 1.1); }
