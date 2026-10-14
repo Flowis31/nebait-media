@@ -36,7 +36,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .bat .pct{left:0;top:190px;width:272px;text-align:center;font:900 62px Unb;color:var(--ink);letter-spacing:-2px}
 .a-bat{left:500px;top:640px}.a-m{left:130px;top:800px}
 .a-pill{left:140px;top:1200px;width:800px;height:104px;border-radius:52px;background:var(--acc);color:var(--ink);font:900 52px/104px Unb;text-align:center}
-.lab{left:0;top:220px;width:1080px;text-align:center;font:700 36px JB;letter-spacing:5px;color:var(--acc)}
+.lab{left:190px;top:204px;width:700px;height:74px;text-align:center;font:700 34px/68px JB;letter-spacing:5px;color:var(--acc)}
 .b-bat{left:140px;top:420px}.b-m{left:620px;top:420px}
 .bolt{width:70px;height:116px}
 .b-n{left:500px;top:820px;width:520px;text-align:center;font:900 190px/1 Unb;color:var(--red);letter-spacing:-8px}
@@ -48,7 +48,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .bn1{left:80px;top:840px;color:var(--red)}.bn2{left:620px;top:1090px;width:300px;font-size:40px;color:var(--ink)}
 .bl{top:1210px;width:420px;text-align:center;font:800 40px Mont;color:var(--paper)}.bl1{left:100px}.bl2{left:560px}
 .c-base{left:120px;top:1196px;width:840px;height:8px;background:var(--dim);border-radius:4px}
-.c-src{left:0;top:1280px;width:1080px;text-align:center;font:600 26px JB;color:var(--dim)}
+.c-src{left:150px;top:1256px;width:780px;height:64px;text-align:center;font:600 26px/58px JB;color:var(--paper)}
 .c-m{left:620px;top:910px}
 .d-t{left:0;top:230px;width:1080px;text-align:center;font:900 96px Unb;color:var(--paper)}
 .d-m{left:340px;top:760px;width:400px;height:400px}
@@ -61,9 +61,11 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .d-st{left:240px;top:400px;width:600px;height:130px;border:14px solid var(--red);border-radius:24px;color:var(--red);font:900 64px/104px Unb;text-align:center;background:rgba(7,16,11,.92)}
 .e-sun{left:680px;top:190px;width:300px;height:300px;transform-origin:50% 50%}
 .e-t{left:60px;top:250px;width:620px;font:900 200px/1 Unb;color:var(--red);letter-spacing:-6px}
-.e-s{left:70px;top:480px;width:600px;font:800 50px Mont;color:var(--paper)}
+.e-s{left:50px;top:470px;width:620px;height:88px;padding-left:34px;font:800 44px/80px Mont;color:var(--paper);white-space:nowrap}
 .e-bat{left:560px;top:680px}.e-m{left:120px;top:780px}
-.e-yr{left:480px;top:1230px;width:460px;text-align:center;font:700 32px JB;color:var(--dim);letter-spacing:2px}
+.e-yr{left:470px;top:1222px;width:480px;height:62px;text-align:center;font:700 28px/56px JB;color:var(--paper);letter-spacing:2px}
+.b-pan{left:478px;top:790px;width:564px;height:392px}
+.h-m{left:56px;top:1150px;width:200px;height:200px}
 .f-bed{left:90px;top:900px;width:900px;height:300px;border-radius:40px;background:#31506b;box-shadow:0 0 0 10px var(--ink)}
 .f-pil{left:200px;top:700px;width:680px;height:300px;border-radius:120px;background:var(--paper);box-shadow:0 0 0 10px var(--ink);transform-origin:50% 100%}
 .f-ph{left:420px;top:880px;width:240px;height:130px;border-radius:26px;background:#0c1a12;box-shadow:0 0 0 10px var(--paper),0 0 0 18px var(--ink)}
@@ -97,13 +99,13 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
   <div id="bg"><div id="grid"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
   <div id="shake">
 <div id="A" class="scene"><div class="a-t">ЗАРЯДКА ДО <b>100%</b> УБИВАЕТ БАТАРЕЮ?</div><div class="bat a-bat"><div class="fill"></div><div class="pct">100%</div></div><div class="m a-m"></div><div class="a-pill">БАЙТ ИЛИ НЕ БАЙТ?</div></div>
-<div id="B" class="scene"><div class="lab">ЗАРЯЖАЕМ ДО УПОРА</div><div class="bat b-bat"><div class="fill"></div><div class="pct">0%</div></div><div class="m b-m"></div><div class="b-n">0</div><div class="b-s">циклов</div><div class="b-r">300–500 · Battery University</div></div>
-<div id="C" class="scene"><div class="lab">СКОЛЬКО ЖИВЁТ БАТАРЕЯ</div><div class="bar b1"></div><div class="bar b2"></div><div class="bn bn1">300–500</div><div class="bn bn2">600–1000</div><div class="c-base"></div><div class="bl bl1">до упора</div><div class="bl bl2">чуть меньше</div><div class="c-src">циклов заряда · по данным Battery University</div><div class="m c-m"></div></div>
+<div id="B" class="scene"><div class="lab chip">ЗАРЯЖАЕМ ДО УПОРА</div><div class="bat b-bat"><div class="fill"></div><div class="pct">0%</div></div><div class="m b-m"></div><div class="panel b-pan"></div><div class="b-n">0</div><div class="b-s">циклов</div><div class="b-r">300–500 · Battery University</div></div>
+<div id="C" class="scene"><div class="lab chip">СКОЛЬКО ЖИВЁТ БАТАРЕЯ</div><div class="bar b1"></div><div class="bar b2"></div><div class="bn bn1">300–500</div><div class="bn bn2">600–1000</div><div class="c-base"></div><div class="bl bl1">до упора</div><div class="bl bl2">чуть меньше</div><div class="c-src chip">циклов заряда · по данным Battery University</div><div class="m c-m"></div></div>
 <div id="D" class="scene"><div class="d-t">ТЫ В ЗАЛЕ</div><div class="d-floor"></div><div class="d-m"></div><div class="d-bb"><div class="d-rod"></div><div class="d-pl d-pl1">100%</div><div class="d-pl d-pl2">100%</div></div><div class="d-st">НЕ ТЯНЕТ</div></div>
-<div id="E" class="scene"><div class="e-sun"></div><div class="e-t">+40°</div><div class="e-s">полный заряд + нагрев</div><div class="bat e-bat"><div class="fill"></div><div class="pct">100%</div></div><div class="m e-m"></div><div class="e-yr">ЁМКОСТЬ ЧЕРЕЗ ГОД</div></div>
+<div id="E" class="scene"><div class="e-sun"></div><div class="e-t">+40°</div><div class="e-s panel red">полный заряд + нагрев</div><div class="bat e-bat"><div class="fill"></div><div class="pct">100%</div></div><div class="m e-m"></div><div class="e-yr chip">ЁМКОСТЬ ЧЕРЕЗ ГОД</div></div>
 <div id="F" class="scene"><div class="m f-m"></div><div class="f-dial"><i></i><u>ДУХОВКА</u></div><div class="f-stm"></div><div class="f-bed"></div><div class="f-ph"><b></b></div><div class="f-pil"></div></div>
 <div id="G" class="scene"><div class="g-l">ВЕРДИКТ</div><div class="g-st">НЕ БАЙТ</div><div class="m g-m"></div></div>
-<div id="H" class="scene"><div class="h-card h1 paper"><em>Лимит заряда</em><s>Настройки → Батарея</s><div class="sw"><i></i></div></div><div class="h-bat"><div class="hf"></div><div class="hl"></div><div class="hp">80%</div></div><div class="h-card h2 paper"><em>И не грей</em><s>жара хуже циклов</s></div><div class="h-sun"></div><div class="h-x"></div></div>
+<div id="H" class="scene"><div class="h-card h1 paper"><em>Лимит заряда</em><s>Настройки → Батарея</s><div class="sw"><i></i></div></div><div class="h-bat"><div class="hf"></div><div class="hl"></div><div class="hp">80%</div></div><div class="h-card h2 paper"><em>И не грей</em><s>жара хуже циклов</s></div><div class="h-sun"></div><div class="h-x"></div><div class="m h-m"></div></div>
 <div id="A2" class="scene"><div class="a-t">ЗАРЯДКА ДО <b>100%</b> УБИВАЕТ БАТАРЕЮ?</div><div class="bat a-bat"><div class="fill"></div><div class="pct">100%</div></div><div class="m a-m"></div><div class="a-pill">БАЙТ ИЛИ НЕ БАЙТ?</div></div>
   </div>
   <div id="vig"></div>
@@ -111,6 +113,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 </div>
 <script src="timing.js"></script>
 <script src="engine.js"></script>
+<script src="mascot.js"></script>
 <script src="art.js"></script>
 <script src="scenes.js"></script>
 </body></html>
