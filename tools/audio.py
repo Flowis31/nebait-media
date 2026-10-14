@@ -256,7 +256,10 @@ for i, e in enumerate(ev):
 sf = fxm.out() * 0.42
 
 # ---------- voice: high-pass, presence lift, gentle compression (unchanged from the skill) ----------
-_, v = wavfile.read('voice.wav'); v = signal.resample_poly(v.astype(np.float64) / 32768, 320, 147); v = hp(v, 85, 4); v = v + 0.35 * bp(v, 2500, 6500)
+vsr, v = wavfile.read('voice.wav'); v = v.astype(np.float64) / 32768
+if v.ndim > 1: v = v.mean(1)
+if vsr != SR: from math import gcd; gg = gcd(SR, vsr); v = signal.resample_poly(v, SR // gg, vsr // gg)          # piper gives 22050, align.py gives 48000
+v = hp(v, 85, 4); v = v + 0.35 * bp(v, 2500, 6500)
 env = np.sqrt(np.maximum(lp(v ** 2, 14), 0) + 1e-9); env /= env.max(); v = v * np.where(env > 0.16, (0.16 / env) ** 0.7, 1.0)
 v = np.tanh(v / np.abs(v).max() * 1.25) / np.tanh(1.25) * 0.9; v = np.pad(v, (0, max(0, N - len(v))))[:N]
 
