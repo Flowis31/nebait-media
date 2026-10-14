@@ -8,6 +8,7 @@ filtered pad), with no square waves and nothing bright above ~8 kHz.
 Usage (in the build folder, next to voice.json / voice.wav / sfx.json):
     python3 audio.py                 # default style
     python3 audio.py --style tech    # pop | lofi | tech
+    python3 audio.py --music-lu 14   # music N LU under the voice (default 17; 004 uses 14 at the owner's request)
     python3 audio.py --music-only    # also writes music.wav (no voice, no effects) for listening checks
 Bars fit TOTAL exactly and the 4-bar chord cycle is aligned to the end, so the track loops with the video on a clean chord change."""
 import json, sys, functools, numpy as np
@@ -19,6 +20,7 @@ MUSIC_BELOW_VOICE_LU = 17.0     # ducked music sits this many LU under the voice
 
 args = sys.argv[1:]
 STYLE = args[args.index('--style') + 1] if '--style' in args else DEFAULT_STYLE
+MUSIC_LU = float(args[args.index('--music-lu') + 1]) if '--music-lu' in args else MUSIC_BELOW_VOICE_LU   # smaller = louder music
 SR = 48000; TOTAL = json.load(open('voice.json'))['total']; N = int(round(TOTAL * SR)); rng = np.random.default_rng(7)
 tt = lambda d: np.arange(int(d * SR)) / SR
 bp = lambda x, lo, hi, o=2: signal.sosfilt(signal.butter(o, [lo, hi], btype='band', fs=SR, output='sos'), x)
@@ -261,7 +263,7 @@ v = np.tanh(v / np.abs(v).max() * 1.25) / np.tanh(1.25) * 0.9; v = np.pad(v, (0,
 # ---------- mix: music is set by loudness relative to the voice, then ducks under it ----------
 duck = np.sqrt(np.maximum(lp(v ** 2, 6), 0) + 1e-9); duck = np.clip(duck / (duck.max() * 0.35), 0, 1)
 shape = 1 - 0.45 * duck
-g = 10 ** ((klufs(v) - MUSIC_BELOW_VOICE_LU - klufs(mus * shape[:, None])) / 20)
+g = 10 ** ((klufs(v) - MUSIC_LU - klufs(mus * shape[:, None])) / 20)
 mg = g * shape
 mix = mus * mg[:, None] + sf * (1 - 0.2 * duck)[:, None] + np.stack([v, v], 1)
 mix = np.tanh(mix * 1.05) / np.tanh(1.05); mix = mix / np.abs(mix).max() * 0.9
