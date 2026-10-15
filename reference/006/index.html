@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#07100b;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+#bg{position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 30%,#143321 0%,#0a1710 45%,#060c08 100%)}
+#grid{will-change:transform;position:absolute;left:0;top:-88px;width:1080px;height:2100px;background-image:radial-gradient(circle,#3c5a48 2.2px,transparent 3px);background-size:44px 44px;opacity:.38}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(125,255,61,.34) 0%,rgba(125,255,61,.33) 30%,rgba(125,255,61,.17) 61%,rgba(125,255,61,.034) 85%,rgba(125,255,61,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(31,214,160,.22) 0%,rgba(31,214,160,.213) 30%,rgba(31,214,160,.11) 61%,rgba(31,214,160,.022) 85%,rgba(31,214,160,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.62) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+.paper{background:var(--paper);color:var(--ink);border-radius:26px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 6px rgba(10,19,13,.9)}
+.step{left:0;width:1080px;top:236px;text-align:center;font:700 34px JB;letter-spacing:6px;color:var(--acc)}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* ---- scene styles: absolute px on a 1080x1920 stage; content y 200..1300, captions 1338..1500, nothing important below 1500 or right of 960 ---- */
+
+.m{width:300px;height:300px}
+.chip{height:72px;padding:0 34px;font:700 30px/66px JB;letter-spacing:3px;color:var(--acc);white-space:nowrap;text-align:center}
+.pan{padding:0 34px;font:800 40px/1.2 Mont;color:var(--paper);white-space:nowrap}
+.pan small{position:static;display:block;font:600 26px JB;color:var(--dim);letter-spacing:1px}
+/* A hook */
+.a-t{left:60px;top:196px;width:960px;text-align:center;font:900 82px/1.08 Unb;color:var(--paper);letter-spacing:-2px}
+.a-t b{position:static;display:inline-block;color:var(--acc)}
+.a-f{left:150px;top:500px;width:780px;height:140px}
+.a-f .lbl{left:36px;top:-18px;padding:0 14px;background:var(--paper);font:700 28px/36px JB;color:#55665b;border-radius:8px}
+.a-f .pw{left:0;top:18px;width:780px;text-align:center;font:800 92px/104px JB;letter-spacing:14px;color:var(--ink)}
+.a-lock{left:130px;top:730px;width:370px;height:420px}
+.a-m{left:560px;top:800px;width:360px;height:360px}
+.doc{width:120px;height:150px;border-radius:12px;background:var(--paper);box-shadow:0 0 0 6px var(--ink)}
+.doc i{left:18px;width:84px;height:12px;border-radius:6px;background:#b9b3a3}
+.a-st{left:250px;top:700px;width:580px;height:150px;border:14px solid var(--red);border-radius:26px;color:var(--red);font:900 80px/122px Unb;text-align:center;background:rgba(7,16,11,.92)}
+.a-src{left:110px;top:1200px;width:820px}
+/* B registry */
+.b-lab{left:120px;top:236px;width:560px}
+.b-db{left:110px;top:430px;width:440px;height:482px}
+.card{left:600px;width:380px;height:118px;border-radius:22px;padding:0}
+.card em{left:28px;top:18px;font:900 34px Unb;font-style:normal;color:var(--ink)}
+.card i{left:28px;top:72px;height:16px;border-radius:8px;background:#b9b3a3}
+.c1{top:400px}.c2{top:550px}.c3{top:700px}
+.b-m{left:640px;top:930px}
+.ppl{width:54px;height:72px}
+/* C firm + login */
+.c-bld{left:90px;top:220px;width:320px;height:338px}
+.c-key{left:330px;top:420px;width:180px;height:82px}
+.c-db{left:690px;top:250px;width:250px;height:274px}
+.c-path{left:0;top:0;width:1080px;height:700px}
+.dl{stroke-dasharray:100;stroke-dashoffset:100}
+.c-chip{left:340px;top:560px;width:620px}
+.c-win{left:120px;top:690px;width:840px;height:430px}
+.c-win .bar{left:0;top:0;width:840px;height:70px;border-radius:26px 26px 0 0;background:#26392d}
+.c-win .bar u{top:22px;width:26px;height:26px;border-radius:50%;text-decoration:none}
+.c-win .ttl{left:0;top:96px;width:840px;text-align:center;font:900 46px Unb;color:var(--ink)}
+.c-win .fld{left:70px;top:190px;width:700px;height:130px;border-radius:20px;background:#fff;box-shadow:inset 0 0 0 7px var(--ink)}
+.c-win .fld b{top:14px;width:100px;height:102px;text-align:center;font:800 88px/102px JB;color:var(--ink)}
+.c-win .cur{top:26px;width:8px;height:80px;background:var(--ink)}
+.c-win .ok{left:270px;top:345px;width:300px;height:62px;border-radius:31px;background:var(--acc);box-shadow:inset 0 0 0 6px var(--ink);font:900 30px/62px Unb;text-align:center;color:var(--ink)}
+.c-m{left:770px;top:1070px;width:210px;height:210px}
+/* D cat joke */
+.d-mon{left:190px;top:240px;width:700px;height:400px;border-radius:30px;background:#15281c;box-shadow:0 0 0 12px var(--ink),0 30px 60px rgba(0,0,0,.5)}
+.d-mon .scr{left:30px;top:30px;width:640px;height:340px;border-radius:14px;background:#0c1a12}
+.d-mon .q{left:0;top:56px;width:640px;text-align:center;font:700 34px JB;color:var(--dim);letter-spacing:3px}
+.d-mon .pw{left:0;top:130px;width:640px;text-align:center;font:800 100px JB;color:var(--paper);letter-spacing:12px}
+.d-mon .gr{left:60px;top:250px;width:520px;height:70px;border-radius:35px;background:var(--acc);font:900 32px/70px Unb;color:var(--ink);text-align:center}
+.d-stand{left:500px;top:650px;width:80px;height:80px;background:#26392d;box-shadow:0 0 0 8px var(--ink)}
+.d-kb{left:90px;top:780px;width:900px;height:330px;border-radius:30px;background:#2f4a3a;box-shadow:0 0 0 12px var(--ink),0 30px 60px rgba(0,0,0,.5)}
+.key{width:72px;height:72px;border-radius:14px;background:#f4ecd9;box-shadow:inset 0 -8px 0 #b9b3a3,0 0 0 5px var(--ink);font:800 36px/64px JB;text-align:center;color:var(--ink)}
+.key.hot{background:var(--acc);box-shadow:inset 0 -8px 0 var(--accd),0 0 0 5px var(--ink)}
+.d-cat{left:300px;top:560px;width:380px;height:380px}
+.d-m{left:720px;top:1000px;width:250px;height:250px}
+/* E download */
+.e-db{left:80px;top:300px;width:330px;height:362px}
+.e-pipe{left:0;top:0;width:1080px;height:1300px}
+.e-lap{left:520px;top:760px;width:440px;height:330px}
+.e-hood{left:600px;top:470px;width:300px;height:300px}
+.e-prog{left:600px;top:810px;width:280px;height:40px;border-radius:20px;background:#26392d;overflow:hidden}
+.e-prog i{left:0;top:0;width:280px;height:40px;background:linear-gradient(90deg,#ff3b5c,#ff9a5c);transform-origin:0 50%}
+.e-pct{left:600px;top:870px;width:280px;text-align:center;font:800 56px JB;color:var(--red)}
+.e-chip{left:110px;top:236px;width:420px}
+.e-m{left:120px;top:960px;width:280px;height:280px}
+.mini{width:70px;height:88px;border-radius:10px;background:var(--paper);box-shadow:0 0 0 5px var(--ink)}
+.mini i{left:12px;width:46px;height:9px;border-radius:5px;background:#b9b3a3}
+/* F big number */
+.f-n{left:0;top:230px;width:1080px;text-align:center;font:900 170px/1 Unb;color:var(--red);letter-spacing:-8px}
+.f-s{left:0;top:440px;width:1080px;text-align:center;font:800 54px Mont;color:var(--paper)}
+.f-grid{left:110px;top:560px;width:620px;height:600px}
+.f-p{width:60px;height:80px}
+.f-m{left:735px;top:860px;width:230px;height:230px}
+.f-src{left:100px;top:1208px;width:860px}
+/* G population vs leak */
+.g-base{left:110px;top:1150px;width:860px;height:10px;border-radius:5px;background:var(--dim)}
+.g-bar{width:300px;transform-origin:50% 100%;border-radius:26px 26px 0 0;box-shadow:0 0 0 8px var(--ink)}
+.g-b1{left:150px;top:741px;height:409px;background:linear-gradient(#e2ff8a,#74c81c)}
+.g-b2{left:600px;top:550px;height:600px;background:linear-gradient(#ff9a5c,#ff3b5c)}
+.g-l{width:400px;text-align:center;font:900 64px Unb;letter-spacing:-2px}
+.g-l1{left:100px;top:1170px;color:var(--acc);font-size:52px}
+.g-l2{left:550px;top:1170px;color:var(--red);font-size:52px}
+.g-cap{left:80px;top:1236px;width:440px;text-align:center;font:700 24px JB;color:var(--paper)}
+.g-cap2{left:530px}
+.g-line{left:0;top:0;width:1080px;height:1300px}
+.g-m{left:190px;top:530px;width:220px;height:220px}
+.g-suit{left:620px;top:600px;width:130px;height:110px}
+.g-gh{left:770px;top:585px;width:110px;height:122px}
+.g-src{left:60px;top:250px;width:700px}
+.g-n{left:550px;top:466px;width:400px;white-space:nowrap;text-align:center;font:900 60px Unb;color:var(--red)}
+.g-n1{left:150px;top:800px;width:300px;text-align:center;font:900 60px Unb;color:var(--ink);white-space:nowrap}
+/* H invoice joke */
+.h-env{left:330px;top:230px;width:420px;height:288px}
+.h-rc{left:300px;top:440px;width:480px;height:760px;overflow:hidden;transform-origin:50% 0}
+.h-paper{left:0;top:0;width:480px;height:2400px;background:var(--paper);border-radius:0 0 18px 18px;box-shadow:0 0 0 7px var(--ink)}
+.h-row{left:36px;width:408px;height:52px;font:700 30px/52px JB;color:var(--ink);border-bottom:3px dashed #b9b3a3}
+.h-row span{right:0;top:0}
+.h-ill{left:316px;top:1150px;padding:0 14px;height:40px;font:600 22px/40px JB;color:#55665b;background:var(--paper);border-radius:8px}
+.h-m{left:40px;top:860px;width:290px;height:290px}
+.h-st{left:150px;top:600px;width:780px;height:150px;border:14px solid var(--red);border-radius:26px;color:var(--red);font:900 78px/122px Unb;text-align:center;background:rgba(7,16,11,.93)}
+.h-chip{left:330px;top:1222px;width:420px}
+/* I moral */
+.i-f{left:140px;top:220px;width:800px;height:160px}
+.i-f .pw{left:0;top:22px;width:800px;text-align:center;font:800 96px/116px JB;letter-spacing:12px;color:var(--ink)}
+.i-x{left:100px;top:0;width:600px;height:160px}
+.i-door{left:150px;top:470px;width:300px;height:460px}
+.i-mat{left:100px;top:930px;width:400px;height:90px;border-radius:16px;background:#c9892f;box-shadow:0 0 0 7px var(--ink);font:900 24px/90px Unb;white-space:nowrap;text-align:center;color:var(--ink)}
+.i-m{left:560px;top:640px;width:340px;height:340px}
+.i-tag{left:480px;top:1050px;width:480px;font-size:34px;line-height:84px;text-align:center}
+.i-hint{left:120px;top:1150px;width:840px}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="grid"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="a-t">ПАРОЛЬ <b>123456</b><br>СЛИЛ ЦЕЛУЮ СТРАНУ</div><div class="a-f paper"><div class="lbl">пароль</div><div class="pw">123456</div></div><div class="a-lock"></div><div class="m a-m"></div><div class="a-st">НЕ БАЙТ</div><div class="a-src nb-chip chip">INGENIØREN · 9 ОКТЯБРЯ 2026</div></div>
+<div id="B" class="scene"><div class="b-lab nb-chip chip">РЕЕСТР ЖИТЕЛЕЙ · CPR</div><div class="b-db"></div><div class="card paper c1"><em>ИМЯ</em><i style="width:220px"></i></div><div class="card paper c2"><em>АДРЕС</em><i style="width:300px"></i></div><div class="card paper c3"><em>НОМЕР CPR</em><i style="width:180px"></i></div><div class="m b-m"></div></div>
+<div id="C" class="scene"><div class="c-bld"></div><div class="c-db"></div><svg class="c-path" viewBox="0 0 1080 700"><path class="dl" pathLength="100" d="M420 470 C560 470 600 400 700 390" fill="none" stroke="#ffd23d" stroke-width="10" stroke-dasharray="100" stroke-linecap="round"/></svg><div class="c-key"></div><div class="c-chip nb-panel pan">законный доступ к поиску<small>частная датская фирма</small></div>
+<div class="c-win paper"><div class="bar"><u style="left:30px;background:#ff3b5c"></u><u style="left:70px;background:#ffd23d"></u><u style="left:110px;background:#74c81c"></u></div><div class="ttl">ВХОД В CPR</div><div class="fld"></div><div class="ok">ВОЙТИ</div></div><div class="m c-m"></div></div>
+<div id="D" class="scene"><div class="d-mon"><div class="scr"><div class="q">ВВЕДИТЕ ПАРОЛЬ</div><div class="pw"></div><div class="gr">ДОСТУП ОТКРЫТ</div></div></div><div class="d-stand"></div><div class="d-kb"></div><div class="d-cat"></div><div class="m d-m"></div></div>
+<div id="E" class="scene"><div class="e-chip nb-chip chip">СЕНТЯБРЬ 2026</div><svg class="e-pipe" viewBox="0 0 1080 1300"><path class="dl pipe" pathLength="100" d="M300 640 C320 820 520 640 640 790" fill="none" stroke="#3b5244" stroke-width="44" stroke-dasharray="100" stroke-linecap="round"/></svg><div class="e-db"></div><div class="e-hood"></div><div class="e-lap"></div><div class="e-prog"><i></i></div><div class="e-pct">0%</div><div class="m e-m"></div></div>
+<div id="F" class="scene"><div class="f-n">0</div><div class="f-s">человек в утечке</div><div class="f-grid"></div><div class="m f-m"></div><div class="f-src nb-panel pan">Минцифры Дании, 5 октября 2026<small>имена, адреса и номера CPR</small></div></div>
+<div id="G" class="scene"><div class="g-src nb-chip chip">ЖИВЁТ В ДАНИИ VS УТЕКЛО</div><div class="g-base"></div><div class="g-bar g-b1"></div><div class="g-bar g-b2"></div><svg class="g-line" viewBox="0 0 1080 1300"><path class="dl" pathLength="100" d="M110 741 H980" fill="none" stroke="#f4ecd9" stroke-width="7" stroke-dasharray="100" stroke-linecap="round"/></svg><div class="g-n1">≈6 млн</div><div class="g-n">8,8 млн</div><div class="g-l g-l1">живут</div><div class="g-l g-l2">в утечке</div><div class="g-cap">DST, 1.01.2025: 5 992 734</div><div class="g-cap g-cap2">живые, уехавшие и умершие</div><div class="g-suit"></div><div class="g-gh"></div><div class="m g-m"></div></div>
+<div id="H" class="scene"><div class="h-rc"><div class="h-paper"></div></div><div class="h-env"></div><div class="h-ill">иллюстрация</div><div class="m h-m"></div><div class="h-chip nb-chip chip">ТАК НАШЛИ ВЗЛОМ</div><div class="h-st">СПАЛИЛИСЬ</div></div>
+<div id="I" class="scene"><div class="i-f paper"><div class="pw">123456</div><svg class="i-x" viewBox="0 0 600 160"><path class="dl" pathLength="100" d="M10 90 Q300 60 590 70" fill="none" stroke="#ff3b5c" stroke-width="18" stroke-dasharray="100" stroke-linecap="round"/></svg></div><div class="i-door"></div><div class="i-mat">ДОБРО ПОЖАЛОВАТЬ</div><div class="m i-m"></div><div class="i-tag nb-panel red pan">цифры подряд = открыто</div><div class="i-hint nb-panel pan">длинная фраза + второй фактор<small>вот это уже пароль</small></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
