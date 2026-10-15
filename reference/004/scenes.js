@@ -13,6 +13,8 @@ const icon = (n, cls, css) => `<div class="ic ${cls || ''}" data-ic="${n}" style
 const raise = (sc, t, d = 0.25) => { tw(sc + ' .armL', t, d, { r: [0, 120] }, 'back'); tw(sc + ' .armR', t, d, { r: [0, -120] }, 'back'); };
 const sad = (sc, t) => tw(sc + ' .mouth', t, 0.2, { sy: [1, -1] });
 const click = (par, x, y, t) => { const r = mk(par, 'ring', '', `left:${x - 60}px;top:${y - 60}px`); tw(r, 0, 0.001, { o: [0, 0] }); tw(r, t, 0.35, { s: [0.2, 1.4], o: [1, 0] }, 'out'); sfx('tick', t, 1.2); };
+
+const chipIn = (sel, t, d = 0.62) => els(sel).forEach(el => { const b = el.getBoundingClientRect(), cx = b.left + b.width / 2; slideIn(el, t, Math.abs(cx - 540) < 60 ? 'down' : cx < 540 ? 'left' : 'right', d, 260); });
 // S01 hook
 HT.S01 = `<div class="a-t fl">ТЫ <b>БЕСПЛАТНО</b><br>РАБОТАЛ<br>НА GOOGLE</div><div class="cap paper a-cap">${capHTML('кривые', 3)}</div><div class="m a-m"></div><div class="a-q">?</div>`;
 SC.push(() => {
@@ -31,10 +33,10 @@ SC.push(() => {
   punch('.b-cap', W('h3', 'кривые'), 0.06);
   typeIn($('#S02 .typed'), 'кривые', W('h3', 'надо'), WE('h3', 'вводить'));
   for (let k = 0; k < 6; k++) sfx('tick', W('h3', 'надо') + k * 0.16, 0.8);
-  hide('.b-c1'); popIn('.b-c1', W('h4', 'проверка') - 0.25); sfx('pop', W('h4', 'проверка') - 0.25);
+  hide('.b-c1'); chipIn('.b-c1', W('h4', 'проверка') - 0.25); sfx('pop', W('h4', 'проверка') - 0.25);
   tw('.b-sl', W('h4', 'проверка'), 0.25, { sx: [0, 1] }, 'out5'); tw('.b-sl', 0, 0.001, { r: [-5, -5] }); sfx('zap', W('h4', 'проверка'), 0.6);
   hide('.b-c2'); stamp('.b-c2', W('h4', 'работа'), -5, 26); raise('#S02', W('h4', 'работа') + 0.15);
-  hide('.b-tm'); popIn('.b-tm', W('h5', 'объясню')); sfx('ding', W('h5', 'две')); punch('.b-tm', W('h5', 'две'));
+  hide('.b-tm'); chipIn('.b-tm', W('h5', 'объясню')); sfx('ding', W('h5', 'две')); punch('.b-tm', W('h5', 'две'));
 });
 // S03 reverse Turing test
 HT.S03 = `<div class="lab">ТЕСТ ТЬЮРИНГА НАОБОРОТ</div><div class="rb c-rb"></div><div class="m c-m"></div>${icon('mag', 'c-mag')}<div class="chip p c-k1">МАШИНА</div><div class="chip c-k2">ПРОВЕРЯЕТ</div><div class="chip p c-k3">ЧЕЛОВЕКА</div>`;
@@ -43,7 +45,7 @@ SC.push(() => {
   tw('.c-rb', t0 - 0.1, 0.5, { x: [-500, 0] }, 'out5'); tw('.c-m', t0 - 0.1, 0.5, { x: [500, 0] }, 'out5');
   hide('.c-mag'); popIn('.c-mag', W('a0', 'тест')); tw('#S03 .rarmR', W('a0', 'тест'), 0.3, { r: [0, -60] }, 'back');
   for (let th = W('a0', 'наоборот'), k = 0; th < L('a0').t1 + 0.2; th += 0.5, k++) tw('.c-mag', th, 0.5, { x: k % 2 ? [220, 60] : [60, 220], y: k % 2 ? [40, -20] : [-20, 40] }, 'inOut');
-  ['.c-k1', '.c-k2', '.c-k3'].forEach((s, i) => { hide(s); const t = [W('a0', 'машина'), W('a0', 'проверяет'), W('a0', 'человека')][i]; popIn(s, t); sfx('pop', t); });
+  ['.c-k1', '.c-k2', '.c-k3'].forEach((s, i) => { hide(s); const t = [W('a0', 'машина'), W('a0', 'проверяет'), W('a0', 'человека')][i]; chipIn(s, t); sfx('whoosh', t - 0.05, 0.5); });
   sweat('#S03', 700, 560, 6, W('a0', 'машина')); sad('#S03', W('a0', 'проверяет'));
   idle('#S03 .reye', t => ({ x: 6 * Math.sin(t * 6) }));
 });
@@ -52,7 +54,7 @@ HT.S04 = `<div class="yr">2007</div><div class="chip p d-chip">reCAPTCHA</div>${
 SC.push(() => {
   const t0 = L('a1').t0; tw('.yr', 0, 0.001, { s: [1, 1] });
   tw('#S04 .yr', t0, 0.4, { s: [2.2, 1], o: [0, 1] }, 'out5'); sfx('thud', t0 + 0.1);
-  hide('.d-chip'); popIn('.d-chip', W('a1', 'рекапча')); sfx('ding', W('a1', 'рекапча'));
+  hide('.d-chip'); chipIn('.d-chip', W('a1', 'рекапча')); sfx('ding', W('a1', 'рекапча'));
   hide('.d-bulb'); tw('.d-bulb', W('a1b', 'гениальная'), 0.3, { s: [0.2, 1], o: [0, 1], r: [-30, 0] }, 'back'); sfx('blip', W('a1b', 'гениальная'));
   burst('#S04', 527, 850, 12, W('a1b', 'гениальная') + 0.1, 260, ['#ffe14d', '#fff3a8']);
   idle('.d-bulb', t => ({ s: 1 + 0.05 * Math.sin(t * 10) }));
@@ -64,9 +66,9 @@ HT.S05 = `<div class="lab">ДВА СЛОВА</div><div class="paper e-c1"><div c
 SC.push(() => {
   const t0 = L('a2').t0 + 0.1;
   tw('.e-c1', t0 - 0.2, 0.45, { x: [-600, 0], r: [-12, -2] }, 'out5'); tw('.e-c2', t0, 0.45, { x: [600, 0], r: [12, 2] }, 'out5'); sfx('whoosh', t0 - 0.2, 0.6); sfx('whoosh', t0, 0.6);
-  hide('.e-b1'); popIn('.e-b1', W('a3', 'знает')); sfx('ding', W('a3', 'знает')); hide('.e-k1'); popIn('.e-k1', W('a3', 'система'));
+  hide('.e-b1'); popIn('.e-b1', W('a3', 'знает')); sfx('ding', W('a3', 'знает')); hide('.e-k1'); chipIn('.e-k1', W('a3', 'система'));
   punch('.e-c1', W('a3', 'проверка'), 0.08);
-  hide('.e-b2'); popIn('.e-b2', WE('a3', 'проверка') - 0.2); hide('.e-k2'); popIn('.e-k2', WE('a3', 'проверка') - 0.1); sfx('buzz', WE('a3', 'проверка') - 0.2, 0.5);
+  hide('.e-b2'); popIn('.e-b2', WE('a3', 'проверка') - 0.2); hide('.e-k2'); chipIn('.e-k2', WE('a3', 'проверка') - 0.1); sfx('buzz', WE('a3', 'проверка') - 0.2, 0.5);
   idle('.e-b2', t => ({ r: 8 * Math.sin(t * 9) }));
   tw('#S05 .pup', W('a3', 'первое'), 0.2, { x: [0, -14] }); tw('#S05 .pup', WE('a3', 'проверка') - 0.2, 0.2, { x: [-14, 14] });
   tw('#S05 .armL', W('a3', 'первое'), 0.25, { r: [0, 70] }, 'back');
@@ -83,7 +85,7 @@ SC.push(() => {
   tw('.f-fly', tf, 0.5, { x: [-220, 0], y: [-405, 0], o: [1, 1], s: [1, 0.9] }, 'inOut'); tw('.f-fly', tf + 0.5, 0.15, { o: [1, 0] }); sfx('whoosh', tf, 0.7);
   typeIn($('#S06 .typed'), 'вести', tf + 0.45, tf + 0.95);
   for (let th = tf; th < tf + 1; th += 0.2) { tw('#S06 .armR', th, 0.1, { r: [0, -50] }); tw('#S06 .armR', th + 0.1, 0.1, { r: [-50, 0] }); sfx('tick', th + 0.45, 0.7); }
-  hide('.f-ok'); popIn('.f-ok', W('a5', 'оцифровано')); sfx('ding', W('a5', 'оцифровано'));
+  hide('.f-ok'); chipIn('.f-ok', W('a5', 'оцифровано')); sfx('ding', W('a5', 'оцифровано'));
   hide('.f-p1'); tw('.f-p1', W('a5', 'оцифровано') + 0.1, 0.6, { y: [40, -80], o: [1, 0] }, 'out');
   tw('.f-w', tf + 0.5, 0.3, { o: [1, 0.25] });
 });
@@ -108,13 +110,13 @@ SC.push(() => {
   count($('.h-n'), W('a7', '100'), WE('a7', 'день'), 100000000); sfx('riser', W('a7', '100'), 0.7); punch('.h-n', WE('a7', 'день'), 0.1); sfx('boom', WE('a7', 'день'), 0.7);
   hide('.h-st'); stamp('.h-st', W('a8', 'бесплатный'), -5, 22);
   tw('.h-m', L('a7').t0, 0.4, { x: [400, 0] }, 'out5'); sad('#S08', W('a8', 'бесплатный') + 0.2);
-  hide('#S08 .note'); tw('#S08 .note', L('a7').t0 + 0.3, 0.3, { o: [0, 1] });
+  hide('#S08 .note'); slideIn('#S08 .note', L('a7').t0 + 0.3, 'down', 0.6, 140);
 });
 // S09 Google buys it
 HT.S09 = `<div class="yr">2009</div><div class="chip p i-rc">reCAPTCHA</div><div class="paper i-g">Google</div><div class="stR i-st">КУПЛЕНО</div><div class="m i-m"></div>`;
 SC.push(() => {
   const t0 = L('b1').t0; tw('#S09 .yr', t0, 0.4, { s: [2.2, 1], o: [0, 1] }, 'out5'); sfx('thud', t0 + 0.1);
-  hide('.i-rc'); popIn('.i-rc', W('b1', 'рекапчу')); tw('.i-g', W('b1', 'рекапчу'), 0.4, { x: [600, 0] }, 'out5');
+  hide('.i-rc'); chipIn('.i-rc', W('b1', 'рекапчу')); tw('.i-g', W('b1', 'рекапчу'), 0.4, { x: [600, 0] }, 'out5');
   const tb = W('b1', 'покупает'); tw('.i-rc', tb, 0.35, { x: [0, 500], s: [1, 0.3] }, 'in'); tw('.i-rc', tb + 0.3, 0.08, { o: [1, 0] }); punch('.i-g', tb + 0.35, 0.16); sfx('coin', tb + 0.35, 1.3);
   burst('#S09', 790, 690, 12, tb + 0.35, 300, ['#ffe14d', '#ffc83d']);
   hide('.i-st'); stamp('.i-st', W('b1', 'google'), -5, 20); tw('#S09 .armR', tb, 0.25, { r: [0, -130] }, 'back');
@@ -159,19 +161,19 @@ HT.S13 = `<div class="m-pv">ПОВОРОТ</div><div class="yr m-yr">2014</div><
 SC.push(() => {
   const t0 = L('c1').t0; tw('.m-pv', t0, 0.35, { r: [-200, -4], s: [0.2, 1], o: [0, 1] }, 'back'); shake(t0 + 0.3, 0.3, 22); sfx('boom', t0 + 0.25, 0.8);
   const t2 = L('c2').t0; tw('.m-pv', t2 - 0.15, 0.15, { o: [1, 0] }); hide('#S13 .yr'); tw('#S13 .yr', t2, 0.4, { s: [2.2, 1], o: [0, 1] }, 'out5'); sfx('thud', t2 + 0.1);
-  hide('.m-g'); popIn('.m-g', W('c2', 'google')); sfx('pop', W('c2', 'google'));
+  hide('.m-g'); chipIn('.m-g', W('c2', 'google')); sfx('pop', W('c2', 'google'));
   const t3 = L('c3').t0; hide('.m-capw'); hide('.m-scan'); hide('.m-n'); hide('.m-s'); hide('#S13 .note');
   tw('.m-rb', t2 + 0.3, 0.4, { x: [-500, 0] }, 'out5'); tw('.m-capw', t3 - 0.1, 0.4, { x: [700, 0], o: [1, 1] }, 'out5');
   const s0 = W('c3', 'читает'), s1 = WE('c3', 'буквы'); tw('.m-scan', s0, 0.1, { o: [0, 1] }); tw('.m-scan', s0, s1 - s0, { x: [0, 560] }, 'inOut'); tw('.m-scan', s1, 0.15, { o: [1, 0] }); sfx('riser', s0, 0.6);
   typeIn($('#S13 .typed'), 'кривые', s0 + 0.1, s1); idle('#S13 .reye', t => ({ x: 8 * Math.sin(t * 14) }));
-  const n0 = W('c3', 'точностью'), n1 = WE('c3', '99'); tw('.m-n', n0, 0.2, { o: [0, 1] }); tw('.m-s', n0, 0.3, { o: [0, 1] }); tw('#S13 .note', n0 + 0.3, 0.3, { o: [0, 1] });
+  const n0 = W('c3', 'точностью'), n1 = WE('c3', '99'); tw('.m-n', n0, 0.2, { o: [0, 1] }); tw('.m-s', n0, 0.3, { o: [0, 1] }); slideIn('#S13 .note', n0 + 0.3, 'down', 0.6, 140);
   count($('.m-n'), n0, n1 - 0.3, 998, v => (v / 10).toFixed(1).replace('.', ',') + '%'); for (let k = 0; k < 8; k++) sfx('tick', n0 + (n1 - n0 - 0.3) * k / 8, 0.7);
   punch('.m-n', n1 - 0.3, 0.14); sfx('boom', n1 - 0.3, 0.7); tw('#S13 .rarmL', n1 - 0.3, 0.25, { r: [0, 120] }, 'back'); tw('#S13 .rarmR', n1 - 0.3, 0.25, { r: [0, -120] }, 'back');
 });
 // S14 the student beat the teacher
 HT.S14 = `<div class="rb n-rb"></div>${icon('cap', 'n-cap')}<div class="m n-m"></div><div class="chip n-l1">УЧЕНИК</div><div class="chip p n-l2">УЧИТЕЛЬ</div>`;
 SC.push(() => {
-  const t0 = L('c4').t0; tw('.n-rb', t0, 0.5, { y: [260, 0], s: [0.7, 1] }, 'back'); hide('.n-l1'); hide('.n-l2'); popIn('.n-l1', W('c4', 'ученик')); popIn('.n-l2', W('c4', 'учителя')); sfx('pop', W('c4', 'ученик')); sfx('pop', W('c4', 'учителя'));
+  const t0 = L('c4').t0; tw('.n-rb', t0, 0.5, { y: [260, 0], s: [0.7, 1] }, 'back'); hide('.n-l1'); hide('.n-l2'); chipIn('.n-l1', W('c4', 'ученик')); chipIn('.n-l2', W('c4', 'учителя')); sfx('pop', W('c4', 'ученик')); sfx('pop', W('c4', 'учителя'));
   const tc = W('c4', 'превзошёл'); hide('.n-cap'); tw('.n-cap', tc, 0.25, { y: [-600, 0], o: [1, 1], r: [-30, -8] }, 'in'); sfx('thud', tc + 0.22); punch('.n-rb', tc + 0.25, 0.06);
   burst('#S14', 740, 560, 16, tc + 0.25, 360); tw('.n-m', tc, 0.4, { s: [1, 0.78] }, 'out'); sad('#S14', tc + 0.1); tw('#S14 .brL', tc, 0.2, { r: [0, 14] }); tw('#S14 .brR', tc, 0.2, { r: [0, -6], y: [0, 6] });
   tw('#S14 .rarmL', tc + 0.25, 0.25, { r: [0, 120] }, 'back'); tw('#S14 .rarmR', tc + 0.25, 0.25, { r: [0, -120] }, 'back');
@@ -218,14 +220,14 @@ HT.S18 = `<div class="chk paper r-chk">${chkHTML()}</div><div class="chip p r-v3
 SC.push(() => {
   const td = W('d1', 'исчезает'); tw('#S18 .ck', 0, 0.001, { dash: [0, 0] });
   tw('.r-chk', td, 0.35, { s: [1, 0.3], o: [1, 0], r: [0, 12] }, 'in'); burst('#S18', 527, 390, 18, td + 0.2, 420, ['#f4ecd9', '#b9b3a3', '#ffffff']); sfx('glitch', td, 1); sfx('pop', td + 0.3);
-  hide('.r-v3'); popIn('.r-v3', W('d2', 'третья')); sfx('pop', W('d2', 'третья'));
+  hide('.r-v3'); chipIn('.r-v3', W('d2', 'третья')); sfx('pop', W('d2', 'третья'));
   hide('.r-g'); hide('.r-n'); hide('.r-thr'); const tg = W('d2', 'версия') + 0.3; tw('.r-g', tg - 0.3, 0.2, { o: [0, 1] }); tw('.r-n', tg, 0.2, { o: [0, 1] });
   $$('.r-arc').forEach((p, i) => tw(p, tg - 0.3 + i * 0.2, 0.3, { dash: [100, 0] }));
   const K = [[0, .5], [W('d2', 'от'), .5], [WE('d2', 'нуля'), 0], [W('d2', 'до') + 0.1, 0], [WE('d2', 'единицы'), 1], [W('d3', 'ноль') - 0.05, 1], [W('d3', 'ноль') + 0.3, 0], [W('d4', '0,5') - 0.1, 0], [W('d4', '0,5') + 0.25, .5], [W('d4', 'ниже'), .5], [W('d4', 'ниже') + 0.3, .3], [999, .3]];
   const nd = $('.r-nd'), nn = $('.r-n');
   custom(t => { let i = 0; while (K[i + 1][0] <= t) i++; const [ta, va] = K[i], [tb, vb] = K[i + 1], v = va + (vb - va) * E.inOut(Math.max(0, Math.min(1, (t - ta) / (tb - ta)))); const j = t > W('d4', 'ниже') + 0.3 ? 0.012 * Math.sin(t * 40) : 0; nd.style.transform = `rotate(${((v + j) - .5) * 180}deg)`; nn.textContent = v.toFixed(1).replace('.', ','); nn.style.color = v >= .5 ? '#b8ff3d' : '#ff3b5c'; });
   sfx('riser', W('d2', 'от'), 0.6); sfx('ding', WE('d2', 'единицы'));
-  hide('.r-h'); hide('.r-b'); popIn('.r-h', W('d3', 'человек')); sfx('pop', W('d3', 'человек')); popIn('.r-b', W('d3', 'бот')); sfx('buzz', W('d3', 'бот'), 0.6);
+  hide('.r-h'); hide('.r-b'); chipIn('.r-h', W('d3', 'человек')); sfx('pop', W('d3', 'человек')); chipIn('.r-b', W('d3', 'бот')); sfx('buzz', W('d3', 'бот'), 0.6);
   const t4 = L('d4').t0; tw('.r-h', t4, 0.2, { o: [1, 0] }); tw('.r-b', t4, 0.2, { o: [1, 0] }); tw('.r-thr', W('d4', 'порог'), 0.2, { o: [0, 1] }); sfx('tick', W('d4', 'порог'), 1.2);
   hide('.r-s'); stamp('.r-s', W('d4', 'подозрительный'), -4, 22); sweat('#S18', 830, 260, 5, W('d4', 'ниже'), 0.2); sad('#S18', W('d4', 'ниже'));
 });
@@ -244,11 +246,11 @@ SC.push(() => {
   const t0 = L('e1').t0 + 0.05; tw('.t-g', 0, 0.001, { o: [0, 0] }); tw('.t-g', t0, 0.15, { s: [3, 1], o: [0, 1] }, 'in'); shake(t0 + 0.15, 0.3, 24); sfx('slam', t0 + 0.13, 1.1);
   const t2 = L('e2').t0; tw('.t-g', t2 - 0.12, 0.12, { o: [1, 0] }); hide('#S20 .yr'); tw('#S20 .yr', t2, 0.4, { s: [2.2, 1], o: [0, 1] }, 'out5'); sfx('thud', t2 + 0.1);
   const tk = W('e2', 'учёные'); hide('.t-m'); hide('.t-rb'); tw('.t-m', tk, 0.4, { x: [-500, 0], o: [1, 1] }, 'out5'); tw('.t-rb', tk + 0.1, 0.4, { x: [500, 0], o: [1, 1] }, 'out5');
-  hide('.t-vs'); stamp('.t-vs', W('e2', 'кто'), 0, 18); hide('.t-l1'); hide('.t-l2'); popIn('.t-l1', tk + 0.2); popIn('.t-l2', tk + 0.3);
+  hide('.t-vs'); stamp('.t-vs', W('e2', 'кто'), 0, 18); hide('.t-l1'); hide('.t-l2'); chipIn('.t-l1', tk + 0.2); chipIn('.t-l2', tk + 0.3);
   tw('#S20 .armR', W('e2', 'лучше'), 0.25, { r: [0, -110] }, 'back'); tw('#S20 .rarmL', W('e2', 'лучше'), 0.25, { r: [0, 110] }, 'back');
   $$('#S20 .t-n, #S20 .t-s, #S20 .note').forEach(e => hide(e)); const a = W('e2b', '1400'), b = W('e2b', '14 0'), e = L('e2b').t1;
   tw('.t-n1', a, 0.15, { o: [0, 1] }); tw($$('#S20 .t-s')[0], a, 0.2, { o: [0, 1] }); count($('.t-n1'), a, b - 0.2, 1400); sfx('riser2', a, 0.5); punch('.t-n1', b - 0.2, 0.1);
-  tw('.t-n2', b, 0.15, { o: [0, 1] }); tw('.t-s2', b, 0.2, { o: [0, 1] }); count($('.t-n2'), b, e - 0.1, 14000); punch('.t-n2', e - 0.1, 0.1); sfx('ding', e - 0.1); tw('#S20 .note', b, 0.3, { o: [0, 1] });
+  tw('.t-n2', b, 0.15, { o: [0, 1] }); tw('.t-s2', b, 0.2, { o: [0, 1] }); count($('.t-n2'), b, e - 0.1, 14000); punch('.t-n2', e - 0.1, 0.1); sfx('ding', e - 0.1); slideIn('#S20 .note', b, 'down', 0.6, 140);
 });
 // S21 the race
 HT.S21 = `<div class="lab">КРИВЫЕ БУКВЫ: КТО БЫСТРЕЕ</div><div class="u-nm" style="top:320px">ЧЕЛОВЕК</div><div class="u-tm u-t1" style="top:314px">0,0 с</div><div class="u-tr" style="top:400px"></div><div class="m u-m"></div><div class="chip p u-s u-s1" style="top:578px">9–15 секунд · точность 50–84%</div><div class="u-nm" style="top:700px">БОТ</div><div class="u-tm u-t2" style="top:694px">0,0 с</div><div class="u-tr" style="top:780px"></div><div class="rb u-rb"></div><div class="chip u-s u-s2" style="top:958px">меньше секунды · точность 99,8%</div><div class="chip p u-c">ГАЛОЧКА: бот 1,4 с · человек 3,1–4,9 с</div><div class="note">UC Irvine · USENIX Security 2023</div>`;
@@ -257,11 +259,11 @@ SC.push(() => {
   custom(t => { const p = Math.max(0, Math.min(1, (t - a) / (b - a))); $('.u-t1').textContent = (15 * p).toFixed(1).replace('.', ',') + ' с'; });
   for (let th = a; th < b; th += 0.3) sfx('tick', th, 0.6);
   [330, 610].forEach((x, k) => { const d = mk('#S21', 'u-x', '×', `left:${x}px`); tw(d, 0, 0.001, { o: [0, 0] }); const t = W('e3', 'ошибками') + k * 0.18; tw(d, t, 0.2, { s: [2.5, 1], o: [0, 1] }, 'in'); sfx('buzz', t, 0.5); });
-  hide('.u-s1'); popIn('.u-s1', b - 0.1); sad('#S21', W('e3', 'ошибками'));
+  hide('.u-s1'); chipIn('.u-s1', b - 0.1); sad('#S21', W('e3', 'ошибками'));
   const c = W('e4', 'меньше'); tw('.u-rb', c, 0.28, { x: [0, 810] }, 'out5'); sfx('whoosh', c, 1.2); sfx('zap', c, 0.8);
   custom(t => { $('.u-t2').textContent = t < c ? '0,0 с' : t < c + 0.28 ? ((t - c) * 3).toFixed(1).replace('.', ',') + ' с' : '< 1 с'; $('.u-t2').style.color = t >= c + 0.28 ? '#b8ff3d' : '#f4ecd9'; });
   for (let k = 0; k < 6; k++) { const d = mk('#S21', 'cf', '', `left:${120 + k * 130}px;top:${842}px;background:#6fe3ff;border-radius:13px;width:${90 - k * 8}px;height:14px`); tw(d, 0, 0.001, { o: [0, 0] }); tw(d, c + k * 0.03, 0.4, { o: [0.9, 0], sx: [1, 2] }, 'out'); }
-  punch('.u-t2', c + 0.3, 0.2); sfx('ding', c + 0.3); hide('.u-s2'); popIn('.u-s2', W('e4', 'почти'));
+  punch('.u-t2', c + 0.3, 0.2); sfx('ding', c + 0.3); hide('.u-s2'); chipIn('.u-s2', W('e4', 'почти'));
   tw('#S21 .rarmL', c + 0.3, 0.2, { r: [0, 120] }, 'back'); tw('#S21 .rarmR', c + 0.3, 0.2, { r: [0, -120] }, 'back');
   hide('.u-c'); const g = W('e4b', 'галочку'); tw('.u-c', g, 0.35, { y: [300, 0], o: [0, 1] }, 'out5'); punch('.u-c', W('e4b', 'полторы'), 0.05); sfx('pop', g); sfx('tick', W('e4b', 'полторы'), 1.2); sfx('tick', W('e4b', 'против'), 1.2);
 });
@@ -281,8 +283,8 @@ SC.push(() => {
   const t0 = L('e4c').t0; tw('.x-sh', t0 - 0.1, 0.35, { s: [0.3, 1], o: [0, 1] }, 'back');
   const tb = W('e4c', 'ботов'); [0, 1, 2].forEach(k => { tw('.x-r' + k, tb + k * 0.22, 0.7, { x: [0, 1400], r: [0, 20] }, 'inOut'); sfx('whoosh', tb + k * 0.22, 0.6); });
   hide('.x-x'); const tx = W('e4c', 'не'); stamp('.x-x', tx, 0, 16); tw('.x-sh', tx + 0.15, 0.5, { r: [0, 24] }, 'elastic'); tw('.x-sh', tx + 0.15, 0.3, { o: [1, 0.45] });
-  hide('.x-k1'); popIn('.x-k1', W('e4c', 'защищает')); sfx('buzz', W('e4c', 'защищает'), 0.6);
-  hide('.x-m'); hide('.x-box'); hide('#S23 .note'); const t1 = L('e4d').t0; tw('.x-m', t1 - 0.1, 0.4, { y: [-300, 0], o: [0, 1] }, 'out5'); tw('.x-box', t1, 0.35, { y: [300, 0], o: [0, 1] }, 'out5'); tw('#S23 .note', t1 + 0.3, 0.3, { o: [0, 1] });
+  hide('.x-k1'); chipIn('.x-k1', W('e4c', 'защищает')); sfx('buzz', W('e4c', 'защищает'), 0.6);
+  hide('.x-m'); hide('.x-box'); hide('#S23 .note'); const t1 = L('e4d').t0; tw('.x-m', t1 - 0.1, 0.4, { y: [-300, 0], o: [0, 1] }, 'out5'); tw('.x-box', t1, 0.35, { y: [300, 0], o: [0, 1] }, 'out5'); slideIn('#S23 .note', t1 + 0.3, 'down', 0.6, 140);
   const c0 = W('e4d', 'собирает'), c1 = L('e4d').t1;
   for (let k = 0; k < 8; k++) { const d = mk('#S23', 'ic x-it', ic(k % 2 ? 'clock' : 'cookie')); const t = c0 + (c1 - c0) * k / 8; tw(d, 0, 0.001, { o: [0, 0] }); tw(d, t, 0.45, { x: [(hash(k) - .5) * 60, (hash(k + 4) - .5) * 300], y: [0, 300], o: [1, 1], s: [0.5, 0.9], r: [0, 200] }, 'in'); tw(d, t + 0.45, 0.06, { o: [1, 0] }); punch('.x-box', t + 0.45, 0.05, 0.15); sfx('coin', t + 0.45, 0.8); }
   sweat('#S23', 430, 790, 5, c0, 0.2); sad('#S23', c0); idle('.x-m', t => t > c0 && t < c1 ? { x: 6 * Math.sin(t * 40) } : {});
@@ -304,7 +306,7 @@ HT.S25 = `<div class="chk paper z-chk">${chkHTML()}</div><div class="m z-m"></di
 SC.push(() => {
   const t0 = L('o1').t0; tw('.z-chk', t0 - 0.1, 0.4, { y: [-700, 0] }, 'out5'); const tc = W('o1', '«я');
   tw('#S25 .armL', W('o1', 'жми'), 0.25, { r: [0, 150] }, 'back'); click('#S25', 256, 480, tc); tw('#S25 .ck', tc + 0.05, 0.3, { dash: [100, 0] }); sfx('ding', tc + 0.15); punch('.z-chk', tc, 0.05);
-  hide('.z-k'); popIn('.z-k', W('o1', 'помни')); sfx('pop', W('o1', 'помни')); tw('#S25 .brR', W('o1', 'помни'), 0.2, { r: [0, -12], y: [0, 8] }, 'back');
+  hide('.z-k'); chipIn('.z-k', W('o1', 'помни')); sfx('pop', W('o1', 'помни')); tw('#S25 .brR', W('o1', 'помни'), 0.2, { r: [0, -12], y: [0, 8] }, 'back');
 });
 boot(() => {
   for (const k in HT) $('#' + k).innerHTML = HT[k];
@@ -317,6 +319,13 @@ boot(() => {
   $$('.m').forEach((m, i) => { idle(m, t => ({ y: 9 * Math.sin(W2 * 60 * t + i), r: 2.5 * Math.sin(W2 * 30 * t + i) })); const p = $('.pup', m); idle(p, t => ({ x: 4 * Math.sin(W2 * 40 * t + i), y: 3 * Math.sin(W2 * 56 * t) })); });
   $$('.rb').forEach((m, i) => idle(m, t => ({ y: 6 * Math.sin(W2 * 50 * t + i) })));
   SC.forEach(f => f());
+  mascotLife();
+  $$('.lab, .note').forEach(el => {
+    el.classList.add('nb-chip'); const w = el.offsetWidth; if (w) el.style.left = Math.round((1080 - w) / 2) + 'px';
+    if (tweens.some(w => w.el === el)) return;
+    const sc = el.closest('.scene'); if (!sc || sc.id === 'A2') return; const i = ids.indexOf('#' + sc.id); if (i < 0) return;
+    const isLab = el.classList.contains('lab'); slideIn(el, cuts[i] + (isLab ? 0.12 : 0.4), isLab ? 'up' : 'down', 0.6, 140);
+  });
   const TR = [tZoom, tSlideUp, tWhip, tCircle, tDrop];
   for (let i = 1; i < ids.length; i++) TR[(i * 3 + (i >> 2)) % 5](ids[i - 1], ids[i], cuts[i]);
   const tLoop = L('out').t0 + 0.15;
