@@ -1,0 +1,31 @@
+name: Voiceover (ElevenLabs)
+# The build session pushes voice/requests/NAME.txt; this job turns it into voice/out/NAME.mp3 + NAME.json and pushes them back.
+on:
+  push:
+    branches: [main]
+    paths: ['voice/requests/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: voiceover
+  cancel-in-progress: false
+jobs:
+  tts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate missing voiceovers
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: python3 tools/eleven_tts.py
+      - name: Push the results
+        run: |
+          git config user.name "nebait-voice"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A voice/out
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -q -m "voiceover: $(git diff --cached --name-only | xargs -n1 basename | tr '\n' ' ')"
+          for i in 1 2 3 4 5; do git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0; sleep 7; done
+          exit 1

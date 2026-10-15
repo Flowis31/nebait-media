@@ -1,0 +1,9 @@
+{
+  "voice_id": "pNInz6obpgDQGcFmaJgB",
+  "voice_name": "Adam - Dominant, Firm",
+  "model_id": "eleven_v4",
+  "fallback_model_id": "eleven_multilingual_v2",
+  "stability": 0.5,
+  "similarity_boost": 0.75,
+  "output_format": "mp3_44100_128"
+}
