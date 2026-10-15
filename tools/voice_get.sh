@@ -9,8 +9,9 @@ python3 align.py --request "$TMP" >/dev/null || exit 1
 H=$(sha1sum "$TMP" | cut -c1-8); ID="$NAME-$H"; REQ="$REPO/voice/requests/$ID.txt"; OUT="$REPO/voice/out/$ID"
 cd "$REPO" && git pull -q --rebase origin main; cd - >/dev/null
 if [ ! -f "$OUT.mp3" ]; then
-  mkdir -p "$REPO/voice/requests"; cp "$TMP" "$REQ"; rm -f "$OUT.error.txt"
-  (cd "$REPO" && git add "voice/requests/$ID.txt" && git commit -q -m "voice request: $ID" && \
+  mkdir -p "$REPO/voice/requests"; cp "$TMP" "$REQ"; date -u +%FT%TZ > "$REQ.retry"     # .retry makes a repeat request a real change
+  (cd "$REPO" && git rm -q --ignore-unmatch "voice/out/$ID.error.txt" && git add "voice/requests/$ID.txt" "voice/requests/$ID.txt.retry" && \
+   git commit -q -m "voice request: $ID" && \
    for i in 1 2 3; do git push -q origin HEAD:main && break; git pull -q --rebase origin main; done) || { echo "could not push the request"; exit 1; }
   echo "requested $ID ($(wc -c < "$TMP") bytes), waiting for GitHub Actions..."
   for i in $(seq 1 40); do
