@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#07100b;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+#bg{position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 30%,#143321 0%,#0a1710 45%,#060c08 100%)}
+#grid{will-change:transform;position:absolute;left:0;top:-88px;width:1080px;height:2100px;background-image:radial-gradient(circle,#3c5a48 2.2px,transparent 3px);background-size:44px 44px;opacity:.38}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(125,255,61,.34) 0%,rgba(125,255,61,.33) 30%,rgba(125,255,61,.17) 61%,rgba(125,255,61,.034) 85%,rgba(125,255,61,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(31,214,160,.22) 0%,rgba(31,214,160,.213) 30%,rgba(31,214,160,.11) 61%,rgba(31,214,160,.022) 85%,rgba(31,214,160,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.62) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+.paper{background:var(--paper);color:var(--ink);border-radius:26px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 6px rgba(10,19,13,.9)}
+.step{left:0;width:1080px;top:236px;text-align:center;font:700 34px JB;letter-spacing:6px;color:var(--acc)}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* ---- scene styles ---- */
+.m{width:300px;height:300px}
+.chipL{height:76px;padding:0 34px;font:700 34px/70px JB;letter-spacing:4px;color:var(--acc);text-align:center;white-space:nowrap}
+.panT{height:84px;padding:0 34px 0 40px;font:800 40px/78px Mont;color:var(--paper);white-space:nowrap}
+.a-t{left:50px;top:190px;width:980px;text-align:center;font:900 82px/1.08 Unb;color:var(--paper);letter-spacing:-2px}
+.a-t b{color:var(--acc);font-weight:900;position:static;display:inline-block}
+.a-br{left:50px;top:480px;width:680px;height:499px}
+.a-mag{left:310px;top:650px;width:280px;height:280px}
+.a-m{left:640px;top:800px;width:400px;height:400px}
+.a-st{left:70px;top:1010px;width:620px;height:150px;border:16px solid var(--acc);border-radius:30px;color:var(--acc);font:900 84px/118px Unb;text-align:center;background:rgba(7,16,11,.92)}
+.a-chip{left:90px;top:1222px;width:900px;font-size:30px;letter-spacing:3px}
+.b-chip{left:250px;top:220px;width:580px}
+.b-cnt{left:40px;top:1000px;width:1000px;height:170px}
+.b-ck{left:560px;top:450px;width:420px;height:504px}
+.b-m{left:20px;top:620px;width:380px;height:380px}
+.b-ph{left:330px;top:700px;width:140px;height:252px}
+.b-tk{left:340px;top:640px;width:150px;height:170px}
+.b-pl{left:600px;top:850px;width:360px;height:200px}
+.b-l1{left:110px;top:1210px;width:330px}.b-l2{left:560px;top:1210px;width:400px}
+.c-n{left:0;top:190px;width:1080px;text-align:center;font:900 230px/1 Unb;color:var(--acc);letter-spacing:-8px}
+.site{width:160px;height:170px}
+.site i{left:6px;top:40px;width:148px;height:124px;border-radius:20px;box-shadow:0 0 0 7px var(--red),0 0 40px rgba(255,59,92,.6);opacity:0}
+.c-src{left:260px;top:908px;width:560px;height:64px;font:600 28px/58px JB;color:var(--paper);text-align:center;padding:0}
+.c-ck{left:400px;top:990px;width:260px;height:312px}
+.c-hole{left:470px;top:1150px;width:120px;height:110px}
+.c-m{left:90px;top:1010px;width:260px;height:260px}
+.c-st{left:690px;top:1060px;width:300px;height:130px;border:14px solid var(--red);border-radius:26px;color:var(--red);font:900 64px/100px Unb;text-align:center;background:rgba(7,16,11,.92)}
+.d-chip{left:60px;top:1180px;width:560px}
+.d-ck{left:340px;top:540px;width:400px;height:480px}
+.d-tk{left:380px;top:-60px;width:320px;height:814px;transform-origin:50% 0}
+.d-cnt{left:40px;top:960px;width:1000px;height:170px}
+.d-m{left:30px;top:620px;width:280px;height:280px}
+.stain{width:150px;height:75px}
+.crumb{width:20px;height:20px;border-radius:6px;background:#c9b691;box-shadow:0 0 0 4px var(--ink)}
+.d-pan{left:170px;top:200px;width:740px;font-size:38px}
+.e-chip{left:200px;top:200px;width:680px}
+.e-cnt{left:40px;top:930px;width:1000px;height:170px}
+.e-pl{left:330px;top:790px;width:340px;height:189px}
+.e-hk{left:740px;top:300px;width:280px;height:317px}
+.e-gl{left:640px;top:640px;width:300px;height:167px}
+.card{border-radius:18px;background:var(--paper);color:var(--ink);box-shadow:0 0 0 7px var(--ink),0 18px 30px rgba(0,0,0,.4);text-align:center}
+.e-note{left:420px;top:700px;width:260px;height:84px;font:900 34px/84px Unb;transform:rotate(-6deg)}
+.e-pw{left:360px;top:560px;width:330px;height:120px;font:800 32px/1.1 JB;padding-top:14px}
+.e-pw b{position:static;display:block;color:var(--red);font:900 44px JB;letter-spacing:6px}
+.e-m{left:40px;top:400px;width:270px;height:270px}
+.f-bw{left:240px;top:800px;width:600px;height:360px}
+.f-key{left:420px;top:640px;width:280px;height:187px}
+.f-m{left:380px;top:300px;width:320px;height:320px}
+.f-stm{left:330px;top:560px;width:420px;height:300px}
+.stm{stroke-dasharray:100;stroke-dashoffset:100}
+.f-q{left:770px;top:300px;font:900 160px Unb;color:var(--acc)}
+.f-q2{left:200px;top:380px;font:900 120px Unb;color:var(--paper)}
+.drop{width:24px;height:24px;border-radius:50%;background:#d9573a;box-shadow:0 0 0 5px var(--ink)}
+.g-br{left:90px;top:290px;width:600px;height:440px}
+.g-cal{left:770px;top:300px;width:220px;height:232px}
+.g-page{left:784px;top:385px;width:192px;height:140px;border-radius:14px;background:#f4ecd9;box-shadow:0 0 0 6px var(--ink);transform-origin:50% 0}
+.g-n{left:50px;top:800px;width:600px;font:900 190px/1 Unb;color:var(--acc);letter-spacing:-6px;white-space:nowrap}
+.g-n small{position:static;font:900 80px Unb;color:var(--paper);letter-spacing:0}
+.g-m{left:770px;top:860px;width:270px;height:270px}
+.g-chip{left:110px;top:830px;width:240px;height:240px}
+.g-plus{left:380px;top:880px;font:900 120px/1 Unb;color:var(--paper)}
+.g-hum{left:470px;top:820px;width:230px;height:230px}
+.g-mag{left:300px;top:420px;width:240px;height:240px}
+.g-date{left:300px;top:200px;width:620px}
+.g-pt{left:210px;top:500px;width:360px;height:150px}
+.spark{width:34px;height:34px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.cf{width:24px;height:24px;border-radius:6px}
+.h-cnt{left:40px;top:900px;width:1000px;height:170px}
+.h-ck{left:250px;top:430px;width:400px;height:480px}
+.h-sp{left:520px;top:820px;width:200px;height:118px}
+.h-m{left:740px;top:560px;width:270px;height:270px}
+.bub{width:40px;height:40px;border-radius:50%;border:5px solid #dff6ff;background:rgba(223,246,255,.25)}
+.i-chip{left:250px;top:200px;width:580px}
+.i-card{left:110px;top:330px;width:860px;height:300px;border-radius:40px}
+.i-card em{left:0;top:52px;width:860px;text-align:center;font:900 76px Unb;font-style:normal;color:var(--ink)}
+.i-btn{left:250px;top:170px;width:360px;height:96px;border-radius:48px;background:var(--acc);box-shadow:0 0 0 8px var(--ink);font:900 40px/96px Unb;text-align:center;color:var(--ink)}
+.i-bar{left:160px;top:700px;width:760px;height:90px;border-radius:45px;background:#0c1a12;box-shadow:0 0 0 10px var(--paper)}
+.i-bar .fl{left:10px;top:10px;width:740px;height:70px;border-radius:35px;background:linear-gradient(90deg,#74c81c,#e2ff8a);transform-origin:0 50%}
+.i-ok{left:820px;top:640px;width:200px;height:200px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 12px var(--ink);font:900 130px/200px Unb;text-align:center;color:var(--ink)}
+.i-m{left:380px;top:860px;width:300px;height:300px}
+.i-crack{left:600px;top:340px;width:300px;height:200px}
+
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="grid"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="a-t">НЕЙРОНКА НАШЛА ДЫРУ В <b>70%</b> САЙТОВ</div><div class="a-br"></div><div class="m a-m"></div><div class="a-mag"></div><div class="a-st">НЕ БАЙТ</div><div class="a-chip nb-chip chipL">21 ОКТЯБРЯ 2026 · WIZ RESEARCH</div></div>
+<div id="B" class="scene"><div class="b-chip nb-chip chipL">САЙТ = КУХНЯ</div><div class="b-ck"></div><div class="b-cnt"></div><div class="m b-m"></div><div class="b-ph"></div><div class="b-tk"></div><div class="b-pl"></div><div class="b-l1 nb-chip chipL">ЗАКАЗ</div><div class="b-l2 nb-chip chipL">СТРАНИЦА</div></div>
+<div id="C" class="scene"><div class="c-n">0%</div><div class="c-grid"></div><div class="c-src nb-chip">оценка Wiz Research</div><div class="c-ck"></div><div class="c-hole"></div><div class="m c-m"></div><div class="c-st">ДЫРА</div></div>
+<div id="D" class="scene"><div class="d-chip nb-chip chipL">ОГРОМНЫЙ ЗАКАЗ</div><div class="d-ck"></div><div class="d-tk"></div><div class="d-cnt"></div><div class="d-stains"></div><div class="m d-m"></div><div class="d-pan nb-panel red panT">забывает убрать со стола</div></div>
+<div id="E" class="scene"><div class="e-chip nb-chip chipL">СЛЕДУЮЩИЙ ЗАКАЗ</div><div class="e-hk"></div><div class="e-cnt"></div><div class="e-stains"></div><div class="e-pw card">ПАРОЛИ<b>••••••</b></div><div class="e-pl"></div><div class="e-note card">КОМАНДЫ</div><div class="e-gl"></div><div class="m e-m"></div></div>
+<div id="F" class="scene"><div class="f-stm"></div><div class="f-key"></div><div class="f-bw"></div><div class="m f-m"></div><div class="f-q">?</div><div class="f-q2">!</div></div>
+<div id="G" class="scene"><div class="g-br"></div><div class="g-cal"></div><div class="g-pages"></div><div class="g-n">10+ <small>ЛЕТ</small></div><div class="g-chip"></div><div class="g-plus">+</div><div class="g-hum"></div><div class="g-mag"></div><div class="g-pt"></div><div class="g-date nb-panel panT">21 октября · заплатка</div><div class="m g-m"></div></div>
+<div id="H" class="scene"><div class="h-ck"></div><div class="h-cnt"></div><div class="h-stains"></div><div class="h-sp"></div><div class="m h-m"></div></div>
+<div id="I" class="scene"><div class="i-chip nb-chip chipL">ЕСТЬ СВОЙ САЙТ?</div><div class="i-card paper"><em>ОБНОВИ PHP</em><div class="i-btn">СЕГОДНЯ</div></div><div class="i-bar"><div class="fl"></div></div><div class="i-ok">✓</div><div class="m i-m"></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
