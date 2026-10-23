@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#07100b;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+#bg{position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 30%,#143321 0%,#0a1710 45%,#060c08 100%)}
+#grid{will-change:transform;position:absolute;left:0;top:-88px;width:1080px;height:2100px;background-image:radial-gradient(circle,#3c5a48 2.2px,transparent 3px);background-size:44px 44px;opacity:.38}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(125,255,61,.34) 0%,rgba(125,255,61,.33) 30%,rgba(125,255,61,.17) 61%,rgba(125,255,61,.034) 85%,rgba(125,255,61,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(31,214,160,.22) 0%,rgba(31,214,160,.213) 30%,rgba(31,214,160,.11) 61%,rgba(31,214,160,.022) 85%,rgba(31,214,160,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.62) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+.paper{background:var(--paper);color:var(--ink);border-radius:26px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 6px rgba(10,19,13,.9)}
+.step{left:0;width:1080px;top:236px;text-align:center;font:700 34px JB;letter-spacing:6px;color:var(--acc)}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* ---- scene styles ---- */
+
+.m{width:300px;height:300px}
+.gpu{width:200px;height:115px}
+.chipL{height:76px;padding:0 34px;font:700 34px/70px JB;letter-spacing:4px;color:var(--acc);text-align:center;white-space:nowrap}
+.panT{height:84px;padding:0 34px 0 40px;font:800 40px/78px Mont;color:var(--paper);white-space:nowrap}
+.zz{font:900 54px Unb;color:var(--paper)}
+.drop{width:22px;height:22px;border-radius:50%;background:#bfefff;box-shadow:0 0 0 5px var(--ink)}
+.spark{width:34px;height:34px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.cf{width:24px;height:24px;border-radius:6px}
+.stt{border-radius:30px;text-align:center;background:rgba(7,16,11,.92)}
+/* A */
+.a-t{left:70px;top:190px;width:940px;text-align:center;font:900 76px/1.1 Unb;color:var(--paper);letter-spacing:-2px}
+.a-t b{color:var(--acc);font-weight:900;position:static;display:inline-block}
+.a-m{left:0px;top:700px;width:310px;height:310px}
+.a-st{left:190px;top:1075px;width:700px;height:150px;border:16px solid var(--acc);color:var(--acc);font:900 84px/118px Unb}
+.a-chip{left:90px;top:1245px;width:900px;font-size:30px;letter-spacing:3px}
+.a-ring{left:732px;top:897px;width:246px;height:160px;border-radius:30px;box-shadow:0 0 0 8px var(--red),0 0 40px rgba(255,59,92,.55)}
+/* B */
+.b-chip{left:220px;top:200px;width:640px}
+.b-br{left:390px;top:310px;width:300px;height:260px}
+.b-m{left:40px;top:300px;width:280px;height:280px}
+.b-lines{left:0;top:0;width:1080px;height:1300px}
+.b-lines path{stroke-dasharray:100;stroke-dashoffset:100}
+/* C, D, E boats */
+.wav{left:-160px;top:960px;width:1400px;height:200px}
+.boat{left:110px;top:640px;width:860px;height:360px}
+.boat .hull{left:0;top:160px;width:860px;height:200px}
+.boat .gpu{width:150px;height:87px}
+.boat .oar{width:40px;height:214px;transform-origin:50% 0}
+.c-m{left:50px;top:575px;width:240px;height:240px}
+.c-pan{left:540px;top:220px;width:420px}
+.c-chip{left:120px;top:220px;width:380px}
+.d-pan{left:160px;top:1190px;width:760px}
+.d-m{left:50px;top:575px;width:240px;height:240px}
+.e-clock{left:390px;top:200px;width:300px;height:300px}
+.e-sun{left:80px;top:240px;width:150px;height:150px}
+.e-moon{left:850px;top:240px;width:140px;height:140px}
+.e-web{left:140px;top:770px;width:200px;height:200px}
+.e-weed{left:-200px;top:1010px;width:150px;height:150px}
+.e-m{left:760px;top:430px;width:260px;height:260px}
+/* F */
+.f-chip{left:330px;top:200px;width:420px}
+.f-n{left:0;top:300px;width:1080px;text-align:center;font:900 250px/1 Unb;color:var(--red);letter-spacing:-8px}
+.f-sub{left:300px;top:575px;width:480px}
+.f-strip{left:100px;top:740px;width:880px;height:80px;border-radius:40px;background:#0c1a12;box-shadow:0 0 0 8px var(--paper)}
+.f-sun{left:70px;top:700px;width:150px;height:150px}
+.f-stop{width:46px;height:46px}
+.f-pan{left:250px;top:900px;width:720px}
+.f-mini{width:56px;height:32px;border-radius:7px;background:#3a5545;box-shadow:0 0 0 4px var(--ink)}
+.f-m{left:20px;top:980px;width:280px;height:280px}
+/* G */
+.g-chip{left:200px;top:200px;width:680px}
+.g-rack{left:40px;top:320px;width:700px;height:520px}
+.g-bench{left:760px;top:740px;width:250px;height:115px}
+.g-m{left:20px;top:900px;width:290px;height:290px}
+.g-pan{left:300px;top:1190px;width:660px}
+.g-wav{left:330px;top:1010px;width:700px;height:100px;overflow:hidden;border-radius:30px}
+.g-wav .wv{left:0;top:0;width:1400px;height:200px}
+.g-boat{left:560px;top:958px;width:200px;height:84px}
+.g-bolt{left:300px;top:400px;width:80px;height:120px}
+.smk{width:90px;height:90px}
+/* H */
+.h-chip{left:220px;top:200px;width:640px}
+.h-sun{left:740px;top:300px;width:230px;height:230px}
+.h-lng{left:180px;top:700px;width:620px;height:300px}
+.h-card{left:300px;top:610px;width:260px;height:150px}
+.h-sh{left:300px;top:610px;width:260px;height:150px}
+.h-drink{left:820px;top:780px;width:120px;height:189px}
+.h-heat{left:280px;top:440px;width:320px;height:180px}
+.h-heat path{stroke-dasharray:100;stroke-dashoffset:100}
+.h-work{left:50px;top:340px;width:200px;height:115px}
+.h-m{left:700px;top:990px;width:280px;height:280px}
+.h-sweat{width:18px;height:26px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#bfefff;box-shadow:0 0 0 4px var(--ink)}
+/* I */
+.i-chip{left:400px;top:200px;width:280px}
+.i-bar{left:300px;top:340px;width:220px;height:640px;border-radius:24px;background:linear-gradient(180deg,#ff6b84,#c41e3d);box-shadow:0 0 0 10px var(--ink);transform-origin:50% 100%}
+.i-base{left:180px;top:990px;width:460px;height:16px;border-radius:8px;background:var(--paper)}
+.i-lbl{left:200px;top:1030px;width:420px}
+.i-big{left:560px;top:420px;width:460px;text-align:center;font:900 120px/1.02 Unb;color:var(--acc)}
+.i-big small{position:static;display:block;font:900 64px Unb;color:var(--paper)}
+.i-sh{left:380px;top:300px;width:320px;height:380px}
+.i-card{left:430px;top:420px;width:220px;height:127px}
+.i-lazy{left:100px;top:760px;width:380px;height:120px;border:12px solid var(--red);color:var(--red);font:900 64px/96px Unb}
+.i-x{left:90px;top:810px;width:400px;height:18px;border-radius:9px;background:var(--red);transform-origin:0 50%}
+.i-ins{left:520px;top:760px;width:500px;height:120px;border:12px solid var(--acc);color:var(--acc);font:900 56px/96px Unb}
+.i-m{left:670px;top:940px;width:290px;height:290px}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="grid"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="a-t">КАЖДАЯ <b>ДЕВЯТАЯ</b> ВИДЕОКАРТА БЕЗДЕЛЬНИЧАЕТ</div><div class="a-grid"></div><div class="a-ring"></div><div class="m a-m"></div><div class="a-zz"></div><div class="a-st stt">ЭТО ПЛАН</div><div class="a-chip nb-chip chipL">19 ОКТЯБРЯ 2026 · ENGINEERING AT META</div></div>
+<div id="B" class="scene"><div class="b-chip nb-chip chipL">ФЕРМА ВИДЕОКАРТ</div><div class="b-lines"></div><div class="b-br"></div><div class="b-grid"></div><div class="m b-m"></div></div>
+<div id="C" class="scene"><div class="c-chip nb-chip chipL">ТЫСЯЧИ КАРТ</div><div class="c-pan nb-panel panT">одна задача</div><div class="wav"></div><div class="boat"></div><div class="c-drops"></div><div class="m c-m"></div></div>
+<div id="D" class="scene"><div class="wav"></div><div class="boat"></div><div class="d-oar"></div><div class="d-drops"></div><div class="m d-m"></div><div class="d-pan nb-panel red panT">встала вся лодка</div></div>
+<div id="E" class="scene"><div class="e-sun"></div><div class="e-moon"></div><div class="e-clock"></div><div class="wav"></div><div class="boat"></div><div class="e-web"></div><div class="e-weed"></div><div class="e-zz"></div><div class="m e-m"></div></div>
+<div id="F" class="scene"><div class="f-chip nb-chip chipL">У META</div><div class="f-n">0</div><div class="f-sub nb-chip chipL">РАЗ В ДЕНЬ</div><div class="f-strip"></div><div class="f-stops"></div><div class="f-sun"></div><div class="f-pan nb-panel red panT">на каждые 8 000 карт</div><div class="f-grid"></div><div class="m f-m"></div></div>
+<div id="G" class="scene"><div class="g-chip nb-chip chipL">В КАЖДОМ ШКАФУ</div><div class="g-rack"></div><div class="g-cards"></div><div class="g-bench"></div><div class="g-wav"><div class="wv"></div></div><div class="g-boat"></div><div class="g-fx"></div><div class="m g-m"></div><div class="g-pan nb-panel panT">скамейка запасных</div></div>
+<div id="H" class="scene"><div class="h-chip nb-chip chipL">РАБОТА МЕЧТЫ</div><div class="h-sun"></div><div class="h-heat"></div><div class="h-lng"></div><div class="h-card"></div><div class="h-sh"></div><div class="h-drink"></div><div class="h-work"></div><div class="h-fx"></div><div class="m h-m"></div></div>
+<div id="I" class="scene"><div class="i-chip nb-chip chipL">ИТОГ</div><div class="i-bar"></div><div class="i-base"></div><div class="i-lbl nb-panel red panT">остановок</div><div class="i-big">В 100 РАЗ<small>МЕНЬШЕ</small></div><div class="i-sh"></div><div class="i-card"></div><div class="i-lazy stt">ЛЕНЬ</div><div class="i-x"></div><div class="i-ins stt">СТРАХОВКА</div><div class="i-fx"></div><div class="m i-m"></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
