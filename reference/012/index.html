@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#07100b;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+#bg{position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 30%,#143321 0%,#0a1710 45%,#060c08 100%)}
+#grid{will-change:transform;position:absolute;left:0;top:-88px;width:1080px;height:2100px;background-image:radial-gradient(circle,#3c5a48 2.2px,transparent 3px);background-size:44px 44px;opacity:.38}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(125,255,61,.34) 0%,rgba(125,255,61,.33) 30%,rgba(125,255,61,.17) 61%,rgba(125,255,61,.034) 85%,rgba(125,255,61,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(31,214,160,.22) 0%,rgba(31,214,160,.213) 30%,rgba(31,214,160,.11) 61%,rgba(31,214,160,.022) 85%,rgba(31,214,160,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.62) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+.paper{background:var(--paper);color:var(--ink);border-radius:26px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 6px rgba(10,19,13,.9)}
+.step{left:0;width:1080px;top:236px;text-align:center;font:700 34px JB;letter-spacing:6px;color:var(--acc)}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* ---- scene styles ---- */
+.m{width:300px;height:300px}
+.chipL{height:92px;padding:0 40px;font:700 42px/86px JB;letter-spacing:4px;color:var(--acc);text-align:center;white-space:nowrap}
+.panT{padding:14px 36px 16px 44px;font:800 54px/1.16 Mont;color:var(--paper)}
+.stt{border-radius:30px;text-align:center;background:rgba(7,16,11,.92);white-space:nowrap}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.svgfull{left:0;top:0;width:1080px;height:1300px}
+.svgfull path.draw{stroke-dasharray:100;stroke-dashoffset:100}
+.qr{width:600px;height:600px;transform-origin:300px 300px}
+.qr > .cat{left:224px;top:224px;width:152px;height:152px}
+.hl{background:#07100b;border:6px dashed var(--red);border-radius:20px}
+.pc{overflow:hidden;background:transparent}
+.qm{width:22px;height:22px;border-radius:5px;background:var(--ink)}
+.qq{font:900 120px/1 Unb;color:var(--acc);-webkit-text-stroke:10px var(--ink);paint-order:stroke fill}
+.tile{width:230px;height:270px;border-radius:30px;background:var(--paper);color:var(--ink);font:900 190px/270px Unb;text-align:center;box-shadow:0 0 0 10px var(--ink),0 24px 50px rgba(0,0,0,.5)}
+.hint{width:46px;height:46px;border-radius:12px;box-shadow:0 0 0 6px var(--ink),0 0 26px rgba(255,255,255,.55)}
+.bubble{border-radius:50%;background:var(--paper);box-shadow:0 0 0 10px var(--ink),0 20px 40px rgba(0,0,0,.4)}
+/* A */
+.a-t{left:50px;top:180px;width:980px;text-align:center;font:900 104px/1.05 Unb;color:var(--paper);letter-spacing:-3px}
+.a-t b{color:var(--acc);font-weight:900;position:static;display:inline}
+.a-qr{left:50px;top:440px}
+.a-ph{left:700px;top:440px;width:270px;height:504px;transform-origin:135px 252px}
+.a-m{left:640px;top:940px;width:360px;height:360px}
+.a-ok{left:110px;top:1090px;height:130px;padding:0 50px;border:12px solid var(--acc);color:var(--acc);font:900 74px/106px Unb}
+.a-q{width:120px;height:140px}
+/* B */
+.b-chip{left:90px;top:190px}
+.b-lk{left:300px;top:186px;width:640px;height:140px;transform-origin:320px 70px}
+.b-qr{left:240px;top:370px}
+.b-m{left:10px;top:990px;width:310px;height:310px}
+.b-k{left:380px;top:1050px;width:200px;height:200px;border-radius:24px;background:var(--ink);box-shadow:0 0 0 8px #3b5244}
+.b-w{left:660px;top:1050px;width:200px;height:200px;border-radius:24px;background:var(--paper);box-shadow:0 0 0 8px var(--ink)}
+.b-k div,.b-w div{left:0;top:0;width:200px;text-align:center;font:900 150px/200px Unb}
+.b-k div{color:var(--acc)} .b-w div{color:var(--ink)}
+.b-ph{left:700px;top:560px;width:300px;height:560px;transform-origin:150px 280px}
+/* C */
+.c-qr{left:240px;top:300px}
+.c-cut{left:0;top:0;width:1080px;height:1300px}
+.c-sc{left:0;top:0;width:220px;height:138px;transform-origin:117px 69px}
+.c-m{left:30px;top:960px;width:330px;height:330px}
+.c-ph{left:700px;top:860px;width:250px;height:467px;transform-origin:125px 233px}
+.c-cat2{left:470px;top:560px;width:140px;height:140px}
+/* D */
+.d-chip{left:90px;top:190px}
+.d-qr{left:240px;top:320px}
+.d-m{left:40px;top:960px;width:320px;height:320px}
+.d-n{left:420px;top:1000px;width:220px;text-align:center;font:900 260px/1 Unb;color:var(--acc);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.d-ph{left:690px;top:900px;width:240px;height:448px;transform-origin:120px 224px}
+.d-sp{left:880px;top:300px;width:150px;height:150px}
+/* E */
+.e-chip{left:90px;top:190px}
+.e-lk{left:220px;top:300px;width:640px;height:140px}
+.e-qr{left:240px;top:470px}
+.e-m{left:20px;top:990px;width:310px;height:310px}
+.e-pan{left:350px;top:1110px;width:600px;white-space:nowrap;font-size:46px}
+/* F */
+.f-k{left:150px;top:330px}.f-o{left:425px;top:330px}.f-t{left:700px;top:330px}
+.f-gap{left:425px;top:330px;width:230px;height:270px;border:10px dashed var(--red);border-radius:30px}
+.f-m{left:330px;top:820px;width:420px;height:420px}
+.f-bulb{left:770px;top:700px;width:150px;height:206px}
+.f-bub{left:90px;top:720px;width:230px;height:230px}
+.f-bub > div{left:25px;top:25px;width:180px;height:180px}
+/* G */
+.g-chip{left:90px;top:190px}
+.g-qr{left:240px;top:320px}
+.g-wp{left:552px;top:632px;width:240px;height:240px;background:#efe6d0;border-radius:0 0 26px 0;transform-origin:120px 0}
+.g-er{left:0;top:0;width:200px;height:108px}
+.g-q{left:552px;top:672px;width:240px;text-align:center;font-size:170px}
+.g-m{left:30px;top:960px;width:330px;height:330px}
+.g-ph{left:690px;top:930px;width:220px;height:410px;transform-origin:110px 205px}
+/* H */
+.h-rc{left:110px;top:250px;width:460px;height:760px}
+.h-qr{left:180px;top:570px;width:318px;height:318px}
+.h-qrw{left:190px;top:580px;width:320px;height:320px}
+.h-mug{left:640px;top:200px;width:240px;height:240px;transform-origin:110px 150px}
+.h-st1{left:380px;top:740px;width:200px;height:200px}
+.h-st2{left:-80px;top:180px;width:860px;height:900px}
+.h-dr{width:30px;height:40px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#7a4520;box-shadow:0 0 0 5px var(--ink)}
+.h-m{left:640px;top:560px;width:330px;height:330px}
+.h-ph{left:690px;top:920px;width:220px;height:410px;transform-origin:110px 205px}
+/* I */
+.i-src{left:60px;top:190px;width:900px;padding:18px 30px 20px 44px}
+.i-src .s1{position:static;display:block;font:800 44px/1.15 Mont;color:var(--paper);white-space:nowrap}
+.i-src .s2{position:static;display:block;font:700 30px/1.5 JB;color:var(--dim);letter-spacing:1px;margin-top:6px}
+.i-qr{left:130px;top:420px}
+.i-bad{left:90px;top:640px;width:680px;height:170px;border:16px solid var(--red);color:var(--red);font:900 86px/138px Unb}
+.i-x{left:0;top:0;width:1080px;height:1300px}
+.i-ok{left:70px;top:1090px;width:880px;height:160px;border:16px solid var(--acc);color:var(--acc);font:900 58px/128px Unb}
+.i-m{left:740px;top:700px;width:300px;height:300px}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="grid"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="a-t">QR-КОД С <b>ДЫРКОЙ</b></div><div class="qr a-qr"></div><div class="a-ph"></div><div class="m a-m"></div><div class="a-ok stt">РАБОТАЕТ</div><div class="a-qs"></div></div>
+<div id="B" class="scene"><div class="b-qr qr"></div><div class="b-lk"></div><div class="b-fly"></div><div class="b-k"><div>1</div></div><div class="b-w"><div>0</div></div><div class="b-ph"></div><div class="b-mods"></div><div class="m b-m"></div></div>
+<div id="C" class="scene"><div class="c-qr qr"></div><div class="c-cut"></div><div class="c-sc"></div><div class="c-fx"></div><div class="m c-m"></div><div class="c-ph"></div></div>
+<div id="D" class="scene"><div class="d-chip nb-chip chipL">СЕКРЕТ 1</div><div class="d-qr qr"></div><div class="d-ln svgfull"></div><div class="d-sp"></div><div class="d-n">3</div><div class="m d-m"></div><div class="d-ph"></div></div>
+<div id="E" class="scene"><div class="e-chip nb-chip chipL">СЕКРЕТ 2</div><div class="e-lk"></div><div class="e-qr qr"></div><div class="e-fx"></div><div class="m e-m"></div><div class="e-pan nb-panel panT">запасные подсказки</div></div>
+<div id="F" class="scene"><div class="f-gap"></div><div class="tile f-k">К</div><div class="tile f-o">О</div><div class="tile f-t">Т</div><div class="m f-m"></div><div class="f-bulb"></div><div class="f-bub bubble"><div></div></div></div>
+<div id="G" class="scene"><div class="g-chip nb-chip chipL">СИЛЬНАЯ ЗАЩИТА</div><div class="g-qr qr"></div><div class="g-wp"></div><div class="g-er"></div><div class="g-q qq">¼</div><div class="m g-m"></div><div class="g-ph"></div><div class="g-fx"></div></div>
+<div id="H" class="scene"><div class="h-rc"></div><div class="h-qr qr"></div><div class="h-st1"></div><div class="h-drs"></div><div class="h-mug"></div><div class="h-st2"></div><div class="m h-m"></div><div class="h-ph"></div></div>
+<div id="I" class="scene"><div class="i-src nb-panel"><span class="s1">Создатель QR-кода: DENSO WAVE</span><span class="s2">qrcode.com · проверено 25.10.2026</span></div><div class="i-qr qr"></div><div class="i-bad stt">ПОЛОМКА</div><div class="i-x svgfull"></div><div class="i-ok stt">ЗАПАС ПРОЧНОСТИ</div><div class="m i-m"></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
