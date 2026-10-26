@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#0c4f72;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#2f8fd0 0%,#6cc6ec 38%,#b9ecf7 54%,#1d93bf 55%,#11648f 72%,#082f47 100%)}
+#grid{display:none;will-change:transform;position:absolute;left:0;top:-88px;width:1080px;height:2100px;background-image:radial-gradient(circle,#3c5a48 2.2px,transparent 3px);background-size:44px 44px;opacity:.38}
+.blob{display:none;position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(125,255,61,.34) 0%,rgba(125,255,61,.33) 30%,rgba(125,255,61,.17) 61%,rgba(125,255,61,.034) 85%,rgba(125,255,61,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(31,214,160,.22) 0%,rgba(31,214,160,.213) 30%,rgba(31,214,160,.11) 61%,rgba(31,214,160,.022) 85%,rgba(31,214,160,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.62) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+.paper{background:var(--paper);color:var(--ink);border-radius:26px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 6px rgba(10,19,13,.9)}
+.step{left:0;width:1080px;top:236px;text-align:center;font:700 34px JB;letter-spacing:6px;color:var(--acc)}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* ---- scene styles ---- */
+#sky2{position:absolute;inset:0}
+#night{position:absolute;left:0;top:0;width:1080px;height:1060px;background:linear-gradient(180deg,#0b1636,#24356b);opacity:0}
+#stars{position:absolute;left:0;top:0;width:1080px;height:1000px;opacity:0}
+.star{position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff}
+#sun{position:absolute;left:760px;top:120px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#fff7c2 0%,#ffe066 45%,rgba(255,224,102,.0) 72%);will-change:transform}
+#moon{position:absolute;left:120px;top:160px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffffff,#d6defa 60%,#aab6e0);box-shadow:0 0 40px rgba(220,230,255,.7);opacity:0}
+#clouds{position:absolute;left:-400px;top:0;width:2400px;height:700px;will-change:transform}
+.cloud{position:absolute;height:70px;border-radius:40px;background:#fff;opacity:.85;box-shadow:40px -26px 0 6px #fff,90px -10px 0 0 #fff}
+#waves{position:absolute;left:-600px;top:1046px;width:2600px;height:60px;will-change:transform;background:radial-gradient(ellipse 40px 14px at 40px 10px,#e8fbff 0 60%,transparent 62%) 0 0/120px 40px repeat-x;opacity:.7}
+#waves2{position:absolute;left:-600px;top:1180px;width:2600px;height:60px;will-change:transform;background:radial-gradient(ellipse 50px 10px at 50px 10px,#7fd4ee 0 60%,transparent 62%) 0 0/170px 40px repeat-x;opacity:.45}
+.m{width:300px;height:300px}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.chipL{height:92px;padding:0 40px;font:700 42px/86px JB;letter-spacing:4px;color:var(--acc);text-align:center;white-space:nowrap}
+.panT{padding:14px 36px 16px 44px;font:800 52px/1.16 Mont;color:var(--paper);white-space:nowrap}
+.stt{border-radius:30px;text-align:center;background:rgba(7,16,11,.92);white-space:nowrap}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.conf{width:18px;height:28px;border-radius:4px}
+.drop{width:26px;height:34px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#d8f6ff;box-shadow:0 0 0 5px var(--ink)}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(10,30,40,.45),rgba(10,30,40,0));transform-origin:center}
+.svgfull{left:0;top:0;width:1080px;height:1300px}
+.svgfull path.draw{stroke-dasharray:100;stroke-dashoffset:100}
+.bot{width:72px;height:94px;transform-origin:50% 100%}
+.cube{width:110px;height:110px}
+.big{font:900 300px/1 Unb;color:#ffe14d;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center}
+/* A */
+.a-13{left:0;top:130px;width:1080px;font-size:250px}
+.a-t{left:40px;top:375px;width:1000px;text-align:center;font:900 74px/1.04 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;letter-spacing:-2px}
+.a-is{left:20px;top:520px;width:1040px;height:582px}
+.a-boat{left:640px;top:1090px;width:400px;height:190px;transform-origin:200px 120px}
+.a-m{left:700px;top:880px;width:260px;height:260px}
+/* B */
+.b-bot{left:330px;top:560px;width:420px;height:546px;transform-origin:210px 546px}
+.b-chip{left:400px;top:230px;width:280px;height:200px}
+.b-ln{left:0;top:0;width:1080px;height:1300px}
+.b-lbl{left:90px;top:190px}
+.b-m{left:0;top:1010px;width:290px;height:290px}
+.b-bin{left:60px;top:1100px;width:170px;height:94px}
+/* C */
+.c-clip{left:70px;top:330px;width:400px;height:511px}
+.c-x{left:120px;top:470px;width:300px;height:300px}
+.c-clk{left:590px;top:320px;width:400px;height:400px}
+.c-n{left:560px;top:760px;width:460px;font-size:190px}
+.c-u{left:560px;top:960px;width:460px;text-align:center;font:900 60px/1 Unb;color:#fff;-webkit-text-stroke:10px var(--ink);paint-order:stroke fill}
+.c-m{left:60px;top:930px;width:330px;height:330px}
+/* D */
+.d-is{left:-260px;top:300px;width:1600px;height:896px}
+.d-word{left:0;top:200px;width:1080px;font-size:200px}
+.d-m{left:760px;top:1000px;width:280px;height:280px}
+/* E */
+.e-is{left:-260px;top:300px;width:1600px;height:896px}
+.e-pole{left:820px;top:520px;width:24px;height:560px;background:#d0d6dc;border:7px solid var(--ink);border-radius:12px}
+.e-ring{left:700px;top:470px;width:220px;height:132px}
+.e-m{left:30px;top:1000px;width:280px;height:280px}
+/* F */
+.f-is{left:-500px;top:520px;width:1500px;height:840px}
+.f-bot{left:300px;top:840px;width:150px;height:196px}
+.f-ring{left:0;top:0;width:150px;height:90px}
+.f-sp{left:0;top:0}
+.f-heart{left:0;top:0}
+.f-m{left:0;top:1120px;width:220px;height:220px}
+/* G */
+.g-n{left:0;top:180px;width:1080px;font-size:230px}
+.g-of{color:#fff;font-size:120px;position:static;display:inline}
+.g-ln{left:0;top:0;width:1080px;height:1300px}
+.g-m{left:780px;top:1020px;width:260px;height:260px}
+/* H */
+.h-book{left:100px;top:330px;width:880px;height:629px;transform-origin:440px 600px}
+.h-m{left:400px;top:980px;width:300px;height:300px}
+/* I */
+.i-is{left:20px;top:520px;width:1040px;height:582px}
+.i-st{left:170px;top:270px;width:740px;height:190px;border:18px solid var(--acc);color:var(--acc);font:900 118px/150px Unb;background:rgba(7,16,11,.88)}
+.i-src{left:60px;top:1150px}
+.i-m{left:720px;top:780px;width:300px;height:300px}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="night"></div><div id="stars"></div><div id="sun"></div><div id="moon"></div><div id="clouds"></div><div id="waves"></div><div id="waves2"></div><div id="grid"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="a-is"></div><div class="a-bots"></div><div class="a-boat"></div><div class="m a-m"></div><div class="a-13 big">13</div><div class="a-t">НЕЙРОНОК ОДНИ<br>НА ОСТРОВЕ</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="b-cubes"></div><div class="b-ln svgfull"></div><div class="b-bot"></div><div class="b-chip"></div><div class="m b-m"></div><div class="b-bin"></div><div class="b-lbl nb-chip chipL">ИГРА ИЗ КУБИКОВ</div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-clip"></div><div class="c-x"></div><div class="c-clk"></div><div class="c-n big">0</div><div class="c-u">ЧАСОВ</div><div class="m c-m"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="d-is"></div><div class="d-bots"></div><div class="d-fx"></div><div class="d-word big">ИГРАТЬ</div><div class="m d-m"></div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="e-is"></div><div class="e-pole"></div><div class="e-cubes"></div><div class="e-bots"></div><div class="e-ring"></div><div class="e-fly"></div><div class="m e-m"></div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-is"></div><div class="f-heart"></div><div class="f-sp"></div><div class="f-bot bot"></div><div class="f-ring"></div><div class="m f-m"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="g-n big">6<span class="g-of"> ИЗ 13</span></div><div class="g-bots"></div><div class="g-ln svgfull"></div><div class="g-th"></div><div class="m g-m"></div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-book"></div><div class="h-fly"></div><div class="m h-m"></div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="i-is"></div><div class="i-bots"></div><div class="m i-m"></div><div class="i-st stt">НЕ БАЙТ</div><div class="i-src nb-chip chipL">MIT · ARXIV · ОКТЯБРЬ 2026</div><div class="i-fx"></div></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
