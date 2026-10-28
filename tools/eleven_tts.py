@@ -12,7 +12,7 @@ print(len(todo), 'request(s) without a voice')
 def call(text, model):
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{CFG['voice_id']}/with-timestamps?output_format={CFG['output_format']}"
     vs = dict(stability=CFG['stability'], similarity_boost=CFG['similarity_boost'])
-    if CFG.get('speed'): vs['speed'] = CFG['speed']          # 1.12 since 28.10.2026 (owner: faster pace)
+    if CFG.get('speed'): vs['speed'] = CFG['speed']          # optional; eleven_v4 ignored it on 28.10.2026, the pace now comes from post_tempo in align.py
     body = dict(text=text, model_id=model, voice_settings=vs)
     req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={'xi-api-key': KEY, 'Content-Type': 'application/json', 'Accept': 'application/json'})
     return json.load(urllib.request.urlopen(req, timeout=600))

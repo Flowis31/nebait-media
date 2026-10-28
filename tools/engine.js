@@ -193,3 +193,65 @@ async function boot(build, opt = {}) {
   build(); captions(opt.chunks, opt.noCaption);
   window.SFX = SFX; window.TOTAL = TOTAL; window.seek = seek; seek(0); window.READY = true;
 }
+
+// =====================================================================================================================
+// Camera, match cuts, light and film texture (owner's request 28.10.2026: "камера-оператор", склейки-превращения, свет и фактура)
+// =====================================================================================================================
+// focus(cam, t, px, py, z, hold): a quick push-in on the point (px,py) of the stage (where the object is BEFORE any camera move),
+//   the point slides toward the frame centre, holds, then the camera eases back. Stack it on a scene's .cam (it composes with the
+//   slow 1 -> 1.06 drift, it does not replace it). Use on the key word: the number, the punchline, the reveal.
+function focus(cam, t, px, py, z = 1.28, hold = 0.7, dIn = 0.28, dOut = 0.45, cx = 540, cy = 780) {
+  const ox = 540, oy = 900;   // .cam transform-origin
+  els(cam).forEach(el => idle(el, tt => {
+    let k = 0;
+    if (tt >= t && tt < t + dIn) k = E.expo((tt - t) / dIn);
+    else if (tt >= t + dIn && tt < t + dIn + hold) k = 1;
+    else if (tt >= t + dIn + hold && tt < t + dIn + hold + dOut) k = 1 - E.inOut((tt - t - dIn - hold) / dOut);
+    if (k <= 0) return {};
+    const s = 1 + (z - 1) * k, tx = px + (cx - px) * 0.7 * k, ty = py + (cy - py) * 0.7 * k;
+    return { s, x: tx - ox - s * (px - ox), y: ty - oy - s * (py - oy) };
+  }));
+}
+// handheld(cam): a slow, loop-safe camera float so no frame is ever perfectly still (amp in px)
+function handheld(cam, amp = 7, seed = 0) {
+  els(cam).forEach((el, i) => idle(el, t => ({ x: amp * Math.sin(W2 * 5 * t + seed + i), y: amp * 0.7 * Math.cos(W2 * 7 * t + seed * 2 + i), r: 0.35 * Math.sin(W2 * 3 * t + seed) })));
+}
+// morphCut(a, b, t, from, to): match cut. A copy of `from` (an object in scene a) flies, turns and rescales into the place of `to`
+// (an object in scene b); the scenes cross-fade behind it; `to` takes over when the copy lands. Call inside build().
+function morphCut(a, b, t, from, to, d = 0.62, spin = 0) {
+  const src = typeof from === 'string' ? $(from) : from, dst = typeof to === 'string' ? $(to) : to;
+  const r0 = src.getBoundingClientRect(), r1 = dst.getBoundingClientRect();
+  let layer = $('#morph'); if (!layer) { layer = document.createElement('div'); layer.id = 'morph'; layer.style.cssText = 'position:absolute;inset:0;pointer-events:none'; $('#shake').appendChild(layer); }
+  const c = document.createElement('div'); c.style.cssText = `position:absolute;left:${r0.left}px;top:${r0.top}px;width:${r0.width}px;height:${r0.height}px;transform-origin:50% 50%`;
+  c.innerHTML = src.innerHTML.replace(/id="([^"]+)"/g, 'id="$1mc"').replace(/url\(#([^)]+)\)/g, 'url(#$1mc)'); layer.appendChild(c);
+  const t0 = t - d * 0.45, dx = r1.left + r1.width / 2 - (r0.left + r0.width / 2), dy = r1.top + r1.height / 2 - (r0.top + r0.height / 2);
+  const sx = r1.width / Math.max(1, r0.width), sy = r1.height / Math.max(1, r0.height);
+  tw(c, 0, 0.001, { o: [0, 0] }); tw(c, t0, 0.001, { o: [1, 1] });
+  tw(c, t0, d, { x: [0, dx], y: [0, dy], sx: [1, sx], sy: [1, sy], r: [0, spin] }, 'inOut');
+  tw(c, t0 + d, 0.08, { o: [1, 0] }, 'lin');
+  tw(src, t0, 0.001, { o: [1, 0] }); tw(dst, 0, 0.001, { o: [0, 0] }); tw(dst, t0 + d - 0.02, 0.06, { o: [0, 1] }, 'lin');
+  tw(a, t0 + 0.05, d * 0.7, { o: [1, 0], s: [1, 0.96] }, 'inOut'); tw(b, t0 + d * 0.2, d * 0.7, { o: [0, 1], s: [1.04, 1] }, 'inOut');
+  sfx('whoosh', t0, 0.8); sfx('pop', t0 + d, 0.4);
+}
+// lookFX({grain, light, tint}): film grain (seeded, re-jittered every frame), a soft key light from the top left and a colour grade
+// layer between the scenes and the captions. grade(t, color, d) changes the tint per scene ("свой цвет у сцены").
+function lookFX(o = {}) {
+  const st = $('#stage'), cap = $('#cap');
+  const add = (id, css) => { const d = document.createElement('div'); d.id = id; d.style.cssText = 'position:absolute;inset:0;pointer-events:none;' + css; st.insertBefore(d, cap); return d; };
+  if (o.light !== false) add('keylight', 'background:radial-gradient(70% 45% at 22% 12%,rgba(255,240,215,.20),rgba(255,240,215,0) 70%),radial-gradient(60% 40% at 85% 95%,rgba(0,0,0,.28),rgba(0,0,0,0) 70%);mix-blend-mode:normal');
+  const tint = add('grade', `background:${o.tint || 'transparent'};mix-blend-mode:soft-light;opacity:.55`);
+  if (o.grain !== false) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 256; const g = cv.getContext('2d'), im = g.createImageData(256, 256);
+    for (let i = 0; i < 256 * 256; i++) { const v = 128 + (hash(i * 0.731 + 3) - 0.5) * 255; im.data[i * 4] = im.data[i * 4 + 1] = im.data[i * 4 + 2] = v; im.data[i * 4 + 3] = 255; }
+    g.putImageData(im, 0, 0);
+    const gr = add('grain', `background-image:url(${cv.toDataURL()});background-size:256px 256px;mix-blend-mode:overlay;opacity:${o.grain || 0.13}`);
+    custom(t => { const f = Math.floor(t * 30); gr.style.backgroundPosition = `${Math.floor(hash(f) * 256)}px ${Math.floor(hash(f + 7.3) * 256)}px`; });
+  }
+  window.GRADES = [];
+  custom(t => { let c = o.tint || 'transparent'; for (const g of window.GRADES) if (t >= g.t) c = g.c; tint.style.background = c; });
+}
+function grade(t, color) { (window.GRADES = window.GRADES || []).push({ t, c: color }); window.GRADES.sort((a, b) => a.t - b.t); }
+// dof(sel, px): static depth-of-field blur for far background layers (rasterised once: move them only with transform)
+function dof(sel, px = 3) { els(sel).forEach(el => { el.style.filter = `blur(${px}px)`; el.style.willChange = 'transform'; }); }
+// shadowFor(el, under): soft contact shadow that follows an element's jumps: scale and fade by its height above the floor
+function contactShadow(par, x, y, w, h = 60) { const d = document.createElement('div'); d.className = 'shd'; d.style.cssText = `position:absolute;left:${x - w / 2}px;top:${y - h / 2}px;width:${w}px;height:${h}px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.5),rgba(0,0,0,0))`; (typeof par === 'string' ? $(par) : par).appendChild(d); return d; }

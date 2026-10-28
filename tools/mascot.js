@@ -8,6 +8,12 @@
 //   .brL / .brR    eyebrows, move with y/r
 //   .mouth         smile; sy:-1 turns it into a frown
 //   .lid           eyelids, sy 0 = open, 1 = closed (mascotLife() blinks them)
+//   .mopen         open mouth (dark cavity + tongue) under the smile line: sy 0 = closed, 1 = wide open. mascotTalk() drives it by the voice.
+// Since 28.10.2026 (owner's request: the mascot is the narrator, not decoration):
+//   mascotTalk()                 after mascotLife(): every mascot opens its mouth with the voice loudness (needs env.js, see tools/envelope.py),
+//                                brows hop on loud syllables. mascotQuiet(el, t0, t1) keeps one mascot's mouth shut in a time range.
+//   mascotPose(el, t, name, d)   body-language poses, tweened from the previous pose: rest point pointL shock think hold cheer sad shrug
+//                                facepalm wave. Use one per beat; the pose sets arms, brows, mouth, pupils.
 // mascotLife() after creating all mascots: blinking and a slow leg sway. Loop-safe (no blink in the first 0.6 s and the last 0.8 s).
 function mascotSVG(id) {
   const ink = '#0a130d';
@@ -71,6 +77,9 @@ function mascotSVG(id) {
   <circle cx="122" cy="214" r="4" fill="#fff" opacity=".45"/><circle cx="222" cy="214" r="4" fill="#fff" opacity=".45"/>
   <path class="brL" style="transform-origin:150px 122px" d="M106 124 Q148 98 190 116" fill="none" stroke="${ink}" stroke-width="13" stroke-linecap="round"/>
   <path class="brR" style="transform-origin:250px 118px" d="M212 116 Q252 100 292 108" fill="none" stroke="${ink}" stroke-width="13" stroke-linecap="round"/>
+  <g class="mopen" style="transform-origin:204px 274px;transform:scaleY(0)">
+    <path d="M162 261 Q204 296 245 257 Q208 352 162 261 Z" fill="#4a0f14" stroke="${ink}" stroke-width="9" stroke-linejoin="round"/>
+    <ellipse cx="206" cy="300" rx="20" ry="9" fill="#ff7a8a"/></g>
   <g class="mouth" style="transform-origin:200px 268px">
     <path d="M160 260 Q204 296 246 256" fill="none" stroke="${ink}" stroke-width="12" stroke-linecap="round"/>
     <path d="M243 247 Q253 254 249 265" fill="none" stroke="${ink}" stroke-width="8" stroke-linecap="round"/>
@@ -87,4 +96,52 @@ function mascotLife() {
     }));
     $$('.legL, .legR', sv).forEach((g, j) => idle(g, t => ({ r: 4 * Math.sin(W2 * 10 * t + j * Math.PI) })));
   });
+}
+
+
+// ---------- talking & poses (28.10.2026) ----------
+const VENV = window.VENV || null;                 // [{fps, v:[0..1]}] loudness of voice.wav, from tools/envelope.py
+const venv = t => { if (!VENV) return 0; const i = t * VENV.fps, k = Math.floor(i), f = i - k, v = VENV.v; if (k < 0 || k >= v.length - 1) return 0; return v[k] * (1 - f) + v[k + 1] * f; };
+const QUIET = [];
+function mascotQuiet(el, t0, t1) { QUIET.push({ el: typeof el === 'string' ? $(el) : el, t0, t1 }); }
+function mascotTalk(gain = 1.15) {
+  if (!VENV) { console.warn('mascotTalk: env.js missing'); return; }
+  $$('svg.mascot-svg').forEach(sv => {
+    const box = sv.parentElement;
+    const quiet = t => QUIET.some(q => (q.el === box || (q.el && q.el.contains(box))) && t >= q.t0 && t < q.t1);
+    $$('.mopen', sv).forEach(m => idle(m, t => {
+      if (quiet(t)) return { sy: 0 };
+      const a = Math.max(0, Math.min(1, (venv(t) - 0.07) / 0.55)); return { sy: Math.pow(a, 0.8) * gain };
+    }));
+    $$('.brL, .brR', sv).forEach((b, j) => idle(b, t => {
+      if (quiet(t)) return { y: 0 };
+      const d = venv(t) - venv(t - 0.12); return { y: d > 0.18 ? -9 * Math.min(1, (d - 0.18) / 0.2) : 0 };
+    }));
+  });
+}
+const POSES = {
+  rest:     { armL: 0,   armR: 0,    br: 0,   brR: 0,  mo: 0,   msy: 1,    px: 0,  py: 0 },
+  point:    { armL: 0,   armR: -62,  br: -6,  brR: -6, mo: 0,   msy: 1,    px: 9,  py: 0 },
+  pointL:   { armL: 62,  armR: 0,    br: -6,  brR: -6, mo: 0,   msy: 1,    px: -9, py: 0 },
+  pointUp:  { armL: 0,   armR: -125, br: -8,  brR: -8, mo: 0,   msy: 1,    px: 6,  py: -9 },
+  shock:    { armL: 150, armR: -150, br: -18, brR: -18, mo: 0.7, msy: 1,   px: 0,  py: -2 },
+  think:    { armL: 128, armR: 0,    br: 6,   brR: -14, mo: 0,  msy: 0.5,  px: -6, py: -9 },
+  hold:     { armL: 38,  armR: -38,  br: -4,  brR: -4, mo: 0,   msy: 1,    px: 0,  py: 6 },
+  cheer:    { armL: 160, armR: -160, br: -12, brR: -12, mo: 0.5, msy: 1.2, px: 0,  py: -6 },
+  sad:      { armL: -12, armR: 12,   br: 9,   brR: 9,  mo: 0,   msy: -0.9, px: 0,  py: 8 },
+  shrug:    { armL: 72,  armR: -72,  br: -12, brR: -12, mo: 0,  msy: -0.6, px: 0,  py: -4 },
+  facepalm: { armL: 0,   armR: -112, br: 8,   brR: 8,  mo: 0,   msy: -0.8, px: 0,  py: 8 },
+  wave:     { armL: 0,   armR: -150, br: -8,  brR: -8, mo: 0.3, msy: 1.15, px: 5, py: 0 },
+};
+const POSE_NOW = new Map();
+function mascotPose(el, t, name, d = 0.38) {
+  const box = typeof el === 'string' ? $(el) : el; const P = POSES[name]; if (!box || !P) { console.warn('mascotPose', el, name); return; }
+  const A = POSE_NOW.get(box) || POSES.rest; POSE_NOW.set(box, P);
+  const q = s => $$(s, box);
+  tw(q('.armL'), t, d, { r: [A.armL, P.armL] }, 'back'); tw(q('.armR'), t, d, { r: [A.armR, P.armR] }, 'back');
+  tw(q('.brL'), t, d * 0.8, { y: [A.br, P.br] }, 'out'); tw(q('.brR'), t, d * 0.8, { y: [A.brR, P.brR] }, 'out');
+  tw(q('.mopen'), t, d * 0.7, { sy: [A.mo, P.mo] }, 'out'); tw(q('.mouth'), t, d * 0.7, { sy: [A.msy, P.msy], sx: [1, 1] }, 'back');
+  tw(q('.pup'), t, d * 0.7, { x: [A.px, P.px], y: [A.py, P.py] }, 'out');
+  if (name === 'wave') for (let k = 0; k < 3; k++) tw(q('.armR'), t + d + k * 0.18, 0.18, { r: [k % 2 ? -125 : -150, k % 2 ? -150 : -125] }, 'inOut');
+  tw(box, t, 0.1, { sy: [1, 0.94] }, 'out'); tw(box, t + 0.1, 0.3, { sy: [0.94, 1] }, 'back');   // a little body bounce on every pose
 }

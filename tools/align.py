@@ -44,14 +44,17 @@ def el_text(LINES):
         parts.append(line + sep); pos += len(line) + len(sep); cap = ends
     return ''.join(parts), toks
 
-def load(path, sr):
-    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-ac', '1', '-ar', str(sr), '-f', 'f32le', '-'], capture_output=True, check=True).stdout
+TEMPO = 1.0   # --tempo X: speed the recording up X times (pitch kept, ffmpeg atempo); timings are scaled to match. Owner 28.10.2026: 1.15
+
+def load(path, sr, tempo=1.0):
+    af = ['-af', f'atempo={tempo}'] if abs(tempo - 1) > 1e-3 else []
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-ac', '1', *af, '-ar', str(sr), '-f', 'f32le', '-'], capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.float32).astype(np.float64)
 
 def finish(src, LINES, words, spans, note):
     """words: [{d, t0, t1, line}] in recording time; spans: [(s0, s1)] per line in recording time. Edit, write the three files."""
     GAPS = [g for _, _, g in LINES]; NL = len(LINES)
-    xo = load(src, OUT_SR); xo = xo / (np.abs(xo).max() + 1e-9)
+    xo = load(src, OUT_SR, TEMPO); xo = xo / (np.abs(xo).max() + 1e-9)
     cuts = [(0.0, max(0.0, spans[0][0] - 0.12))]
     for li in range(NL - 1):
         a, b = spans[li][1], spans[li + 1][0]; cap = GAPS[li] + 0.15            # was +0.35 before 28.10.2026: tighter pace
@@ -88,7 +91,7 @@ def finish(src, LINES, words, spans, note):
 def from_elevenlabs(src, aj):
     LINES = script_lines(); text, toks = el_text(LINES)
     A = json.load(open(aj)); al = A.get('alignment') or A.get('normalized_alignment')
-    chars, st, en = al['characters'], al['character_start_times_seconds'], al['character_end_times_seconds']
+    chars, st, en = al['characters'], [x / TEMPO for x in al['character_start_times_seconds']], [x / TEMPO for x in al['character_end_times_seconds']]
     if A.get('text') and A['text'] != text: sys.exit('script_lines.py differs from the text this voice was generated from: request a new voice')
     got = ''.join(chars); idx = list(range(len(text)))
     if got != text:                                                   # map our character positions onto the returned ones
@@ -195,6 +198,7 @@ def from_recording(src, VOICE='ruslan', LS='0.76'):
 
 if __name__ == '__main__':
     a = sys.argv[1:]
+    if '--tempo' in a: i = a.index('--tempo'); TEMPO = float(a[i + 1]); del a[i:i + 2]
     if a[0] == '--request':
         text, _ = el_text(script_lines()); open(a[1], 'w').write(text + '\n'); print(f'{a[1]}: {len(text)} characters')
     elif '--el' in a: from_elevenlabs(a[0], a[a.index('--el') + 1])

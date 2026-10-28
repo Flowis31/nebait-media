@@ -21,4 +21,5 @@ if [ ! -f "$OUT.mp3" ]; then
   done
   [ -f "$OUT.mp3" ] || { echo "no voice after 400 s (is the workflow enabled and the secret set?)"; exit 1; }
 fi
-python3 align.py "$OUT.mp3" --el "$OUT.json" && echo "voice: $OUT.mp3"
+TEMPO=$(python3 -c "import json;print(json.load(open('$REPO/tools/elevenlabs.json')).get('post_tempo',1.0))")
+python3 align.py "$OUT.mp3" --el "$OUT.json" --tempo "$TEMPO" && echo "voice: $OUT.mp3"

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#0d1822;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c;--cy:#6ad1ff;--amb:#ffd76b}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#0b141d 0%,#15283a 38%,#1f3a50 62%,#122230 62.3%,#0c1620 80%,#070c12 100%)}
+#blinds{position:absolute;left:-500px;top:-200px;width:2600px;height:1600px;will-change:transform;opacity:.5;
+  background:repeating-linear-gradient(180deg,rgba(255,226,150,.22) 0 46px,rgba(255,226,150,0) 46px 92px);transform-origin:0 0;clip-path:polygon(30% 0,70% 0,95% 100%,10% 100%)}
+#board{position:absolute;left:-600px;top:0;width:3200px;height:1200px;will-change:transform}
+.pin{position:absolute;background:#e9dcc0;border:5px solid #0a130d;border-radius:6px;box-shadow:0 10px 0 rgba(0,0,0,.3)}
+.pin:after{content:'';position:absolute;left:44%;top:-12px;width:20px;height:20px;border-radius:50%;background:#ff3b5c;border:4px solid #0a130d}
+.yarn{position:absolute;height:5px;background:#ff3b5c;transform-origin:0 50%;opacity:.8}
+#floor{position:absolute;left:-600px;top:1190px;width:3200px;height:800px;will-change:transform;background:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 6px,transparent 6px 180px)}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(255,215,107,.18) 0%,rgba(255,215,107,.08) 45%,rgba(255,215,107,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(106,209,255,.16) 0%,rgba(106,209,255,.07) 45%,rgba(106,209,255,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.6) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* shared */
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.c{border-left-color:var(--cy);border-color:rgba(106,209,255,.35);background:linear-gradient(180deg,rgba(14,26,38,.94),rgba(8,14,22,.94))}
+.nb-chip.c{border-color:rgba(106,209,255,.5);background:rgba(8,14,22,.9)}
+.chipL{height:92px;padding:0 40px;font:700 42px/86px JB;letter-spacing:4px;color:var(--cy);text-align:center;white-space:nowrap}
+.panT{padding:18px 40px 20px 46px;font:800 42px/1.22 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--cy);font-weight:900}
+.big{font:900 300px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--amb)}
+.lbl{font:900 64px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.m{width:400px;height:400px}
+.stt{border-radius:30px;text-align:center;background:rgba(8,12,18,.92);white-space:nowrap}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.conf{width:18px;height:28px;border-radius:4px}
+.qm{font:900 90px/1 Unb;color:var(--red);-webkit-text-stroke:10px var(--ink);paint-order:stroke fill}
+.tile{width:58px;height:46px;border-radius:12px;background:#5a6b7a;border:5px solid var(--ink)}
+.tile.red{background:var(--red)}
+/* A */
+.a-n{left:0;top:170px;width:1080px;font-size:170px}
+.a-t{left:0;top:380px;width:1080px;font-size:70px;-webkit-text-stroke:14px var(--ink)}
+.a-det{left:40px;top:560px;width:520px;height:572px}
+.a-sus{left:560px;top:600px;width:440px;height:484px}
+.a-mask{left:600px;top:700px;width:300px;height:244px}
+.a-mg{left:330px;top:640px;width:300px;height:300px}
+.a-m{left:380px;top:1000px;width:320px;height:320px}
+.a-shd1{left:60px;top:1110px;width:480px;height:80px}.a-shd2{left:580px;top:1060px;width:400px;height:70px}
+/* B */
+.b-src{left:40px;top:180px;font-size:34px}
+.b-grid{left:110px;top:400px;width:860px;height:440px}
+.b-n{left:80px;top:880px;width:620px;font-size:170px}
+.b-u{left:80px;top:1070px;width:620px}
+.b-m{left:720px;top:900px;width:340px;height:340px}
+/* C */
+.c-lamp{left:340px;top:-60px;width:400px;height:900px}
+.c-table{left:90px;top:960px;width:900px;height:300px}
+.c-bots{left:0;top:0}
+.c-lbl{left:40px;top:180px}
+.c-m{left:20px;top:960px;width:320px;height:320px}
+/* D */
+.d-lamp{left:340px;top:-60px;width:400px;height:900px}
+.d-det{left:30px;top:520px;width:420px;height:462px}
+.d-seat{left:560px;top:440px;width:460px;height:560px}
+.d-per{left:590px;top:460px;width:400px;height:480px}
+.d-sus{left:600px;top:480px;width:400px;height:440px}
+.d-mask{left:640px;top:560px;width:300px;height:244px}
+.d-table{left:90px;top:960px;width:900px;height:300px}
+.d-m{left:380px;top:930px;width:320px;height:320px}
+/* E */
+.e-det{left:20px;top:560px;width:440px;height:484px}
+.e-sus{left:620px;top:600px;width:420px;height:462px}
+.e-chat{left:0;top:0}
+.e-btn1,.e-btn2{top:1110px;width:360px;height:120px;border-radius:30px;border:9px solid var(--ink);font:900 50px/104px Unb;text-align:center;color:#fff}
+.e-btn1{left:120px;background:linear-gradient(180deg,#5ad17a,#2c9c4c)}.e-btn2{left:600px;background:linear-gradient(180deg,#ff6b6b,#d23a3a)}
+.e-q{left:0;top:200px;width:1080px}
+.e-m{left:380px;top:860px;width:300px;height:300px}
+/* F */
+.f-det{left:-40px;top:520px;width:500px;height:550px}
+.f-sus{left:600px;top:560px;width:440px;height:484px}
+.f-mask{left:640px;top:660px;width:330px;height:268px}
+.f-b1{left:120px;top:200px;width:420px;height:280px}
+.f-b2{left:600px;top:330px;width:360px;height:240px}
+.f-b3{left:100px;top:300px;width:520px;height:347px}
+.f-fold{left:400px;top:1010px;width:300px;height:233px}
+.f-st{left:420px;top:1070px;width:260px;height:96px;border:10px solid #2c9c4c;color:#2c9c4c;font:900 40px/76px Unb;border-radius:18px}
+.f-m{left:780px;top:1000px;width:290px;height:290px}
+/* G */
+.g-fold{left:60px;top:200px;width:460px;height:358px}
+.g-sus{left:560px;top:420px;width:460px;height:506px}
+.g-mask{left:600px;top:520px;width:330px;height:268px}
+.g-tr{left:470px;top:760px;width:400px;height:174px;transform-origin:20px 100px}
+.g-n{left:20px;top:620px;width:520px;font-size:220px}
+.g-u{left:20px;top:850px;width:520px}
+.g-chat{left:60px;top:960px;width:600px;height:260px;border-radius:40px;background:#fff;border:10px solid var(--ink);font:900 72px/240px Mont;color:var(--ink);text-align:center}
+.g-sq{left:0;top:0;width:600px;height:260px}
+.g-det{left:-30px;top:560px;width:380px;height:418px}
+.g-st{left:560px;top:600px;width:440px;height:140px;border:14px solid #2cd45c;color:#2cd45c;font:900 80px/112px Unb;border-radius:24px}
+.g-m{left:740px;top:960px;width:320px;height:320px}
+/* I */
+.i-per{left:60px;top:470px;width:440px;height:528px}
+.i-sus{left:600px;top:500px;width:420px;height:462px}
+.i-lbl1{left:60px;top:200px}.i-lbl2{left:600px;top:200px}
+.i-mgs{left:0;top:0}
+.i-cup{left:880px;top:820px;width:110px;height:120px}
+.i-m{left:390px;top:950px;width:300px;height:300px}
+/* J */
+.j-st{left:200px;top:250px;width:680px;height:190px;border:18px solid var(--acc);color:var(--acc);font:900 100px/150px Unb}
+.j-det{left:30px;top:560px;width:420px;height:462px}
+.j-sus{left:620px;top:600px;width:400px;height:440px}
+.j-mg{left:300px;top:640px;width:300px;height:300px}
+.j-c1{left:70px;top:480px;width:420px;height:280px}.j-c2{left:590px;top:480px;width:420px;height:280px}.j-per{left:90px;top:730px;width:360px;height:432px}
+.j-m{left:400px;top:940px;width:280px;height:280px}
+.j-sub{left:220px;top:1150px;width:660px;height:150px;border-radius:80px;background:linear-gradient(180deg,#ff4f6b,#e3243f);border:10px solid var(--ink);box-shadow:0 18px 40px rgba(0,0,0,.5);font:900 54px/130px Unb;color:#fff;text-align:left;padding-left:160px}
+.j-bell{left:40px;top:12px;width:110px;height:110px}
+.j-fx{left:0;top:0}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="blinds"></div><div id="board"></div><div id="floor"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="a-sus"></div><div class="a-mask"></div><div class="a-det"></div><div class="a-mg"></div><div class="m a-m"></div><div class="a-n big"><i>3</i> ИЗ 98</div><div class="a-t lbl">БОТ ЛОВИТ БОТА?</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="b-src nb-panel c panT"><b>Université Paris Cité</b> · октябрь 2026<br>журнал Computers in Human Behavior Reports</div><div class="b-grid"></div><div class="b-n big">0</div><div class="b-u lbl">ДОПРОСОВ</div><div class="m b-m"></div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-lamp"></div><div class="c-bots"></div><div class="c-table"></div><div class="c-lbl nb-chip c chipL">БОТЫ-СЛЕДОВАТЕЛИ</div><div class="m c-m"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="d-lamp"></div><div class="d-det"></div><div class="d-per"></div><div class="d-sus"></div><div class="d-mask"></div><div class="d-table"></div><div class="m d-m"></div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="e-q lbl">ЧЕЛОВЕК <i>ИЛИ</i> БОТ?</div><div class="e-det"></div><div class="e-sus"></div><div class="e-chat"></div><div class="e-btn1">ЧЕЛОВЕК</div><div class="e-btn2">БОТ</div><div class="m e-m"></div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-sus"></div><div class="f-mask"></div><div class="f-det"></div><div class="f-b1"></div><div class="f-b2"></div><div class="f-b3"></div><div class="f-fold"></div><div class="f-st stt">ЧЕЛОВЕК</div><div class="m f-m"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="g-fold"></div><div class="g-sus"></div><div class="g-mask"></div><div class="g-tr"></div><div class="g-n big">0</div><div class="g-u lbl">ПОЙМАЛИ</div><div class="g-chat">ПРВИЕТ<div class="g-sq"></div></div><div class="g-det"></div><div class="g-st stt">ЖИВОЙ!</div><div class="m g-m"></div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="i-lbl1 nb-chip chipL" style="color:#ff6b6b;border-color:rgba(255,107,107,.5)">ЖИВОЙ ЧЕЛОВЕК</div><div class="i-lbl2 nb-chip c chipL">НЕЙРОНКА</div><div class="i-per"></div><div class="i-sus"></div><div class="i-cup"></div><div class="i-mgs"></div><div class="m i-m"></div></div></div>
+<div id="J" class="scene"><div class="cam"><div class="j-c1"></div><div class="j-c2"></div><div class="j-det"></div><div class="j-per"></div><div class="j-sus"></div><div class="j-mg"></div><div class="m j-m"></div><div class="j-st stt">НЕ БАЙТ</div><div class="j-sub">ПОДПИШИСЬ<div class="j-bell"></div></div><div class="j-fx"></div></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="scenes.js"></script>
+</body></html>
