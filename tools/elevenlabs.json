@@ -5,5 +5,6 @@
   "fallback_model_id": "eleven_multilingual_v2",
   "stability": 0.5,
   "similarity_boost": 0.75,
-  "output_format": "mp3_44100_128"
+  "output_format": "mp3_44100_128",
+  "speed": 1.12
 }

@@ -9,7 +9,7 @@ script_lines.py in the current folder must be exactly what the voice says.
                                                      word timings by DTW against a piper reading of the same script
 
 The edit is the same in both modes: 0.12 s of silence before the first word, pauses between lines longer than the script's
-pause + 0.35 s are shortened, 0.10 s of silence after the last word (the video loops).
+pause + 0.15 s are shortened, 0.10 s of silence after the last word (the video loops).
 The DTW mode needs the kit (synth.py, dl/piper, voices/ruslan); the --el and --request modes need only ffmpeg and numpy."""
 import sys, os, json, shutil, subprocess, tempfile, difflib
 import numpy as np
@@ -54,7 +54,7 @@ def finish(src, LINES, words, spans, note):
     xo = load(src, OUT_SR); xo = xo / (np.abs(xo).max() + 1e-9)
     cuts = [(0.0, max(0.0, spans[0][0] - 0.12))]
     for li in range(NL - 1):
-        a, b = spans[li][1], spans[li + 1][0]; cap = GAPS[li] + 0.35
+        a, b = spans[li][1], spans[li + 1][0]; cap = GAPS[li] + 0.15            # was +0.35 before 28.10.2026: tighter pace
         if b - a > cap: m0 = a + cap / 2; cuts.append((m0, m0 + (b - a - cap)))
     end_keep = spans[-1][1] + 0.10
     lead = max(0.0, 0.12 - (spans[0][0] - cuts[0][1]))
