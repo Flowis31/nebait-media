@@ -48,8 +48,8 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .tile{width:58px;height:46px;border-radius:12px;background:#5a6b7a;border:5px solid var(--ink)}
 .tile.red{background:var(--red)}
 /* A */
-.a-n{left:0;top:170px;width:1080px;font-size:170px}
-.a-t{left:0;top:380px;width:1080px;font-size:70px;-webkit-text-stroke:14px var(--ink)}
+.a-n{left:0;top:190px;width:1080px;font-size:88px;-webkit-text-stroke:14px var(--ink)}
+.a-t{left:0;top:330px;width:1080px;font-size:64px;-webkit-text-stroke:14px var(--ink)}
 .a-det{left:40px;top:560px;width:520px;height:572px}
 .a-sus{left:560px;top:600px;width:440px;height:484px}
 .a-mask{left:600px;top:700px;width:300px;height:244px}
@@ -107,6 +107,17 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .g-det{left:-30px;top:560px;width:380px;height:418px}
 .g-st{left:560px;top:600px;width:440px;height:140px;border:14px solid #2cd45c;color:#2cd45c;font:900 80px/112px Unb;border-radius:24px}
 .g-m{left:740px;top:960px;width:320px;height:320px}
+/* R */
+.tile.s{width:40px;height:32px;border-radius:9px;border-width:4px}
+.r-grid{left:70px;top:250px;width:650px;height:330px}
+.r-n{left:0;top:630px;width:1080px;font-size:150px}
+.r-m{left:740px;top:230px;width:310px;height:310px}
+.r-sus{left:600px;top:840px;width:400px;height:440px}
+.r-mask{left:640px;top:930px;width:300px;height:244px}
+.r-tr{left:470px;top:1110px;width:360px;height:157px;transform-origin:20px 100px}
+.r-z{left:60px;top:860px;width:480px;font-size:230px}
+.r-u{left:60px;top:1110px;width:480px}
+.r-fx{left:0;top:0}
 /* I */
 .i-per{left:60px;top:470px;width:440px;height:528px}
 .i-sus{left:600px;top:500px;width:420px;height:462px}
@@ -129,13 +140,14 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 <div id="stage">
   <div id="bg"><div id="blinds"></div><div id="board"></div><div id="floor"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
   <div id="shake">
-<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="a-sus"></div><div class="a-mask"></div><div class="a-det"></div><div class="a-mg"></div><div class="m a-m"></div><div class="a-n big"><i>3</i> ИЗ 98</div><div class="a-t lbl">БОТ ЛОВИТ БОТА?</div></div></div>
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="a-sus"></div><div class="a-mask"></div><div class="a-det"></div><div class="a-mg"></div><div class="m a-m"></div><div class="a-n big"><i>98</i> ДОПРОСОВ</div><div class="a-t lbl">КТО КОГО ПОЙМАЕТ?</div></div></div>
 <div id="B" class="scene"><div class="cam"><div class="b-src nb-panel c panT"><b>Université Paris Cité</b> · октябрь 2026<br>журнал Computers in Human Behavior Reports</div><div class="b-grid"></div><div class="b-n big">0</div><div class="b-u lbl">ДОПРОСОВ</div><div class="m b-m"></div></div></div>
 <div id="C" class="scene"><div class="cam"><div class="c-lamp"></div><div class="c-bots"></div><div class="c-table"></div><div class="c-lbl nb-chip c chipL">БОТЫ-СЛЕДОВАТЕЛИ</div><div class="m c-m"></div></div></div>
 <div id="D" class="scene"><div class="cam"><div class="d-lamp"></div><div class="d-det"></div><div class="d-per"></div><div class="d-sus"></div><div class="d-mask"></div><div class="d-table"></div><div class="m d-m"></div></div></div>
 <div id="E" class="scene"><div class="cam"><div class="e-q lbl">ЧЕЛОВЕК <i>ИЛИ</i> БОТ?</div><div class="e-det"></div><div class="e-sus"></div><div class="e-chat"></div><div class="e-btn1">ЧЕЛОВЕК</div><div class="e-btn2">БОТ</div><div class="m e-m"></div></div></div>
 <div id="F" class="scene"><div class="cam"><div class="f-sus"></div><div class="f-mask"></div><div class="f-det"></div><div class="f-b1"></div><div class="f-b2"></div><div class="f-b3"></div><div class="f-fold"></div><div class="f-st stt">ЧЕЛОВЕК</div><div class="m f-m"></div></div></div>
 <div id="G" class="scene"><div class="cam"><div class="g-fold"></div><div class="g-sus"></div><div class="g-mask"></div><div class="g-tr"></div><div class="g-n big">0</div><div class="g-u lbl">ПОЙМАЛИ</div><div class="g-chat">ПРВИЕТ<div class="g-sq"></div></div><div class="g-det"></div><div class="g-st stt">ЖИВОЙ!</div><div class="m g-m"></div></div></div>
+<div id="R" class="scene"><div class="cam"><div class="r-grid"></div><div class="r-n big">0</div><div class="r-sus"></div><div class="r-mask"></div><div class="r-tr"></div><div class="r-z big">0</div><div class="r-u lbl">НИ РАЗУ</div><div class="m r-m"></div><div class="r-fx"></div></div></div>
 <div id="I" class="scene"><div class="cam"><div class="i-lbl1 nb-chip chipL" style="color:#ff6b6b;border-color:rgba(255,107,107,.5)">ЖИВОЙ ЧЕЛОВЕК</div><div class="i-lbl2 nb-chip c chipL">НЕЙРОНКА</div><div class="i-per"></div><div class="i-sus"></div><div class="i-cup"></div><div class="i-mgs"></div><div class="m i-m"></div></div></div>
 <div id="J" class="scene"><div class="cam"><div class="j-c1"></div><div class="j-c2"></div><div class="j-det"></div><div class="j-per"></div><div class="j-sus"></div><div class="j-mg"></div><div class="m j-m"></div><div class="j-st stt">НЕ БАЙТ</div><div class="j-sub">ПОДПИШИСЬ<div class="j-bell"></div></div><div class="j-fx"></div></div></div>
 <div id="A2" class="scene"></div>

@@ -58,8 +58,8 @@ boot(() => {
 
   // ---------- cuts, camera, parallax, grade ----------
   const cut = k => L(k).t0 - 0.12;
-  const tB = cut('f1'), tC = cut('s1'), tD = cut('s2'), tE = cut('s3'), tF = cut('j1'), tG = cut('t1'), tI = cut('t3'), tJ = cut('v1'), tLoop = TOTAL - 0.8;
-  const CUTS = [0, tB, tC, tD, tE, tF, tG, tI, tJ], IDS = ['#A', '#B', '#C', '#D', '#E', '#F', '#G', '#I', '#J'];
+  const tB = cut('f1'), tC = cut('s1'), tD = cut('s2'), tE = cut('s3'), tF = cut('j1'), tG = cut('t1'), tR = cut('r1'), tI = cut('t3'), tJ = cut('v1'), tLoop = TOTAL - 0.8;
+  const CUTS = [0, tB, tC, tD, tE, tF, tG, tR, tI, tJ], IDS = ['#A', '#B', '#C', '#D', '#E', '#F', '#G', '#R', '#I', '#J'];
   sceneCuts(IDS, CUTS);
   IDS.forEach((s, i) => { const t0 = CUTS[i] + (i ? 0.25 : 0.5), t1 = i < IDS.length - 1 ? CUTS[i + 1] + 0.3 : TOTAL; tw(s + ' > .cam', t0, t1 - t0, { s: [1, 1.06] }, 'lin'); });
   tw('#A2 > .cam', 0, 0.001, { s: [1, 1] });
@@ -71,10 +71,10 @@ boot(() => {
     $('#board').style.transform = `translate(${(-x * 0.4).toFixed(1)}px,0)`;
     $('#floor').style.transform = `translate(${(-(x * 1.0) % 180).toFixed(1)}px,0)`;
   });
-  grade(0, 'transparent'); grade(tF - 0.2, 'rgba(255,190,90,.35)'); grade(tG, 'rgba(120,80,255,.25)'); grade(tI, 'rgba(255,60,80,.22)'); grade(tJ, 'rgba(120,255,120,.18)'); grade(tLoop + 0.3, 'transparent');
+  grade(0, 'transparent'); grade(tF - 0.2, 'rgba(255,190,90,.35)'); grade(tG, 'rgba(120,80,255,.25)'); grade(tR, 'rgba(255,215,107,.22)'); grade(tI, 'rgba(255,60,80,.22)'); grade(tJ, 'rgba(120,255,120,.18)'); grade(tLoop + 0.3, 'transparent');
   $$('.m').forEach((m, i) => { if (!m.closest('#A') && !m.closest('#A2')) idle(m, t => ({ y: 6 * Math.sin(W2 * 16 * t + i), r: 1.4 * Math.sin(W2 * 8 * t + i) })); });
   idle('.a-det, .d-det, .e-det, .f-det, .g-det, .j-det', t => ({ y: 8 * Math.sin(W2 * 12 * t), r: 1.5 * Math.sin(W2 * 6 * t) }));
-  idle('.a-sus, .d-sus, .f-sus, .g-sus, .i-sus, .j-sus', t => ({ y: 8 * Math.cos(W2 * 12 * t), r: -1.5 * Math.sin(W2 * 6 * t) }));
+  idle('.a-sus, .d-sus, .f-sus, .g-sus, .r-sus, .i-sus, .j-sus', t => ({ y: 8 * Math.cos(W2 * 12 * t), r: -1.5 * Math.sin(W2 * 6 * t) }));
   idle('.bant', t => ({ r: 6 * Math.sin(W2 * 20 * t) }));
   idle('.lswing', t => ({ r: 3 * Math.sin(W2 * 8 * t) }));
 
@@ -97,20 +97,14 @@ boot(() => {
   slideIn('.b-src', W('f1', 0) - 0.05, 'left', 0.7, 450); sfx('whoosh', W('f1', 0), 0.4);
   mascotPose('.b-m', W('f1', 0), 'pointUp');
   const TI = []; for (let k = 0; k < 98; k++) { const c = k % 14, r = Math.floor(k / 14); const el = mk('.b-grid', 'tile'); place(el, c * 61, r * 62); hide(el); TI.push(el); }
-  const t98 = W('f1', 3) - 0.1;
+  const t98 = W('f1', 2) - 0.1;
   TI.forEach((el, k) => { const t0 = t98 + (k % 14) * 0.025 + Math.floor(k / 14) * 0.05; tw(el, t0, 0.3, { o: [0, 1], s: [0.2, 1], y: [-30, 0] }, 'back'); });
   for (let k = 0; k < 8; k++) sfx('tick', t98 + k * 0.08, 0.35);
   slideIn('.b-n', t98, 'down', 0.4, 120);
   custom(t => { $('.b-n').textContent = Math.round(98 * easeO((t - t98) / 0.7)); });
-  slideIn('.b-u', W('f1', 4) - 0.05, 'down', 0.45, 100);
-  // «поймали только 3»: three tiles go red and pop; the camera pushes in on them; the number swaps to 3
-  const t3 = W('f1', 8) - 0.05, RED = [17, 52, 80];
-  RED.forEach((k, j) => { const el = TI[k]; tw(el, t3 + j * 0.12, 0.001, { o: [1, 1] }); el.classList.add('pending'); punch(el, t3 + j * 0.12, 0.5); sfx('blip', t3 + j * 0.12, 0.5); });
-  custom(t => RED.forEach((k, j) => TI[k].classList.toggle('red', t >= t3 + j * 0.12)));
-  TI.forEach((el, k) => { if (!RED.includes(k)) tw(el, t3, 0.3, { o: [1, 0.35] }, 'lin'); });
-  focus('#B > .cam', t3 - 0.05, 540, 620, 1.12, 0.65); tw('.b-u', t3, 0.2, { o: [1, 0] }, 'lin');
-  custom(t => { const bn = $('.b-n'); if (t >= t3 + 0.3) { bn.innerHTML = '<i>3</i> из 98'; bn.style.fontSize = '130px'; } else bn.style.fontSize = ''; }); punch('.b-n', t3 + 0.32, 0.12); sfx('ding', t3 + 0.3, 0.6);
-  mascotPose('.b-m', t3, 'shock');
+  slideIn('.b-u', W('f1', 3) - 0.05, 'down', 0.45, 100);
+  focus('#B > .cam', W('f1', 5) - 0.05, 540, 620, 1.12, 0.6);
+  mascotPose('.b-m', W('f1', 5), 'think');
 
   // ================= C: the bots become investigators — hats drop on seven heads =================
   tWhip('#B', '#C', tC);
@@ -176,11 +170,10 @@ boot(() => {
   // ================= G: the legend — student trumpeter with typos, caught zero times =================
   morphCut('#F', '#G', tG, '.f-fold', '.g-fold', 0.6, -8);
   hide('.g-n'); hide('.g-u'); hide('.g-chat'); hide('.g-st'); hide('.g-tr');
-  tw('.g-fold', W('t1', 3), 0.3, { r: [0, -4] }, 'back'); sfx('blip', W('t1', 3), 0.4);
+  tw('.g-fold', W('t1', 5), 0.3, { r: [0, -4] }, 'back'); sfx('blip', W('t1', 5), 0.4);
   tw('.g-mask', 0, 0.001, { o: [1, 1] });
-  // «ни разу»: big zero, push-in
-  slideIn('.g-n', W('t1', 4) - 0.05, 'down', 0.45, 140); slideIn('.g-u', W('t1', 5) - 0.05, 'down', 0.45, 100);
-  focus('#G > .cam', W('t1', 6) - 0.1, 280, 760, 1.2, 0.5); sfx('ding', W('t1', 6), 0.6);
+  // «нейронка с легендой»: push-in on the dossier
+  focus('#G > .cam', W('t1', 5) - 0.1, 290, 380, 1.18, 0.5); sfx('ding', W('t1', 5), 0.5);
   // «студент-трубач»: the trumpet flies to its mouth and blows notes
   tw('.g-tr', W('t2', 0) - 0.1, 0.45, { o: [0, 1], x: [300, 0], r: [30, -6] }, 'back');
   tw('.g-sus .barmL', W('t2', 0), 0.35, { r: [0, 70] }, 'back');
@@ -188,7 +181,6 @@ boot(() => {
     const t0 = W('t2', 0) + 0.3 + k * 0.25; tw(n, t0, 0.05, { o: [0, 1] }, 'lin'); tw(n, t0, 0.9, { x: [0, 120 + 40 * k], y: [0, -260 - 40 * k], r: [0, 30] }, 'out'); tw(n, t0 + 0.6, 0.3, { o: [1, 0] }, 'lin'); }
   sfx('blip', W('t2', 0) + 0.3, 0.4);
   // «опечатывается»: a message with a typo, the red squiggle draws under it
-  tw('.g-n, .g-u', W('t2', 1), 0.3, { o: [1, 0] }, 'in');
   slideIn('.g-chat', W('t2', 2) - 0.05, 'left', 0.55, 400); sfx('tick', W('t2', 3), 0.5);
   tw('.g-sq .sq', W('t2', 3) + 0.1, 0.45, { dash: [100, 0] }, 'inOut');
   // «опечатка — лучшее доказательство, что ты живой»: the detective sees the typo and stamps «ЖИВОЙ!»
@@ -200,37 +192,64 @@ boot(() => {
   burst('#G .cam', 18, 820, 340, W('j2', 5) + 0.05, 280, 41, 'conf', 120);
   mascotPose('.g-m', W('t1', 4), 'pointL'); mascotPose('.g-m', W('j2', 0), 'cheer');
 
+  // ================= R: the answer — 3 of 98, the trumpeter never =================
+  tWhip('#G', '#R', tR);
+  $('.r-sus').innerHTML = botSVG('rs', '#b9a2ff'); $('.r-mask').innerHTML = maskSVG('rm', '#ffd34d'); $('.r-tr').innerHTML = trumpetSVG('rt');
+  hide('.r-n'); hide('.r-sus'); hide('.r-mask'); hide('.r-tr'); hide('.r-z'); hide('.r-u');
+  const RT = []; for (let k = 0; k < 98; k++) { const el = mk('.r-grid', 'tile s'); place(el, (k % 14) * 46, Math.floor(k / 14) * 46); hide(el); RT.push(el); }
+  const tG98 = W('r1', 0) + 0.05;
+  RT.forEach((el, k) => tw(el, tG98 + (k % 14) * 0.015 + Math.floor(k / 14) * 0.03, 0.25, { o: [0, 1], s: [0.2, 1] }, 'back'));
+  for (let k = 0; k < 6; k++) sfx('tick', tG98 + k * 0.07, 0.35);
+  slideIn('.r-n', tG98, 'down', 0.4, 120); custom(t => { const n = $('.r-n'); if (t < W('r1', 7) - 0.05) n.innerHTML = '? из 98'; else n.innerHTML = '<i>3</i> из 98'; });
+  tw('.r-m', tR, 0.001, { x: [-380, -380], y: [640, 640], s: [1.15, 1.15] }); tw('.r-m', W('r2', 0) - 0.2, 0.5, { x: [-380, 0], y: [640, 0], s: [1.15, 1] }, 'expo');
+  const mg = mk('#R .cam', '', magnifierSVG('rg')); place(mg, 0, 0, 200, 200); hide(mg); tw(mg, W('r1', 1), 0.2, { o: [0, 1] }, 'lin');
+  custom(t => { const u = clamp((t - W('r1', 1)) / (W('r1', 7) - W('r1', 1))); mg.style.transform = `translate(${(60 + 560 * u + 40 * Math.sin(u * 20)).toFixed(1)}px,${(240 + 200 * Math.abs(Math.sin(u * 7))).toFixed(1)}px)`; });
+  tw(mg, W('r1', 7) + 0.1, 0.25, { o: [1, 0] }, 'lin');
+  mascotPose('.r-m', W('r1', 0), 'think');
+  const tThree = W('r1', 7) - 0.05, RED = [17, 52, 80];
+  RED.forEach((k, j) => { punch(RT[k], tThree + j * 0.1, 0.6); sfx('blip', tThree + j * 0.1, 0.5); });
+  custom(t => RED.forEach((k, j) => RT[k].classList.toggle('red', t >= tThree + j * 0.1)));
+  RT.forEach((el, k) => { if (!RED.includes(k)) tw(el, tThree, 0.3, { o: [1, 0.3] }, 'lin'); });
+  punch('.r-n', tThree, 0.14); sfx('ding', tThree, 0.7); focus('#R > .cam', tThree - 0.05, 540, 600, 1.16, 0.6);
+  mascotPose('.r-m', tThree, 'shock');
+  // «трубача — ни разу»: the trumpeter slides in playing, big zero
+  tw('.r-sus, .r-mask', W('r2', 0) - 0.15, 0.45, { o: [0, 1], x: [400, 0] }, 'expo'); sfx('whoosh', W('r2', 0) - 0.15, 0.5);
+  tw('.r-tr', W('r2', 0) + 0.05, 0.45, { o: [0, 1], x: [300, 0], r: [30, -6] }, 'back');
+  slideIn('.r-z', W('r2', 1) - 0.05, 'down', 0.4, 140); slideIn('.r-u', W('r2', 2) - 0.05, 'down', 0.4, 100);
+  punch('.r-z', W('r2', 2), 0.12); sfx('ding', W('r2', 2), 0.6);
+  for (let k = 0; k < 4; k++) { const n = mk('#R .cam', 'qm'); n.textContent = '♪'; n.style.color = '#ffd34d'; place(n, 820, 1120); hide(n);
+    const t0 = W('r2', 1) + k * 0.22; tw(n, t0, 0.05, { o: [0, 1] }, 'lin'); tw(n, t0, 0.8, { x: [0, 100 + 40 * k], y: [0, -240 - 40 * k], r: [0, 30] }, 'out'); tw(n, t0 + 0.55, 0.25, { o: [1, 0] }, 'lin'); }
+  mascotPose('.r-m', W('r2', 1), 'cheer');
+
   // ================= I: people were suspected more often than bots =================
-  tSlideUp('#G', '#I', tI);
+  tSlideUp('#R', '#I', tI);
   hide('.i-lbl1'); hide('.i-lbl2');
-  slideIn('.i-lbl1', W('t3', 2) - 0.05, 'left', 0.55, 400); slideIn('.i-lbl2', W('t3', 8) - 0.15, 'right', 0.55, 400);
+  slideIn('.i-lbl1', W('t3', 1) - 0.05, 'left', 0.55, 400); slideIn('.i-lbl2', W('t3', 7) - 0.15, 'right', 0.55, 400);
   // suspicion: magnifiers swarm the human, the bot sips coffee
   for (let k = 0; k < 6; k++) { const g = mk('.i-mgs', '', magnifierSVG('im' + k)); const w = 130 + 30 * hash(k); place(g, 120 + 280 * hash(k + 2), 450 + 300 * hash(k + 5), w, w); hide(g);
-    const t0 = W('t3', 5) - 0.1 + k * 0.1; tw(g, t0, 0.45, { o: [0, 1], x: [-300 + 600 * hash(k), 0], y: [-200, 0], s: [0.4, 1] }, 'expo');
+    const t0 = W('t3', 4) - 0.1 + k * 0.1; tw(g, t0, 0.45, { o: [0, 1], x: [-300 + 600 * hash(k), 0], y: [-200, 0], s: [0.4, 1] }, 'expo');
     idle(g, t => t > t0 + 0.4 ? { x: 14 * Math.sin((t - t0) * 5 + k), y: 10 * Math.cos((t - t0) * 6 + k), r: 8 * Math.sin((t - t0) * 4 + k) } : {}); }
-  for (let k = 0; k < 3; k++) { const q = mk('#I .cam', 'qm'); q.textContent = '?'; place(q, 140 + k * 140, 380); hide(q); popIn(q, W('t3', 6) + k * 0.1, 0.3); sfx('pop', W('t3', 6) + k * 0.1, 0.35); }
-  tw('.i-per .ppup', W('t3', 5), 0.25, { x: [0, 8], y: [0, -6] }, 'out'); tw('.i-per .pmouth', W('t3', 5), 0.25, { sy: [1, -0.8] }, 'back');
-  idle('.i-per', t => (t > W('t3', 6) && t < tJ) ? { x: 3 * Math.sin(t * 60) } : {});
-  tw('.i-cup', 0, 0.001, { o: [1, 1] }); tw('.i-sus .barmR', W('t3', 7), 0.4, { r: [0, -40] }, 'back');
-  tw('.i-sus .bhead', W('t3', 8), 0.4, { r: [0, -8] }, 'back');
-  focus('#I > .cam', W('t3', 5), 280, 700, 1.15, 0.8);
-  mascotPose('.i-m', W('t3', 0), 'shrug'); mascotPose('.i-m', W('t3', 8), 'sad');
+  for (let k = 0; k < 3; k++) { const q = mk('#I .cam', 'qm'); q.textContent = '?'; place(q, 140 + k * 140, 380); hide(q); popIn(q, W('t3', 5) + k * 0.1, 0.3); sfx('pop', W('t3', 5) + k * 0.1, 0.35); }
+  tw('.i-per .ppup', W('t3', 4), 0.25, { x: [0, 8], y: [0, -6] }, 'out'); tw('.i-per .pmouth', W('t3', 4), 0.25, { sy: [1, -0.8] }, 'back');
+  idle('.i-per', t => (t > W('t3', 5) && t < tJ) ? { x: 3 * Math.sin(t * 60) } : {});
+  tw('.i-cup', 0, 0.001, { o: [1, 1] }); tw('.i-sus .barmR', W('t3', 6), 0.4, { r: [0, -40] }, 'back');
+  tw('.i-sus .bhead', W('t3', 7), 0.4, { r: [0, -8] }, 'back');
+  focus('#I > .cam', W('t3', 4), 280, 700, 1.15, 0.8);
+  mascotPose('.i-m', W('t3', 0), 'shrug'); mascotPose('.i-m', W('t3', 7), 'sad');
 
   // ================= J: verdict НЕ БАЙТ, the takeaway, subscribe, loop =================
   tCircle('#I', '#J', tJ, 540, 400);
   hide('.j-st'); hide('.j-sub'); hide('.j-c1'); hide('.j-c2'); hide('.j-per');
-  // «нейронка нейронку не видит»: the detective looks straight through the suspect, which fades almost out
-  tw('.j-mg', W('v1', 1) - 0.1, 0.5, { x: [0, 300], r: [0, 10] }, 'inOut');
-  tw('.j-sus', W('v1', 3), 0.4, { o: [1, 0.25] }, 'inOut'); tw('.j-det .bpup', W('v1', 2), 0.3, { x: [0, 10] }, 'out');
-  const tSt = W('v1', 6) - 0.02;
+  // «по переписке бота не отличит даже бот»: a person and a bot send the same message; the detective can't tell
+  tw('.j-det, .j-mg', 0, 0.001, { o: [0, 0] });
+  tw('.j-per', tJ, 0.001, { o: [1, 1] }); tw('.j-sus', tJ, 0.001, { y: [160, 160] });
+  popIn('.j-c1', W('v1', 1), 0.35); popIn('.j-c2', W('v1', 2), 0.35); sfx('pop', W('v1', 1), 0.4); sfx('pop', W('v1', 2), 0.4);
+  idle('.j-c1', t => t > W('v1', 1) + 0.4 ? { y: 8 * Math.sin(t * 4) } : {}); idle('.j-c2', t => t > W('v1', 2) + 0.4 ? { y: 8 * Math.sin(t * 4 + 1) } : {});
+  for (let k = 0; k < 2; k++) { const q = mk('#J .cam', 'qm'); q.textContent = '?'; place(q, 250 + k * 520, 440); hide(q); popIn(q, W('v1', 5) + k * 0.12, 0.3); sfx('pop', W('v1', 5) + k * 0.12, 0.3); }
+  mascotPose('.j-m', W('v1', 3), 'shrug');
+  const tSt = W('v1', 8) - 0.02;
   mascotPose('.j-m', tSt - 0.5, 'pointUp'); tw('.j-m', tSt - 0.45, 0.25, { y: [0, -90] }, 'out'); tw('.j-m', tSt - 0.2, 0.18, { y: [-90, 0] }, 'in'); mascotPose('.j-m', tSt - 0.18, 'point', 0.18);
   stamp('.j-st', tSt, -7, 26); burst('.j-fx', 22, 540, 360, tSt + 0.05, 420, 61, 'conf', 140);
-  // «по переписке бота не отличить»: two identical messages, one from the bot, one from a person — indistinguishable
-  tw('.j-sus', W('m1', 0) - 0.1, 0.4, { o: [0.25, 1], x: [0, 0], y: [0, 160] }, 'inOut'); tw('.j-per', W('m1', 0) - 0.1, 0.45, { o: [0, 1], x: [-300, 0] }, 'expo'); tw('.j-det, .j-mg', W('m1', 0) - 0.1, 0.3, { o: [1, 0] }, 'lin');
-  popIn('.j-c1', W('m1', 1), 0.35); popIn('.j-c2', W('m1', 2), 0.35); sfx('pop', W('m1', 1), 0.4); sfx('pop', W('m1', 2), 0.4);
-  idle('.j-c1', t => t > W('m1', 1) + 0.4 ? { y: 8 * Math.sin(t * 4) } : {}); idle('.j-c2', t => t > W('m1', 2) + 0.4 ? { y: 8 * Math.sin(t * 4 + 1) } : {});
-  for (let k = 0; k < 2; k++) { const q = mk('#J .cam', 'qm'); q.textContent = '?'; place(q, 250 + k * 520, 400); hide(q); popIn(q, W('m1', 4) + k * 0.12, 0.3); }
-  mascotPose('.j-m', W('m1', 3), 'shrug');
   const tSub = W('cta', 0) - 0.05;
   slideIn('.j-sub', tSub, 'down', 0.6, 300); sfx('whoosh', tSub, 0.5);
   for (let k = 0; k < 4; k++) tw('.j-bell .bell', W('cta', 1) + k * 0.16, 0.08, { r: [k % 2 ? 18 : -18, k % 2 ? -18 : 18] }, 'inOut');
