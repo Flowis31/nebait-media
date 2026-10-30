@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#2a140c;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c;--amb:#ffc34a;--cy:#6ad1ff;--org:#ff8a3d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: a dusk crossroads in the fields — sky, sun, far hills, fence, ground (three parallax layers) */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#24102a 0%,#5a1f2e 22%,#b24a2c 42%,#f09a4a 55.5%,#5c4a1c 55.6%,#3a2e12 70%,#1d1608 100%)}
+#sun{position:absolute;left:330px;top:820px;width:420px;height:420px;border-radius:50%;background:radial-gradient(closest-side,#fff1b8 0%,#ffcf6a 55%,rgba(255,170,80,.0) 100%);will-change:transform}
+#hills{position:absolute;left:-700px;top:860px;width:3400px;height:260px;will-change:transform}
+#fence{position:absolute;left:-700px;top:1020px;width:3400px;height:120px;will-change:transform;opacity:.55;
+  background:linear-gradient(180deg,transparent 0 30px,#2a1c0a 30px 40px,transparent 40px 70px,#2a1c0a 70px 80px,transparent 80px),repeating-linear-gradient(90deg,#2a1c0a 0 14px,transparent 14px 160px)}
+#ground{position:absolute;left:-700px;top:1100px;width:3400px;height:900px;will-change:transform;background:repeating-linear-gradient(100deg,rgba(255,220,140,.05) 0 10px,transparent 10px 140px)}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(255,170,80,.16) 0%,rgba(255,170,80,.07) 45%,rgba(255,170,80,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(255,90,60,.12) 0%,rgba(255,90,60,.05) 45%,rgba(255,90,60,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.6) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* shared */
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.o{border-left-color:var(--amb);border-color:rgba(255,195,74,.35);background:linear-gradient(180deg,rgba(44,24,14,.94),rgba(24,12,8,.94))}
+.nb-chip.o{border-color:rgba(255,195,74,.55);background:rgba(24,12,8,.9)}
+.nb-chip.r{border-color:rgba(255,59,92,.6);background:rgba(30,8,12,.92)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:5px;color:var(--amb);text-align:center;white-space:nowrap}
+.chipL.r{color:#ff6b80}
+.panT{padding:18px 40px 20px 46px;font:800 42px/1.24 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--amb);font-weight:900}
+.big{font:900 300px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--amb)}
+.lbl{font:900 64px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.m{width:400px;height:400px}
+.stt{border-radius:30px;text-align:center;background:rgba(14,8,6,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.dust{width:60px;height:60px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,230,190,.8),rgba(255,230,190,0))}
+.qm{font:900 90px/1 Unb;color:var(--amb);-webkit-text-stroke:10px var(--ink);paint-order:stroke fill}
+.tick{width:84px;height:84px;border-radius:22px;border:7px solid var(--ink);font:900 56px/70px Unb;text-align:center;color:#fff}
+.tick.y{background:linear-gradient(180deg,#6be58a,#25a04a)}.tick.n{background:linear-gradient(180deg,#ff7a7a,#d23a3a)}
+.head{width:54px;height:54px;border-radius:50%;background:#8a7a6a;border:6px solid var(--ink)}
+.head.hi{background:var(--amb)}
+.dot{width:30px;height:30px;border-radius:50%;background:#c9b9a6;border:5px solid var(--ink)}
+.dot.go{background:var(--amb)}
+.bub{border-radius:40px;border:9px solid var(--ink);background:#fff}
+.bub.c{background:linear-gradient(180deg,#dff7ff,#8fe0ff)}
+.bar{height:20px;border-radius:10px;background:#9aa6b2}
+/* A — hook */
+.a-n{left:0;top:150px;width:1080px;font-size:250px}
+.a-w{left:0;top:400px;width:1080px;font-size:92px;-webkit-text-stroke:14px var(--ink)}
+.a-q{left:0;top:520px;width:1080px;font-size:58px;-webkit-text-stroke:11px var(--ink)}
+.a-bot{left:-20px;top:650px;width:530px;height:583px}
+.a-bar{left:590px;top:630px;width:460px;height:230px}
+.a-per{left:610px;top:770px;width:420px;height:504px}
+.a-m{left:340px;top:950px;width:380px;height:380px}
+.a-shd1{left:10px;top:1190px;width:480px;height:80px}.a-shd2{left:630px;top:1230px;width:380px;height:70px}.a-shd3{left:380px;top:1290px;width:300px;height:60px}
+/* B — the study and the task */
+.b-src{left:40px;top:180px}
+.b-per{left:150px;top:420px;width:400px;height:480px}
+.b-lap{left:90px;top:780px;width:520px;height:360px}
+.b-barn{left:640px;top:560px;width:400px;height:400px;transform-origin:200px 400px}
+.b-chip{left:620px;top:440px}
+.b-m{left:700px;top:960px;width:340px;height:340px}
+.b-shd1{left:640px;top:920px;width:400px;height:80px}.b-shd2{left:90px;top:1100px;width:520px;height:80px}.b-shd3{left:720px;top:1250px;width:300px;height:60px}
+/* C — crossroads and the coin */
+.c-road{left:0;top:0;width:1080px;height:1320px}
+.c-sl{left:10px;top:470px;width:330px;height:385px}.c-sr{left:740px;top:470px;width:330px;height:385px}
+.c-bot{left:340px;top:640px;width:400px;height:440px}
+.c-coin{left:470px;top:260px;width:150px;height:150px}
+.c-m{left:30px;top:960px;width:330px;height:330px}
+.c-shd1{left:360px;top:1040px;width:360px;height:70px}
+/* D — joke: heads or tails */
+.d-barn{left:20px;top:420px;width:420px;height:420px;transform-origin:210px 420px}
+.d-lock{left:150px;top:560px;width:180px;height:225px}
+.d-coin{left:600px;top:420px;width:230px;height:230px}
+.d-cw{left:560px;top:670px;width:310px;font-size:56px;-webkit-text-stroke:10px var(--ink)}
+.d-m{left:560px;top:820px;width:420px;height:420px}
+.d-shd1{left:30px;top:800px;width:400px;height:80px}.d-shd2{left:600px;top:1190px;width:340px;height:70px}
+/* E — expectation */
+.e-chip{left:40px;top:190px}
+.e-per{left:30px;top:420px;width:400px;height:480px}
+.e-bulb{left:150px;top:300px;width:140px;height:182px}
+.e-sc{left:500px;top:470px;width:540px;height:497px}
+.e-coin{left:715px;top:390px;width:110px;height:110px}
+.e-me{left:526px;top:625px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe2c8,#f2c29b);border:7px solid var(--ink)}
+.e-bt{left:878px;top:570px;width:150px;height:165px}
+.e-row{left:60px;top:1010px;width:960px;height:100px}
+.e-m{left:720px;top:1010px;width:320px;height:320px}
+.e-shd1{left:40px;top:860px;width:380px;height:70px}
+/* F — reality: her words in his mouth */
+.f-chip{left:600px;top:190px}
+.f-per{left:30px;top:620px;width:440px;height:528px}
+.f-lap{left:560px;top:850px;width:480px;height:332px}
+.f-bub{left:80px;top:390px;width:560px;height:200px}
+.f-m{left:690px;top:400px;width:330px;height:330px}
+.f-shd1{left:40px;top:1110px;width:420px;height:70px}.f-shd2{left:560px;top:1150px;width:480px;height:70px}
+/* R — 15 of 100 owned up */
+.r-grid{left:155px;top:210px;width:780px;height:620px}
+.r-n{left:0;top:860px;width:1080px;font-size:140px}
+.r-m{left:760px;top:1030px;width:300px;height:300px}
+/* G — joke: the jacket */
+.g-j1{left:60px;top:220px;width:310px;height:351px}.g-j2{left:400px;top:220px;width:310px;height:351px}
+.g-rail{left:30px;top:222px;width:720px;height:18px;border-radius:8px;background:linear-gradient(180deg,#d9c3a0,#8a6a44);border:5px solid var(--ink)}
+.g-bot{left:680px;top:600px;width:400px;height:440px}
+.g-m{left:250px;top:780px;width:420px;height:420px}
+.g-jon{left:330px;top:960px;width:260px;height:295px}
+.g-bub{left:40px;top:560px;width:600px;height:400px}
+.g-shd1{left:270px;top:1150px;width:380px;height:70px}.g-shd2{left:710px;top:1010px;width:340px;height:60px}
+/* H — the answer, the verdict, the takeaway */
+.h-st{left:200px;top:250px;width:680px;height:190px;border:18px solid var(--acc);color:var(--acc);font:900 100px/150px Unb}
+.h-n{left:0;top:490px;width:1080px;font-size:130px}
+.h-road{left:0;top:0;width:1080px;height:1320px}
+.h-crowd{left:0;top:0}
+.h-bot{left:450px;top:820px;width:180px;height:198px}
+.h-m{left:30px;top:960px;width:340px;height:340px}
+.h-bulb{left:300px;top:560px;width:170px;height:221px}
+.h-ph{left:720px;top:660px;width:200px;height:382px}
+.h-chk{left:0;top:0;width:1080px;height:1320px}
+.h-sub{left:220px;top:1150px;width:660px;height:150px;border-radius:80px;background:linear-gradient(180deg,#ff4f6b,#e3243f);border:10px solid var(--ink);box-shadow:0 18px 40px rgba(0,0,0,.5);font:900 54px/130px Unb;color:#fff;text-align:left;padding-left:160px}
+.h-bell{left:40px;top:12px;width:110px;height:110px}
+.h-fx{left:0;top:0}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="sun"></div><div id="hills"></div><div id="fence"></div><div id="ground"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="shd a-shd3"></div><div class="a-bar"></div><div class="a-per"></div><div class="a-bot"></div><div class="m a-m"></div><div class="a-n big"><i>50</i></div><div class="a-w big">ЭКСПЕРТОВ</div><div class="a-q lbl">СКОЛЬКО ПОДДАЛИСЬ?</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="shd b-shd1"></div><div class="shd b-shd2"></div><div class="shd b-shd3"></div><div class="b-barn"></div><div class="b-per"></div><div class="b-lap"></div><div class="b-src nb-panel o panT"><b>Anthropic</b> · 27 октября 2026<br>создатели чат-бота Claude</div><div class="b-chip nb-chip o chipL">РАСШИРЯТЬ?</div><div class="m b-m"></div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-road"></div><div class="c-sl"></div><div class="c-sr"></div><div class="shd c-shd1"></div><div class="c-bot"></div><div class="c-coin"></div><div class="m c-m"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="shd d-shd1"></div><div class="shd d-shd2"></div><div class="d-barn"></div><div class="d-lock"></div><div class="m d-m"></div><div class="d-coin"></div><div class="d-cw lbl">ОРЁЛ</div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="e-chip nb-chip o chipL">ОЖИДАНИЕ</div><div class="shd e-shd1"></div><div class="e-per"></div><div class="e-bulb"></div><div class="e-sc"></div><div class="e-me"></div><div class="e-bt"></div><div class="e-coin"></div><div class="e-row"></div><div class="m e-m"></div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-chip nb-chip r chipL r">РЕАЛЬНОСТЬ</div><div class="shd f-shd1"></div><div class="shd f-shd2"></div><div class="f-per"></div><div class="f-lap"></div><div class="f-bub bub c"></div><div class="m f-m"></div></div></div>
+<div id="R" class="scene"><div class="cam"><div class="r-grid"></div><div class="r-n big">0</div><div class="m r-m"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="shd g-shd1"></div><div class="shd g-shd2"></div><div class="g-rail"></div><div class="g-j1"></div><div class="g-j2"></div><div class="g-bot"></div><div class="m g-m"></div><div class="g-jon"></div><div class="g-bub"></div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-road"></div><div class="h-crowd"></div><div class="h-bot"></div><div class="h-n big">?</div><div class="h-chk"></div><div class="h-bulb"></div><div class="h-ph"></div><div class="m h-m"></div><div class="h-st stt">НЕ БАЙТ</div><div class="h-sub">ПОДПИШИСЬ<div class="h-bell"></div></div><div class="h-fx"></div></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>

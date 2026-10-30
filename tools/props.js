@@ -152,3 +152,56 @@ function magnifierSVG(id) {
   <circle cx="100" cy="100" r="80" fill="url(#mg${id})" stroke="${PIK}" stroke-width="16"/><circle cx="100" cy="100" r="68" fill="none" stroke="#d9e4ee" stroke-width="6"/>
   <path d="M56 78 A50 50 0 0 1 94 46" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>`);
 }
+
+// ---------- added 30.10.2026 (ролик 017) ----------
+// jacket on a hanger, viewBox 0 0 300 340. Rig: .jhang (hanger hook, o), .jsleeveL/.jsleeveR (origin 70/230 90). col = fabric colour
+function jacketSVG(id, col = '#ff5f5f') {
+  return psv('0 0 300 340', `<defs>${lg('jk' + id, '#ffffff', col)}${lg('jd' + id, col, '#6a1f2a')}</defs>
+  <g class="jhang"><path d="M150 40 Q150 10 170 12 Q188 16 182 32" fill="none" stroke="${PIK}" stroke-width="9" stroke-linecap="round"/><path d="M60 78 L150 40 L240 78" fill="none" stroke="#8a6a44" stroke-width="10" stroke-linecap="round"/></g>
+  <g class="jsleeveL" style="transform-origin:70px 90px"><path d="M70 86 Q30 150 34 250 L74 254 Q78 170 98 120 Z" fill="url(#jd${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/><rect x="30" y="236" width="46" height="24" rx="8" fill="#2a2a2a" stroke="${PIK}" stroke-width="7"/></g>
+  <g class="jsleeveR" style="transform-origin:230px 90px"><path d="M230 86 Q270 150 266 250 L226 254 Q222 170 202 120 Z" fill="url(#jd${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/><rect x="224" y="236" width="46" height="24" rx="8" fill="#2a2a2a" stroke="${PIK}" stroke-width="7"/></g>
+  <path d="M70 84 Q110 62 130 70 L150 120 L170 70 Q190 62 230 84 L236 310 Q150 330 64 310 Z" fill="url(#jk${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+  <path d="M150 120 L150 318" stroke="${PIK}" stroke-width="7"/><path d="M130 70 L150 140 L118 128 Z M170 70 L150 140 L182 128 Z" fill="url(#jd${id})" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>
+  <circle cx="162" cy="180" r="7" fill="${PIK}"/><circle cx="162" cy="230" r="7" fill="${PIK}"/><circle cx="162" cy="280" r="7" fill="${PIK}"/>
+  <rect x="88" y="230" width="44" height="12" rx="5" fill="${PIK}" opacity=".55"/><path d="M84 110 Q90 96 108 92" fill="none" stroke="#fff" stroke-width="8" opacity=".55" stroke-linecap="round"/>`);
+}
+// balance scale, viewBox 0 0 500 460. Rig: .sbeam (tilt r, origin 250 110); .spanL/.spanR follow the beam ends (counter-rotate them by -r)
+// pans hang from (70,110) and (430,110); put objects above the pans at y ~ 200
+function scalesSVG(id) {
+  return psv('0 0 500 460', `<defs>${lg('sc' + id, '#fff2c0', '#d9a43a')}${lg('sp' + id, '#ffe9a8', '#c48a22')}</defs>
+  <path d="M190 440 L310 440 L290 400 L210 400 Z" fill="url(#sc${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <rect x="236" y="110" width="28" height="296" rx="10" fill="url(#sc${id})" stroke="${PIK}" stroke-width="9"/>
+  <g class="sbeam" style="transform-origin:250px 110px">
+    <rect x="50" y="98" width="400" height="24" rx="12" fill="url(#sc${id})" stroke="${PIK}" stroke-width="9"/>
+    <g class="spanL" style="transform-origin:70px 110px"><path d="M70 110 L20 220 M70 110 L120 220" stroke="${PIK}" stroke-width="5"/><path d="M6 218 L134 218 Q120 262 70 262 Q20 262 6 218 Z" fill="url(#sp${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/></g>
+    <g class="spanR" style="transform-origin:430px 110px"><path d="M430 110 L380 220 M430 110 L480 220" stroke="${PIK}" stroke-width="5"/><path d="M366 218 L494 218 Q480 262 430 262 Q380 262 366 218 Z" fill="url(#sp${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/></g>
+  </g>
+  <circle cx="250" cy="98" r="22" fill="url(#sc${id})" stroke="${PIK}" stroke-width="9"/><path d="M226 140 L226 380" stroke="#fff" stroke-width="5" opacity=".4"/>`);
+}
+// road sign on a post, viewBox 0 0 360 420; arrow points right (mirror the box with sx:-1 for left; text stays readable if you pass flip=true)
+function signpostSVG(id, txt = '', col = '#ffd34d', flip = false) {
+  const ar = flip ? 'M330 70 L60 70 L20 120 L60 170 L330 170 Z' : 'M30 70 L300 70 L340 120 L300 170 L30 170 Z';
+  return psv('0 0 360 420', `<defs>${lg('sg' + id, '#ffffff', col)}${lg('sw' + id, '#c08a55', '#7a4e26')}</defs>
+  <rect x="166" y="150" width="28" height="262" rx="8" fill="url(#sw${id})" stroke="${PIK}" stroke-width="9"/>
+  <path d="${ar}" fill="url(#sg${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <text x="${flip ? 195 : 165}" y="136" text-anchor="middle" style="font:900 42px Unb" fill="${PIK}">${txt}</text>
+  <path d="M50 88 L150 88" stroke="#fff" stroke-width="7" opacity=".6" stroke-linecap="round"/>`);
+}
+// light bulb (idea), viewBox 0 0 200 260. .bray (rays group, o/s), .bglass (fill glow)
+function bulbSVG(id) {
+  return psv('0 0 200 260', `<defs>${rg('bu' + id, '#fffbe0', '#ffd23a')}</defs>
+  <g class="bray" style="transform-origin:100px 90px"><path d="M100 2 L100 -30 M30 30 L8 8 M170 30 L192 8 M2 100 L-30 100 M198 100 L230 100" stroke="#ffd23a" stroke-width="12" stroke-linecap="round"/></g>
+  <path class="bglass" d="M100 10 Q180 12 180 92 Q178 140 140 170 L140 196 L60 196 L60 170 Q22 140 20 92 Q20 12 100 10 Z" fill="url(#bu${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M78 150 Q100 110 122 150" fill="none" stroke="#e08a00" stroke-width="7"/>
+  <rect x="58" y="196" width="84" height="22" rx="6" fill="#b8c2cc" stroke="${PIK}" stroke-width="8"/><rect x="64" y="218" width="72" height="20" rx="6" fill="#98a2ac" stroke="${PIK}" stroke-width="8"/><path d="M84 246 L116 246" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/>
+  <path d="M50 70 Q60 38 92 30" fill="none" stroke="#fff" stroke-width="9" opacity=".8" stroke-linecap="round"/>`);
+}
+// puppet control bar with strings, viewBox 0 0 400 200 (cross at the top; strings hang from .pstr paths, draw them on with dash: pathLength=100)
+function puppetBarSVG(id, len = 600) {
+  return psv('0 0 400 200', `<defs>${lg('pb' + id, '#e8c08a', '#9a6a34')}</defs>
+  <path class="pstr" d="M60 60 L60 ${60 + len}" pathLength="100" stroke="#f4ecd9" stroke-width="5" style="stroke-dasharray:100;stroke-dashoffset:100"/>
+  <path class="pstr" d="M340 60 L340 ${60 + len}" pathLength="100" stroke="#f4ecd9" stroke-width="5" style="stroke-dasharray:100;stroke-dashoffset:100"/>
+  <path class="pstr" d="M200 30 L200 ${30 + len * 0.8}" pathLength="100" stroke="#f4ecd9" stroke-width="5" style="stroke-dasharray:100;stroke-dashoffset:100"/>
+  <rect x="30" y="44" width="340" height="32" rx="14" fill="url(#pb${id})" stroke="${PIK}" stroke-width="9"/>
+  <rect x="184" y="6" width="32" height="140" rx="14" fill="url(#pb${id})" stroke="${PIK}" stroke-width="9"/><path d="M48 52 L150 52" stroke="#fff" stroke-width="5" opacity=".5" stroke-linecap="round"/>`);
+}
