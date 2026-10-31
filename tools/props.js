@@ -205,3 +205,33 @@ function puppetBarSVG(id, len = 600) {
   <rect x="30" y="44" width="340" height="32" rx="14" fill="url(#pb${id})" stroke="${PIK}" stroke-width="9"/>
   <rect x="184" y="6" width="32" height="140" rx="14" fill="url(#pb${id})" stroke="${PIK}" stroke-width="9"/><path d="M48 52 L150 52" stroke="#fff" stroke-width="5" opacity=".5" stroke-linecap="round"/>`);
 }
+
+// ---------- battery, viewBox 0 0 300 140. .bfill (sx 0..1 = charge, transform-origin left; recolour its fill), .bbolt (charging bolt, o/s)
+function batterySVG(id, col = '#7dff8a') {
+  return psv('0 0 300 140', `<defs>${lg('bt' + id, '#4a5568', '#1c222c')}${lg('bf' + id, '#ffffff', col)}</defs>
+  <rect x="270" y="44" width="24" height="52" rx="8" fill="#9aa6b2" stroke="${PIK}" stroke-width="8"/>
+  <rect x="8" y="8" width="266" height="124" rx="26" fill="url(#bt${id})" stroke="${PIK}" stroke-width="11"/>
+  <rect class="bfill" x="26" y="26" width="230" height="88" rx="14" fill="${col}" style="transform-origin:26px 70px"/>
+  <rect x="26" y="26" width="230" height="30" rx="12" fill="#fff" opacity=".22"/>
+  <path d="M30 22 L110 22" stroke="#fff" stroke-width="7" opacity=".3" stroke-linecap="round"/>
+  <g class="bbolt" style="transform-origin:141px 70px"><path d="M152 18 L112 78 L140 78 L128 122 L172 58 L144 58 Z" fill="#ffe14d" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/></g>`);
+}
+// ---------- brightness slider, viewBox 0 0 640 140. .sfill (sx 0..1 from the left, origin 70px), .sknob (x 0..500 = level 0..1), .ssun (big sun rays, s)
+function sliderSVG(id) {
+  let rays = ''; for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; rays += `<path d="M${(590 + 30 * Math.cos(a)).toFixed(1)} ${(70 + 30 * Math.sin(a)).toFixed(1)} L${(590 + 46 * Math.cos(a)).toFixed(1)} ${(70 + 46 * Math.sin(a)).toFixed(1)}" stroke="#ffe14d" stroke-width="9" stroke-linecap="round"/>`; }
+  return psv('0 0 640 140', `<defs>${lg('sl' + id, '#fff3a0', '#ffb800', false)}${rg('sk' + id, '#ffffff', '#c9d2dc')}</defs>
+  <circle cx="22" cy="70" r="14" fill="none" stroke="#ffe14d" stroke-width="7"/>
+  <rect x="58" y="48" width="512" height="44" rx="22" fill="#1a2030" stroke="${PIK}" stroke-width="9"/>
+  <rect class="sfill" x="70" y="58" width="490" height="24" rx="12" fill="url(#sl${id})" style="transform-origin:70px 70px"/>
+  <g class="ssun" style="transform-origin:590px 70px">${rays}<circle cx="590" cy="70" r="20" fill="#ffe14d" stroke="${PIK}" stroke-width="6"/></g>
+  <g class="sknob"><circle cx="70" cy="70" r="40" fill="url(#sk${id})" stroke="${PIK}" stroke-width="10"/><circle cx="58" cy="58" r="10" fill="#fff" opacity=".8"/></g>`);
+}
+// ---------- sunglasses that sit on the mascot's eyes: a 400x400 overlay box placed exactly over a mascotSVG box
+function sunglassesSVG(id) {
+  return psv('0 0 400 400', `<defs>${lg('sg' + id, '#3a4a6a', '#05070c')}</defs>
+  <path d="M96 150 Q60 140 40 150" fill="none" stroke="${PIK}" stroke-width="12" stroke-linecap="round"/><path d="M304 150 Q340 140 360 150" fill="none" stroke="${PIK}" stroke-width="12" stroke-linecap="round"/>
+  <path d="M96 140 L192 140 Q196 196 150 204 Q100 204 96 140 Z" fill="url(#sg${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M208 140 L304 140 Q300 204 250 204 Q204 196 208 140 Z" fill="url(#sg${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M192 146 Q200 136 208 146" fill="none" stroke="${PIK}" stroke-width="10"/>
+  <path d="M112 154 L140 154" stroke="#fff" stroke-width="7" opacity=".55" stroke-linecap="round"/><path d="M224 154 L252 154" stroke="#fff" stroke-width="7" opacity=".55" stroke-linecap="round"/>`);
+}

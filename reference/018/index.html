@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#0b1030;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c;--amb:#ffe14d;--cy:#7ab8ff;--vio:#9a7bff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: a night room-lab over a city — sky with stars and moon (far), skyline with lit windows (mid), floor (near) */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#070a22 0%,#0e1440 30%,#1b2160 52%,#2a2a6a 60%,#141838 60.1%,#0d1028 78%,#070816 100%)}
+#stars{position:absolute;left:-700px;top:0;width:3400px;height:1100px;will-change:transform;opacity:.8;
+  background-image:radial-gradient(circle,#fff 1.6px,transparent 2.6px),radial-gradient(circle,#cfe0ff 1.2px,transparent 2.2px);background-size:170px 130px,110px 90px;background-position:0 0,55px 40px}
+#moon{position:absolute;left:770px;top:250px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle at 38% 34%,#fffbe8 0%,#f2e6b8 55%,#c9b98a 100%);box-shadow:0 0 90px 30px rgba(255,240,190,.18);will-change:transform}
+#city{position:absolute;left:-700px;top:880px;width:3400px;height:280px;will-change:transform}
+#floor{position:absolute;left:-700px;top:1152px;width:3400px;height:800px;will-change:transform;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 6px,transparent 6px 180px)}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(122,140,255,.16) 0%,rgba(122,140,255,.07) 45%,rgba(122,140,255,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(255,215,90,.10) 0%,rgba(255,215,90,.04) 45%,rgba(255,215,90,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.6) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* shared */
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.y{border-left-color:var(--amb);border-color:rgba(255,225,77,.35);background:linear-gradient(180deg,rgba(20,26,64,.94),rgba(10,12,34,.94))}
+.nb-chip.y{border-color:rgba(255,225,77,.55);background:rgba(10,12,34,.9)}
+.nb-chip.r{border-color:rgba(255,59,92,.6);background:rgba(30,8,12,.92)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:5px;color:var(--amb);text-align:center;white-space:nowrap}
+.chipL.r{color:#ff6b80}
+.panT{padding:18px 40px 20px 46px;font:800 42px/1.24 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--amb);font-weight:900}
+.big{font:900 300px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--amb)}
+.lbl{font:900 64px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.m{width:360px;height:360px}
+.gl{width:360px;height:360px}
+.stt{border-radius:30px;text-align:center;background:rgba(14,6,10,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.puff{width:70px;height:70px;border-radius:50%;background:radial-gradient(closest-side,rgba(200,205,220,.85),rgba(200,205,220,0))}
+.drop{width:26px;height:34px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:linear-gradient(180deg,#e8fbff,#6ad1ff);border:4px solid var(--ink)}
+.qm{font:900 120px/1 Unb;color:var(--amb);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.halo{border-radius:50%;background:radial-gradient(closest-side,rgba(255,250,220,.95),rgba(255,230,120,.45) 45%,rgba(255,220,90,0) 100%)}
+.lamp{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4a5262,#161a24);border:4px solid #05070c}
+.lamp .lo{left:-4px;top:-4px;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffffff 0%,#fff6b8 40%,#ffc400 100%);box-shadow:0 0 20px 7px rgba(255,214,70,.55)}
+.bolt{width:70px;height:96px}
+.tbl{border-radius:18px;background:linear-gradient(180deg,#6a4a8a,#3a2650);border:9px solid var(--ink);box-shadow:0 24px 50px rgba(0,0,0,.5)}
+.tog{width:200px;height:110px;border-radius:60px;border:9px solid var(--ink);font:900 64px/90px Unb;text-align:center}
+.tog.l{background:linear-gradient(180deg,#fffbe0,#ffd34d);color:#8a5a00}.tog.d{background:linear-gradient(180deg,#3a4270,#141838);color:#cfe0ff}
+/* A — hook */
+.a-t{left:0;top:230px;width:1080px;font-size:84px;-webkit-text-stroke:14px var(--ink)}
+.a-n{left:0;top:340px;width:1080px;font-size:270px}
+.a-q{left:0;top:630px;width:1080px;font-size:74px;-webkit-text-stroke:12px var(--ink)}
+.a-halo{left:40px;top:700px;width:560px;height:620px;opacity:.35}
+.a-ph{left:150px;top:730px;width:300px;height:573px}
+.a-m{left:600px;top:900px;width:400px;height:400px}
+.a-shd1{left:120px;top:1270px;width:400px;height:70px}.a-shd2{left:630px;top:1250px;width:340px;height:70px}
+/* B — the bench, two phones */
+.b-tbl{left:40px;top:1080px;width:1000px;height:90px}
+.b-batL{left:150px;top:390px;width:280px;height:131px}.b-batR{left:650px;top:390px;width:280px;height:131px}
+.b-phL{left:160px;top:550px;width:260px;height:496px}.b-phR{left:660px;top:550px;width:260px;height:496px}
+.b-m{left:380px;top:880px;width:320px;height:320px}
+.b-shd1{left:150px;top:1040px;width:280px;height:50px}.b-shd2{left:650px;top:1040px;width:280px;height:50px}
+/* C — the screen is lamps */
+.c-ph{left:60px;top:200px;width:560px;height:1069px}
+.c-dim{left:116px;top:312px;width:448px;height:840px;border-radius:40px;background:#0b0e18}
+.c-grid{left:116px;top:330px;width:448px;height:816px}
+.c-bulb{left:730px;top:250px;width:250px;height:325px}
+.c-boff{left:747px;top:260px;width:216px;height:220px}
+.c-ln{left:0;top:0;width:1080px;height:1320px}
+.c-m{left:660px;top:880px;width:380px;height:380px}
+.c-shd1{left:90px;top:1240px;width:500px;height:70px}
+/* D — the dark screen eats less? */
+.d-plug{left:420px;top:230px;width:240px;height:240px}
+.d-phL{left:110px;top:640px;width:250px;height:477px}.d-phR{left:720px;top:640px;width:250px;height:477px}
+.d-batL{left:105px;top:520px;width:260px;height:121px}.d-batR{left:715px;top:520px;width:260px;height:121px}
+.d-m{left:370px;top:900px;width:340px;height:340px}
+.d-shd1{left:110px;top:1100px;width:250px;height:50px}.d-shd2{left:720px;top:1100px;width:250px;height:50px}
+/* E — the measurement at full brightness */
+.e-src{left:40px;top:180px}
+.e-batL{left:110px;top:420px;width:280px;height:131px}.e-batR{left:690px;top:420px;width:280px;height:131px}
+.e-haloL{left:-60px;top:480px;width:640px;height:720px}.e-haloR{left:520px;top:480px;width:640px;height:720px}
+.e-phL{left:120px;top:580px;width:260px;height:496px}.e-phR{left:700px;top:580px;width:260px;height:496px}
+.e-sl{left:220px;top:1150px;width:640px;height:140px}
+.e-chip{left:360px;top:300px}
+.e-m{left:380px;top:770px;width:320px;height:320px}
+.e-shd1{left:120px;top:1070px;width:260px;height:50px}.e-shd2{left:700px;top:1070px;width:260px;height:50px}
+/* F — joke: the beach */
+.f-sky{left:-100px;top:-100px;width:1280px;height:2120px;background:linear-gradient(180deg,#3aa0ff 0%,#8fd0ff 38%,#d8f2ff 52%,#2aa6c8 52.1%,#1b86b0 60%,#f4d9a0 60.1%,#e8c27a 80%,#c99a50 100%)}
+.f-sun{left:650px;top:170px;width:330px;height:330px}
+.f-sea{left:-700px;top:1000px;width:3400px;height:120px}
+.f-umb{left:20px;top:420px;width:460px;height:640px}
+.f-bed{left:220px;top:1000px;width:640px;height:200px}
+.f-m{left:330px;top:680px;width:380px;height:380px}
+.f-gl{left:330px;top:680px;width:380px;height:380px}
+.f-ph{left:660px;top:790px;width:120px;height:229px}
+.f-beam{left:700px;top:180px;width:420px;height:640px;transform-origin:20px 640px;background:linear-gradient(180deg,rgba(255,255,235,.25),rgba(255,255,235,1));clip-path:polygon(0 100%,12% 100%,100% 0,25% 0);mix-blend-mode:screen}
+.f-chip{left:600px;top:560px}
+.f-shd1{left:250px;top:1160px;width:600px;height:80px}
+/* G — home, auto brightness ~ a third */
+.g-win{left:640px;top:200px;width:360px;height:330px;border-radius:20px;border:14px solid #3a2e5a;background:linear-gradient(180deg,#0a0e2a,#1d2260);box-shadow:inset 0 0 0 6px var(--ink),0 20px 40px rgba(0,0,0,.4)}
+.g-ph{left:100px;top:300px;width:420px;height:802px}
+.g-glow{left:-40px;top:300px;width:700px;height:800px}
+.g-grid{left:153px;top:400px;width:314px;height:600px}
+.g-sl{left:520px;top:640px;width:520px;height:114px}
+.g-chip{left:620px;top:540px}
+.g-third{left:577px;top:770px;width:140px;height:16px;border-radius:8px;background:var(--amb)}
+.g-m{left:600px;top:880px;width:380px;height:380px}
+.g-shd1{left:110px;top:1090px;width:400px;height:70px}
+/* H — the answer, БАЙТ, the takeaway, subscribe, loop */
+.h-st{left:250px;top:260px;width:580px;height:180px;border:18px solid var(--red);color:var(--red);font:900 110px/144px Unb}
+.h-batL{left:90px;top:500px;width:400px;height:187px}.h-batR{left:590px;top:500px;width:400px;height:187px}
+.h-icL{left:240px;top:700px;font-size:80px}.h-icR{left:740px;top:700px;font-size:80px}
+.h-n{left:0;top:790px;width:1080px;font-size:170px}
+.h-47{left:60px;top:1010px;width:330px;font-size:120px}
+.h-strike{left:60px;top:1000px;width:330px;height:140px}
+.h-chip{left:40px;top:1160px}
+.h-sl{left:220px;top:620px;width:640px;height:140px}
+.h-phx{left:430px;top:780px;width:220px;height:420px}
+.h-tgL{left:110px;top:960px}.h-tgR{left:110px;top:1100px}
+.h-m{left:720px;top:990px;width:330px;height:330px}
+.h-sub{left:220px;top:1150px;width:660px;height:150px;border-radius:80px;background:linear-gradient(180deg,#ff4f6b,#e3243f);border:10px solid var(--ink);box-shadow:0 18px 40px rgba(0,0,0,.5);font:900 54px/130px Unb;color:#fff;text-align:left;padding-left:160px}
+.h-bell{left:40px;top:12px;width:110px;height:110px}
+.h-fx{left:0;top:0}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="stars"></div><div id="moon"></div><div id="city"></div><div id="floor"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="halo a-halo"></div><div class="a-ph"></div><div class="m a-m"></div><div class="a-t lbl">ТЁМНАЯ ТЕМА</div><div class="a-n big"><i>47%</i></div><div class="a-q lbl">БАТАРЕИ?</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="tbl b-tbl"></div><div class="shd b-shd1"></div><div class="shd b-shd2"></div><div class="b-batL"></div><div class="b-batR"></div><div class="b-phL"></div><div class="b-phR"></div><div class="m b-m"></div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="shd c-shd1"></div><div class="c-ph"></div><div class="c-dim"></div><div class="c-grid"></div><div class="c-ln"></div><div class="c-bulb"></div><div class="c-boff"></div><div class="m c-m"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="shd d-shd1"></div><div class="shd d-shd2"></div><div class="d-plug"></div><div class="d-batL"></div><div class="d-batR"></div><div class="d-phL"></div><div class="d-phR"></div><div class="m d-m"></div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="shd e-shd1"></div><div class="shd e-shd2"></div><div class="halo e-haloL"></div><div class="halo e-haloR"></div><div class="e-batL"></div><div class="e-batR"></div><div class="e-phL"></div><div class="e-phR"></div><div class="e-src nb-panel y panT"><b>Purdue University</b> · 28.07.2021<br>замер на телефонах</div><div class="e-chip nb-chip y chipL">ВДВОЕ МЕНЬШЕ</div><div class="m e-m"></div><div class="e-sl"></div></div></div>
+<div id="F" class="scene"><div class="f-sky"></div><div class="cam"><div class="f-sun"></div><div class="f-sea"></div><div class="shd f-shd1"></div><div class="f-umb"></div><div class="f-bed"></div><div class="f-beam"></div><div class="m f-m"></div><div class="gl f-gl"></div><div class="f-ph"></div><div class="f-chip nb-chip y chipL">МАКСИМУМ</div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="g-win"></div><div class="shd g-shd1"></div><div class="halo g-glow"></div><div class="g-ph"></div><div class="g-grid"></div><div class="g-chip nb-chip y chipL">АВТО</div><div class="g-sl"></div><div class="g-third"></div><div class="m g-m"></div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-batL"></div><div class="h-batR"></div><div class="h-icL lbl">☀</div><div class="h-icR lbl">☾</div><div class="h-n big"><i>3–9%</i></div><div class="h-47 lbl">47%</div><div class="h-strike"></div><div class="h-chip nb-chip r chipL r">ТОЛЬКО НА ПЛЯЖЕ</div><div class="h-sl"></div><div class="h-phx"></div><div class="tog l h-tgL">☀</div><div class="tog d h-tgR">☾</div><div class="m h-m"></div><div class="h-st stt">БАЙТ</div><div class="h-sub">ПОДПИШИСЬ<div class="h-bell"></div></div><div class="h-fx"></div></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
