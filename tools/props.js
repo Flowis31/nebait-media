@@ -235,3 +235,53 @@ function sunglassesSVG(id) {
   <path d="M192 146 Q200 136 208 146" fill="none" stroke="${PIK}" stroke-width="10"/>
   <path d="M112 154 L140 154" stroke="#fff" stroke-width="7" opacity=".55" stroke-linecap="round"/><path d="M224 154 L252 154" stroke="#fff" stroke-width="7" opacity=".55" stroke-linecap="round"/>`);
 }
+
+// ---------- true-wireless earbud (from 014, detailed 01.11.2026), viewBox 0 0 400 400: head with a face, silicone tip on the left,
+//            stem down-right. Rig: .ebEye (sy blink), .ebBrow (y), .ebMouth (sy), .mic1 (outer mic, s pulse), .spk (sound exit),
+//            .ebGlow (status LED, o), .ebTip (silicone tip, s). face=false for a plain product earbud.
+function earbudSVG(id, face = true, tip = '#9f99b8') {
+  return psv('0 0 400 400', `<defs>${rg('ebg' + id, '#ffffff', '#bdb8d4', '40%', '30%')}${lg('ebs' + id, '#ffffff', '#c9c4de', false)}${rg('ebt' + id, '#ecebf4', tip, '40%', '40%')}
+    <radialGradient id="ebl${id}" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#b8ff3d"/><stop offset="1" stop-color="#b8ff3d" stop-opacity="0"/></radialGradient></defs>
+  <ellipse cx="210" cy="392" rx="120" ry="14" fill="#000" opacity=".18"/>
+  <path d="M232 208 L300 372 Q306 392 286 396 L262 398 Q244 400 238 382 L186 236 Z" fill="url(#ebs${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M246 236 L296 362" stroke="#fff" stroke-width="7" opacity=".7" stroke-linecap="round"/>
+  <rect class="mic2" x="262" y="356" width="26" height="12" rx="6" fill="#26213d" transform="rotate(-21 275 362)"/>
+  <g class="ebTip" style="transform-origin:96px 168px"><ellipse cx="74" cy="168" rx="58" ry="66" fill="url(#ebt${id})" stroke="${PIK}" stroke-width="10"/>
+    <path d="M40 124 Q54 108 76 106" fill="none" stroke="#fff" stroke-width="7" opacity=".6" stroke-linecap="round"/>
+    <ellipse class="spk" cx="40" cy="168" rx="18" ry="30" fill="#3a3456" stroke="${PIK}" stroke-width="6"/>
+    ${[-14, 0, 14].map(y => `<circle cx="40" cy="${168 + y}" r="3" fill="#8f86c4"/>`).join('')}</g>
+  <ellipse cx="200" cy="160" rx="132" ry="118" fill="url(#ebg${id})" stroke="${PIK}" stroke-width="11"/>
+  <path d="M90 200 Q150 268 270 250" fill="none" stroke="#9d97b8" stroke-width="8" opacity=".45" stroke-linecap="round"/>
+  <path d="M110 92 Q150 58 208 56" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".9"/>
+  <g class="mic1" style="transform-origin:262px 66px"><ellipse cx="262" cy="66" rx="30" ry="15" fill="#2b2547" stroke="${PIK}" stroke-width="6"/>
+    ${[-14, -5, 4, 13].map(x => `<circle cx="${262 + x}" cy="66" r="3" fill="#8f86c4"/>`).join('')}</g>
+  <circle class="ebGlow" cx="318" cy="128" r="26" fill="url(#ebl${id})" opacity="0"/><circle cx="318" cy="128" r="7" fill="#26213d" stroke="${PIK}" stroke-width="3"/>
+  ${face ? `<g class="ebFace">
+    <g class="ebEye" style="transform-origin:200px 150px"><ellipse cx="166" cy="150" rx="17" ry="23" fill="${PIK}"/><ellipse cx="240" cy="150" rx="17" ry="23" fill="${PIK}"/>
+    <circle cx="172" cy="141" r="6" fill="#fff"/><circle cx="246" cy="141" r="6" fill="#fff"/></g>
+    <path class="ebBrow" style="transform-origin:203px 112px" d="M146 116 Q166 104 184 112 M222 112 Q240 104 260 116" fill="none" stroke="${PIK}" stroke-width="9" stroke-linecap="round"/>
+    <g class="ebMouth" style="transform-origin:203px 204px"><path d="M176 196 Q203 226 230 196 Z" fill="#ff5f8f" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/></g>
+    <ellipse cx="136" cy="190" rx="16" ry="9" fill="#ff8ab0" opacity=".45"/><ellipse cx="270" cy="190" rx="16" ry="9" fill="#ff8ab0" opacity=".45"/></g>` : ''}`);
+}
+// ---------- ear cut-away (head side, outer ear, ear canal, eardrum), viewBox 0 0 900 700. The canal runs x 470..800 at y 330..420
+//            (an earbud tip sits at about x 470..560, y 375). Rig: .canal, .eardrum (sx pulse, origin 806 375)
+function earCutSVG(id) {
+  return psv('0 0 900 700', `<defs>${rg('ek' + id, '#ffd2b8', '#e99a7c', '40%', '35%')}${lg('ec' + id, '#9a3a48', '#5a1f2a')}</defs>
+  <path d="M900 40 L520 40 Q300 60 290 300 Q280 520 520 660 L900 660 Z" fill="url(#ek${id})" stroke="${PIK}" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M330 140 Q380 70 500 60" fill="none" stroke="#fff" stroke-width="10" opacity=".35" stroke-linecap="round"/>
+  <path d="M520 120 Q330 130 330 300 Q330 470 470 520 Q520 530 520 470 Q430 430 440 320 Q450 220 540 210 Z" fill="#f6b597" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M500 160 Q380 180 378 300" fill="none" stroke="#d98468" stroke-width="9" opacity=".6" stroke-linecap="round"/>
+  <path class="canal" d="M470 330 L760 330 Q800 330 800 370 L800 380 Q800 420 760 420 L470 420 Z" fill="url(#ec${id})" stroke="${PIK}" stroke-width="10"/>
+  <path d="M490 346 L740 346" stroke="#c25a68" stroke-width="6" opacity=".6" stroke-linecap="round"/>
+  <g class="eardrum" style="transform-origin:806px 375px"><ellipse cx="806" cy="375" rx="16" ry="58" fill="#ffd9c9" stroke="${PIK}" stroke-width="8"/></g>`);
+}
+// ---------- loose silicone ear tip (side view: a soft dome on a short stem), viewBox 0 0 200 200, size label S/M/L on the dome.
+function eartipSVG(id, sz = 1, label = '') {
+  const rx = 88 * sz, h = 100 * sz, base = 140;
+  return psv('0 0 200 200', `<defs>${rg('et' + id, '#f6f5fb', '#9f99b8', '40%', '25%')}${lg('es' + id, '#5a537a', '#2b2547', false)}</defs>
+  <ellipse cx="100" cy="190" rx="${rx * 0.8}" ry="8" fill="#000" opacity=".22"/>
+  <rect x="${100 - 22 * sz}" y="${base - 6}" width="${44 * sz}" height="${50 * sz}" rx="${10 * sz}" fill="url(#es${id})" stroke="${PIK}" stroke-width="8"/>
+  <path d="M${100 - rx} ${base} Q${100 - rx} ${base - h * 1.25} 100 ${base - h} Q${100 + rx} ${base - h * 1.25} ${100 + rx} ${base} Q100 ${base + 18 * sz} ${100 - rx} ${base} Z" fill="url(#et${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M${100 - rx * 0.62} ${base - h * 0.55} Q${100 - rx * 0.4} ${base - h * 0.95} ${100 - rx * 0.05} ${base - h * 0.98}" fill="none" stroke="#fff" stroke-width="7" opacity=".75" stroke-linecap="round"/>
+  ${label ? `<text x="100" y="${base - h * 0.28}" text-anchor="middle" style="font:900 ${40 * sz + 8}px Unb" fill="#fff" stroke="${PIK}" stroke-width="8" paint-order="stroke">${label}</text>` : ''}`);
+}
