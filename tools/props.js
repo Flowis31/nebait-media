@@ -285,3 +285,70 @@ function eartipSVG(id, sz = 1, label = '') {
   <path d="M${100 - rx * 0.62} ${base - h * 0.55} Q${100 - rx * 0.4} ${base - h * 0.95} ${100 - rx * 0.05} ${base - h * 0.98}" fill="none" stroke="#fff" stroke-width="7" opacity=".75" stroke-linecap="round"/>
   ${label ? `<text x="100" y="${base - h * 0.28}" text-anchor="middle" style="font:900 ${40 * sz + 8}px Unb" fill="#fff" stroke="${PIK}" stroke-width="8" paint-order="stroke">${label}</text>` : ''}`);
 }
+
+// ---------- added 02.11.2026 (ролик 020) ----------
+// talking key = the password character, viewBox 0 0 300 560: round bow with a face at the top (centre 150,150), blade down to y 540,
+// teeth on the right, "••••" engraved on the blade. Rig: .keye (sy blink, origin 150 140), .kpup (x/y), .kbrow (y), .kmouth (sy 0..1 open,
+// origin 150 205), .karmL/.karmR (little arms, origin 40/260 190), .kshine (o). face=false for a plain key.
+function keyCharSVG(id, face = true, col = '#ffd34d') {
+  const arms = face ? `<g class="karmL" style="transform-origin:42px 190px"><path d="M42 190 Q-6 214 -14 268" fill="none" stroke="${PIK}" stroke-width="24" stroke-linecap="round"/><path d="M42 190 Q-6 214 -14 268" fill="none" stroke="#e7b21e" stroke-width="11" stroke-linecap="round"/><circle cx="-14" cy="274" r="22" fill="#fff" stroke="${PIK}" stroke-width="7"/></g>
+    <g class="karmR" style="transform-origin:258px 190px"><path d="M258 190 Q306 214 314 268" fill="none" stroke="${PIK}" stroke-width="24" stroke-linecap="round"/><path d="M258 190 Q306 214 314 268" fill="none" stroke="#e7b21e" stroke-width="11" stroke-linecap="round"/><circle cx="314" cy="274" r="22" fill="#fff" stroke="${PIK}" stroke-width="7"/></g>` : '';
+  const faceG = face ? `<g class="keye" style="transform-origin:150px 140px"><ellipse cx="112" cy="140" rx="27" ry="31" fill="#fff" stroke="${PIK}" stroke-width="7"/><ellipse cx="188" cy="140" rx="27" ry="31" fill="#fff" stroke="${PIK}" stroke-width="7"/>
+      <g class="kpup"><circle cx="116" cy="146" r="13" fill="${PIK}"/><circle cx="192" cy="146" r="13" fill="${PIK}"/><circle cx="121" cy="139" r="5" fill="#fff"/><circle cx="197" cy="139" r="5" fill="#fff"/></g></g>
+    <g class="kbrow"><path d="M84 100 Q110 86 136 98" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/><path d="M164 98 Q190 86 216 100" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/></g>
+    <g class="kmouth" style="transform-origin:150px 200px;transform:scaleY(0.12)"><path d="M118 196 Q150 192 182 196 Q176 246 150 246 Q124 246 118 196 Z" fill="#5a1414" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/><ellipse cx="150" cy="232" rx="16" ry="8" fill="#ff7a8a"/></g>
+    <path d="M120 196 Q150 206 180 196" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="84" cy="182" rx="14" ry="8" fill="#ff8a5a" opacity=".35"/><ellipse cx="216" cy="182" rx="14" ry="8" fill="#ff8a5a" opacity=".35"/>` :
+    `<circle cx="150" cy="150" r="46" fill="#3a2a0a" stroke="${PIK}" stroke-width="9"/>`;
+  return psv('0 0 300 560', `<defs>${rg('kb' + id, '#fff7c2', col, '34%', '28%')}${lg('kl' + id, '#fff1a8', '#d39a12', false)}</defs>
+    ${arms}
+    <path d="M124 262 L124 520 Q124 544 150 544 Q176 544 176 520 L176 262 Z" fill="url(#kl${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M176 380 L222 380 L222 410 L200 410 L200 430 L222 430 L222 470 L176 470" fill="url(#kl${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <circle cx="150" cy="320" r="7" fill="#a87410"/><circle cx="150" cy="352" r="7" fill="#a87410"/><circle cx="150" cy="384" r="7" fill="#a87410"/><circle cx="150" cy="416" r="7" fill="#a87410"/>
+    <path d="M138 280 L138 500" stroke="#fff" stroke-width="6" opacity=".45" stroke-linecap="round"/>
+    <rect x="112" y="246" width="76" height="30" rx="10" fill="#e9b11c" stroke="${PIK}" stroke-width="9"/>
+    <circle cx="150" cy="150" r="118" fill="url(#kb${id})" stroke="${PIK}" stroke-width="12"/>
+    <circle cx="150" cy="150" r="98" fill="none" stroke="#d9a114" stroke-width="6" opacity=".7"/>
+    <circle cx="150" cy="44" r="14" fill="#2a1a08" stroke="${PIK}" stroke-width="7"/>
+    <path class="kshine" d="M66 110 A92 92 0 0 1 120 52" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".7"/>
+    ${faceG}`);
+}
+// steel safe, viewBox 0 0 460 480. Rig: .sdoor (opens with sx 1 -> 0.12, transform-origin 40px = left hinge), .sdial (r, origin 230 220 inside the door),
+// .sinner (the dark inside, shown when the door opens; put contents above the safe box in the scene)
+function safeSVG(id) {
+  return psv('0 0 460 480', `<defs>${lg('sf' + id, '#b9c4d0', '#5d6977')}${lg('sd' + id, '#d9e1ea', '#7d8996')}${rg('sn' + id, '#2a3240', '#0b0f16')}</defs>
+    <rect x="20" y="20" width="420" height="420" rx="34" fill="url(#sf${id})" stroke="${PIK}" stroke-width="12"/>
+    <rect class="sinner" x="46" y="46" width="368" height="368" rx="20" fill="url(#sn${id})" stroke="${PIK}" stroke-width="8"/>
+    <path d="M60 200 L400 200 M60 310 L400 310" stroke="#3a4454" stroke-width="8"/>
+    <rect x="60" y="440" width="70" height="30" rx="8" fill="#4a5462" stroke="${PIK}" stroke-width="9"/><rect x="330" y="440" width="70" height="30" rx="8" fill="#4a5462" stroke="${PIK}" stroke-width="9"/>
+    <g class="sdoor" style="transform-origin:40px 230px">
+      <rect x="40" y="40" width="380" height="380" rx="24" fill="url(#sd${id})" stroke="${PIK}" stroke-width="11"/>
+      <rect x="66" y="66" width="328" height="328" rx="16" fill="none" stroke="#95a2b0" stroke-width="6"/>
+      <g class="sdial" style="transform-origin:230px 220px"><circle cx="230" cy="220" r="74" fill="#3d4756" stroke="${PIK}" stroke-width="10"/><circle cx="230" cy="220" r="52" fill="#596476" stroke="${PIK}" stroke-width="6"/>
+        <path d="M230 150 L230 172 M300 220 L278 220 M230 290 L230 268 M160 220 L182 220" stroke="#e6edf4" stroke-width="7" stroke-linecap="round"/><path d="M230 220 L230 176" stroke="#ffd34d" stroke-width="9" stroke-linecap="round"/></g>
+      <rect x="350" y="180" width="30" height="90" rx="12" fill="#3d4756" stroke="${PIK}" stroke-width="8"/>
+      <path d="M70 80 L170 80" stroke="#fff" stroke-width="8" opacity=".4" stroke-linecap="round"/></g>`);
+}
+// take-away burger box (clamshell), viewBox 0 0 320 260. Rig: .blid (opens with r -> -70, origin 40 120 = back hinge). Inside sits at y 100..150.
+function burgerBoxSVG(id, col = '#ff8a3d') {
+  return psv('0 0 320 260', `<defs>${lg('bx' + id, '#ffd1a3', col)}${lg('bxl' + id, '#ffe2c2', col)}</defs>
+    <path d="M20 128 L300 128 L280 240 Q278 252 264 252 L56 252 Q42 252 40 240 Z" fill="url(#bx${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M60 170 Q160 186 260 170" fill="none" stroke="#c45a14" stroke-width="7" opacity=".5"/>
+    <g class="blid" style="transform-origin:30px 128px"><path d="M20 128 Q20 30 160 26 Q300 30 300 128 Z" fill="url(#bxl${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M118 84 Q160 52 202 84 Z" fill="#e0782a" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/><rect x="114" y="88" width="92" height="10" rx="5" fill="#6aa832"/><rect x="116" y="100" width="88" height="14" rx="7" fill="#8a4a20"/>
+      <path d="M60 70 Q90 44 140 38" fill="none" stroke="#fff" stroke-width="8" opacity=".55" stroke-linecap="round"/></g>`);
+}
+// door with a hasp and a handle, viewBox 0 0 440 800 (door 40..400 x 40..780). Hang a padlockSVG at about (300,360);
+// .dkey = a key on a string hanging from the handle (330,470), swing it with r (origin 330 470).
+function doorSVG(id, col = '#b5643a') {
+  return psv('0 0 440 800', `<defs>${lg('dr' + id, '#e09a62', col)}</defs>
+    <rect x="20" y="20" width="400" height="780" rx="14" fill="#5a3420" stroke="${PIK}" stroke-width="12"/>
+    <rect x="40" y="40" width="360" height="760" rx="8" fill="url(#dr${id})" stroke="${PIK}" stroke-width="10"/>
+    <rect x="80" y="90" width="280" height="250" rx="14" fill="none" stroke="#8a4a26" stroke-width="10"/><rect x="80" y="520" width="280" height="230" rx="14" fill="none" stroke="#8a4a26" stroke-width="10"/>
+    <rect x="240" y="350" width="130" height="34" rx="8" fill="#9aa6b2" stroke="${PIK}" stroke-width="8"/>
+    <circle cx="330" cy="470" r="26" fill="#ffd34d" stroke="${PIK}" stroke-width="9"/><rect x="250" y="458" width="80" height="24" rx="10" fill="#ffd34d" stroke="${PIK}" stroke-width="8"/>
+    <g class="dkey" style="transform-origin:330px 470px"><path d="M330 470 L330 560" stroke="#f4ecd9" stroke-width="5"/>
+      <circle cx="330" cy="580" r="24" fill="#ffd34d" stroke="${PIK}" stroke-width="8"/><circle cx="330" cy="580" r="9" fill="#5a3420"/>
+      <path d="M330 604 L330 680 M330 650 L350 650 M330 668 L346 668" stroke="${PIK}" stroke-width="18" stroke-linecap="round"/><path d="M330 604 L330 680 M330 650 L350 650 M330 668 L346 668" stroke="#ffd34d" stroke-width="8" stroke-linecap="round"/></g>
+    <path d="M60 70 L60 760" stroke="#fff" stroke-width="7" opacity=".22" stroke-linecap="round"/>`);
+}
