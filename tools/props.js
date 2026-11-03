@@ -352,3 +352,78 @@ function doorSVG(id, col = '#b5643a') {
       <path d="M330 604 L330 680 M330 650 L350 650 M330 668 L346 668" stroke="${PIK}" stroke-width="18" stroke-linecap="round"/><path d="M330 604 L330 680 M330 650 L350 650 M330 668 L346 668" stroke="#ffd34d" stroke-width="8" stroke-linecap="round"/></g>
     <path d="M60 70 L60 760" stroke="#fff" stroke-width="7" opacity=".22" stroke-linecap="round"/>`);
 }
+
+// ---------- added 03.11.2026 (ролик 021 «Телефон врёт кассе») ----------
+// talking phone character, viewBox 0 0 300 560 (body 20..280 x 20..540, screen 38..262 x 70..470). Same face rig as keyCharSVG, so one
+// talk/blink loop drives both: .keye (sy blink, origin 150 220), .kpup (x/y), .kbrow (y), .kmouth (sy 0..1 talk), .karmL/.karmR (r, origin
+// 22/278 300; white gloves), .klegL/.klegR (r, origin 110/190 540), .pscr (screen colour layer, o), .pnfc (contactless waves on the back, o)
+function talkPhoneSVG(id, col = '#4a5fd8') {
+  const arm = (cls, x0, x1, ox) => `<g class="${cls}" style="transform-origin:${ox}px 300px"><path d="M${ox} 300 Q${x0} 330 ${x1} 392" fill="none" stroke="${PIK}" stroke-width="24" stroke-linecap="round"/><path d="M${ox} 300 Q${x0} 330 ${x1} 392" fill="none" stroke="${col}" stroke-width="11" stroke-linecap="round"/><circle cx="${x1}" cy="400" r="24" fill="#fff" stroke="${PIK}" stroke-width="7"/><path d="M${x1 - 10} 392 Q${x1} 386 ${x1 + 10} 392" stroke="#c9d2dc" stroke-width="4" fill="none"/></g>`;
+  const leg = (cls, x) => `<g class="${cls}" style="transform-origin:${x}px 540px"><path d="M${x} 530 L${x} 590" stroke="${PIK}" stroke-width="20" stroke-linecap="round"/><path d="M${x} 530 L${x} 590" stroke="${col}" stroke-width="8" stroke-linecap="round"/><path d="M${x - 26} 606 Q${x - 26} 584 ${x} 584 Q${x + 34} 584 ${x + 34} 606 Z" fill="#ff4d5e" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/></g>`;
+  return psv('0 0 300 560', `<defs>${lg('tp' + id, '#6b7cff', col)}${lg('ts' + id, '#eaf6ff', '#a9cdf2')}${lg('tsg' + id, '#d6ffb0', '#7ddf5a')}</defs>
+    ${arm('karmL', -4, -24, 22)}${arm('karmR', 304, 324, 278)}${leg('klegL', 110)}${leg('klegR', 190)}
+    <rect x="20" y="20" width="260" height="520" rx="46" fill="url(#tp${id})" stroke="${PIK}" stroke-width="12"/>
+    <rect x="38" y="70" width="224" height="400" rx="22" fill="url(#ts${id})" stroke="${PIK}" stroke-width="6"/>
+    <rect class="pscr" x="38" y="70" width="224" height="400" rx="22" fill="url(#tsg${id})" opacity="0"/>
+    <rect x="115" y="36" width="70" height="18" rx="9" fill="#0a0c10"/><circle cx="200" cy="45" r="6" fill="#2a3150"/>
+    <rect x="120" y="488" width="60" height="12" rx="6" fill="#0a0c10" opacity=".5"/>
+    <path d="M50 110 L104 82" stroke="#fff" stroke-width="10" opacity=".55" stroke-linecap="round"/><path d="M50 140 L80 124" stroke="#fff" stroke-width="7" opacity=".35" stroke-linecap="round"/>
+    <path d="M282 120 L282 200" stroke="#2a3150" stroke-width="8" stroke-linecap="round"/>
+    <g class="pnfc" opacity="0"><path d="M150 440 m-20 -6 a24 24 0 0 1 40 0 M150 440 m-36 -16 a44 44 0 0 1 72 0" fill="none" stroke="#4a5fd8" stroke-width="7" stroke-linecap="round"/></g>
+    <g class="keye" style="transform-origin:150px 220px"><ellipse cx="108" cy="220" rx="30" ry="35" fill="#fff" stroke="${PIK}" stroke-width="7"/><ellipse cx="192" cy="220" rx="30" ry="35" fill="#fff" stroke="${PIK}" stroke-width="7"/>
+      <g class="kpup"><circle cx="112" cy="226" r="14" fill="${PIK}"/><circle cx="196" cy="226" r="14" fill="${PIK}"/><circle cx="117" cy="219" r="5" fill="#fff"/><circle cx="201" cy="219" r="5" fill="#fff"/></g></g>
+    <g class="kbrow"><path d="M76 172 Q104 156 134 168" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/><path d="M166 168 Q196 156 224 172" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/></g>
+    <g class="kmouth" style="transform-origin:150px 292px;transform:scaleY(0.12)"><path d="M112 288 Q150 284 188 288 Q182 346 150 346 Q118 346 112 288 Z" fill="#5a1414" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/><ellipse cx="150" cy="330" rx="18" ry="9" fill="#ff7a8a"/></g>
+    <path d="M114 288 Q150 300 186 288" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="78" cy="270" rx="15" ry="9" fill="#ff8a7a" opacity=".4"/><ellipse cx="222" cy="270" rx="15" ry="9" fill="#ff8a7a" opacity=".4"/>`);
+}
+// bank card, viewBox 0 0 520 330. 16 number slots as dots (.cd0 .. .cd15, light them with o or fill); label = small text top right.
+// Rig: .cshine (sweep a highlight with x), .cdots (whole number row). c0/c1 = card gradient
+function bankCardSVG(id, c0 = '#ffb84d', c1 = '#ff5f6d', label = 'КАРТА') {
+  let d = ''; for (let g = 0; g < 4; g++) for (let k = 0; k < 4; k++) { const i = g * 4 + k; d += `<circle class="cd${i}" cx="${62 + g * 112 + k * 24}" cy="214" r="9" fill="#fff"/>`; }
+  return psv('0 0 520 330', `<defs>${lg('bc' + id, c0, c1, false)}<clipPath id="bclp${id}"><rect x="10" y="10" width="500" height="310" rx="34"/></clipPath></defs>
+    <rect x="10" y="10" width="500" height="310" rx="34" fill="url(#bc${id})" stroke="${PIK}" stroke-width="11"/>
+    <g clip-path="url(#bclp${id})"><circle cx="460" cy="40" r="150" fill="#fff" opacity=".12"/><rect class="cshine" x="-200" y="-40" width="70" height="420" fill="#fff" opacity=".28" transform="rotate(20)"/></g>
+    <rect x="56" y="92" width="78" height="60" rx="12" fill="#ffe58a" stroke="${PIK}" stroke-width="7"/><path d="M56 122 L134 122 M95 92 L95 152 M74 92 L74 152 M116 92 L116 152" stroke="#c99a1a" stroke-width="4"/>
+    <g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".9"><path d="M168 104 q10 18 0 36"/><path d="M184 96 q16 26 0 52"/><path d="M200 88 q22 34 0 68"/></g>
+    <g class="cdots">${d}</g>
+    <rect x="56" y="256" width="170" height="16" rx="8" fill="#fff" opacity=".55"/><rect x="250" y="256" width="70" height="16" rx="8" fill="#fff" opacity=".55"/>
+    <text x="470" y="74" text-anchor="end" style="font:800 30px JB" fill="#fff" opacity=".9">${label}</text>
+    <circle cx="420" cy="266" r="30" fill="#ff3b5c" opacity=".9"/><circle cx="458" cy="266" r="30" fill="#ffd34d" opacity=".85"/>
+    <path d="M40 40 Q120 24 200 30" fill="none" stroke="#fff" stroke-width="8" opacity=".45" stroke-linecap="round"/>`);
+}
+// card payment terminal, viewBox 0 0 300 520 (screen 44..256 x 52..236). Rig: .tok (green check, o), .tbad (red cross, o),
+// .tglow (green screen flash, o), .twaves (contactless symbol on the screen, o / s), .tbeep (top LED, o), .tscr (screen content group)
+function terminalSVG(id) {
+  let keys = ''; for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) keys += `<rect x="${62 + c * 64}" y="${300 + r * 46}" width="48" height="34" rx="9" fill="${r === 3 ? ['#ff4d5e', '#ffd34d', '#5fd36b'][c] : '#e2e8f0'}" stroke="${PIK}" stroke-width="5"/>`;
+  return psv('0 0 300 520', `<defs>${lg('tm' + id, '#4a5266', '#1e2330')}${lg('tsc' + id, '#d8f3ff', '#9fd3ef')}</defs>
+    <rect x="20" y="20" width="260" height="480" rx="40" fill="url(#tm${id})" stroke="${PIK}" stroke-width="12"/>
+    <rect x="44" y="52" width="212" height="184" rx="16" fill="url(#tsc${id})" stroke="${PIK}" stroke-width="7"/>
+    <rect class="tglow" x="44" y="52" width="212" height="184" rx="16" fill="#7ddf5a" opacity="0"/>
+    <g class="tscr"><g class="twaves" style="transform-origin:150px 144px" fill="none" stroke="#2a3a6a" stroke-width="9" stroke-linecap="round"><path d="M118 112 q14 32 0 64"/><path d="M140 100 q22 44 0 88"/><path d="M162 88 q30 56 0 112"/></g></g>
+    <g class="tok" opacity="0"><circle cx="150" cy="144" r="58" fill="#fff" stroke="${PIK}" stroke-width="7"/><path d="M120 146 L142 168 L182 120" fill="none" stroke="#2fa84f" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g class="tbad" opacity="0"><circle cx="150" cy="144" r="58" fill="#fff" stroke="${PIK}" stroke-width="7"/><path d="M124 118 L176 170 M176 118 L124 170" stroke="#ff3b5c" stroke-width="16" stroke-linecap="round"/></g>
+    ${keys}
+    <circle class="tbeep" cx="150" cy="36" r="8" fill="#7dff8a" opacity=".25"/>
+    <path d="M40 80 L40 440" stroke="#fff" stroke-width="7" opacity=".18" stroke-linecap="round"/>`);
+}
+// paper bus ticket, viewBox 0 0 380 200. Rig: .thole (punched holes, o), .tcode (the code text), .tstub (tear-off part, r origin 300 0)
+function ticketSVG(id, code = '★★★', col = '#ffe9a8') {
+  return psv('0 0 380 200', `<defs>${lg('tk' + id, '#fffbe6', col)}</defs>
+    <path d="M14 20 L366 20 L366 78 Q346 100 366 122 L366 180 L14 180 L14 122 Q34 100 14 78 Z" fill="url(#tk${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M290 30 L290 170" stroke="#c4a35a" stroke-width="5" stroke-dasharray="10 9"/>
+    <text x="40" y="66" style="font:800 26px JB" fill="#8a6a2a">БИЛЕТ</text><text class="tcode" x="40" y="132" style="font:900 52px Unb" fill="#2a3a6a">${code}</text>
+    <rect x="40" y="148" width="200" height="10" rx="5" fill="#c4a35a" opacity=".6"/>
+    <g class="thole" opacity="0"><circle cx="322" cy="62" r="13" fill="#1d2a44" stroke="${PIK}" stroke-width="4"/><circle cx="334" cy="104" r="13" fill="#1d2a44" stroke="${PIK}" stroke-width="4"/><circle cx="320" cy="146" r="13" fill="#1d2a44" stroke="${PIK}" stroke-width="4"/></g>`);
+}
+// secure chip with a vault door (the phone's "safe chip"), viewBox 0 0 320 320. Rig: .vdoor (sx 1 -> 0.15 opens, origin 70 160), .vdial (r, origin 170 160), .vin (inside)
+function chipSafeSVG(id) {
+  let pins = ''; for (let k = 0; k < 5; k++) { const p = 74 + k * 43; pins += `<rect x="${p - 8}" y="0" width="16" height="36" rx="5" fill="#d8dee6" stroke="${PIK}" stroke-width="5"/><rect x="${p - 8}" y="284" width="16" height="36" rx="5" fill="#d8dee6" stroke="${PIK}" stroke-width="5"/><rect x="0" y="${p - 8}" width="36" height="16" rx="5" fill="#d8dee6" stroke="${PIK}" stroke-width="5"/><rect x="284" y="${p - 8}" width="36" height="16" rx="5" fill="#d8dee6" stroke="${PIK}" stroke-width="5"/>`; }
+  return psv('0 0 320 320', `<defs>${lg('cs' + id, '#3c4a63', '#161c28')}${lg('cv' + id, '#e3e9f0', '#8d99a8')}</defs>${pins}
+    <rect x="28" y="28" width="264" height="264" rx="30" fill="url(#cs${id})" stroke="${PIK}" stroke-width="11"/>
+    <path d="M44 60 L44 120 M60 44 L120 44" stroke="#5fe0ff" stroke-width="5" opacity=".5" stroke-linecap="round"/>
+    <rect class="vin" x="70" y="80" width="200" height="160" rx="16" fill="#0b0f16" stroke="${PIK}" stroke-width="7"/>
+    <g class="vdoor" style="transform-origin:70px 160px"><rect x="70" y="80" width="200" height="160" rx="16" fill="url(#cv${id})" stroke="${PIK}" stroke-width="8"/>
+      <g class="vdial" style="transform-origin:170px 160px"><circle cx="170" cy="160" r="40" fill="#3d4756" stroke="${PIK}" stroke-width="7"/><path d="M170 160 L170 128" stroke="#ffd34d" stroke-width="8" stroke-linecap="round"/><path d="M170 112 L170 120 M218 160 L210 160 M170 208 L170 200 M122 160 L130 160" stroke="#e6edf4" stroke-width="5"/></g>
+      <rect x="240" y="135" width="14" height="50" rx="6" fill="#3d4756" stroke="${PIK}" stroke-width="5"/><path d="M86 96 L150 96" stroke="#fff" stroke-width="6" opacity=".45" stroke-linecap="round"/></g>`);
+}

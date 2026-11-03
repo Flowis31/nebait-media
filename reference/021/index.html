@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#10243a;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c;--amb:#ffb84d;--mus:#ffd34d;--ket:#ff4d5e;--cy:#5fe0ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: an evening supermarket — shelves (far), checkout hall (mid), tiled floor (near) */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#0f2338 0%,#14304a 55%,#1a3a56 100%)}
+#shelf{position:absolute;left:0;top:60px;width:4800px;height:1000px;will-change:transform;opacity:.75}
+#hall{position:absolute;left:-700px;top:60px;width:3400px;height:1300px;will-change:transform}
+#floor{position:absolute;left:-700px;top:1230px;width:3400px;height:700px;will-change:transform;background:repeating-linear-gradient(90deg,#d9e2ec 0 118px,#b9c6d4 118px 120px),#c9d4e0}
+#floor:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 98px,rgba(10,19,13,.18) 98px 100px),linear-gradient(180deg,rgba(15,35,56,.55),rgba(15,35,56,.85))}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(95,224,255,.16) 0%,rgba(95,224,255,.05) 45%,rgba(95,224,255,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(255,77,94,.10) 0%,rgba(255,77,94,.03) 45%,rgba(255,77,94,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.55) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--cy)}
+/* shared */
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.c{border-left-color:var(--cy);border-color:rgba(95,224,255,.35);background:linear-gradient(180deg,rgba(16,40,64,.95),rgba(8,22,38,.95))}
+.nb-chip.c{border-color:rgba(95,224,255,.6);background:rgba(8,22,38,.92)}
+.nb-chip.r{border-color:rgba(255,59,92,.65);background:rgba(40,8,14,.92)}
+.nb-chip.y{border-color:rgba(255,211,77,.6);background:rgba(30,24,8,.92)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:var(--cy);text-align:center;white-space:nowrap}
+.chipL.r{color:#ff6b80}.chipL.y{color:var(--mus)}.chipL.g{color:var(--acc)}
+.panT{padding:18px 40px 20px 46px;font:800 40px/1.24 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--cy);font-weight:900}
+.big{font:900 150px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--cy)}
+.lbl{font:900 96px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.5),rgba(0,0,0,0));transform-origin:center}
+.m{width:360px;height:360px}
+.stt{border-radius:30px;text-align:center;background:rgba(6,14,24,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.heart{width:60px;height:60px;background:#ff4d7a;clip-path:path('M30 54 C-8 28 4 2 30 16 C56 2 68 28 30 54 Z')}
+.qm{font:900 120px/1 Unb;color:var(--cy);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.ring{border-radius:50%;border:12px solid var(--cy);box-shadow:0 0 0 6px rgba(10,19,13,.6)}
+.xx{width:160px;height:160px}
+.nose{width:200px;height:60px;transform-origin:0 50%}
+/* A — hook */
+.a-t{left:0;top:180px;width:1080px}
+.a-t2{left:0;top:350px;width:1080px}
+.a-term{left:50px;top:640px;width:240px;height:416px}
+.a-ph{left:370px;top:500px;width:300px;height:560px}
+.a-nose{left:518px;top:748px}
+.a-m{left:650px;top:880px;width:360px;height:360px}
+.a-shd1{left:60px;top:1030px;width:240px;height:50px}.a-shd2{left:370px;top:1090px;width:300px;height:60px}.a-shd3{left:710px;top:1210px;width:320px;height:56px}
+/* B — 16 digits */
+.b-n{left:0;top:190px;width:1080px;font-size:220px}
+.b-u{left:0;top:420px;width:1080px}
+.b-card{left:90px;top:540px;width:900px;height:571px}
+.b-ph{left:40px;top:1000px;width:160px;height:299px}
+.b-m{left:730px;top:990px;width:300px;height:300px}
+/* C — tap, the till is sure it got them */
+.c-counter{left:-40px;top:1100px;width:1160px;height:240px;border-radius:24px;background:linear-gradient(180deg,#e9eef5,#9fb0c4);border:10px solid var(--ink)}
+.c-belt{left:-40px;top:1100px;width:1160px;height:46px;border-radius:20px;background:repeating-linear-gradient(90deg,#2a3346 0 40px,#3a4558 40px 80px);border:8px solid var(--ink)}
+.c-cash{left:600px;top:300px;width:380px;height:456px}
+.c-bub{left:90px;top:170px;width:470px;height:358px}
+.c-bcard{left:180px;top:225px;width:300px;height:190px}
+.c-term{left:700px;top:700px;width:240px;height:416px}
+.c-ph{left:330px;top:600px;width:260px;height:485px}
+.c-m{left:20px;top:1000px;width:290px;height:290px}
+/* D — radio, 4 cm */
+.d-chip{left:40px;top:200px}
+.d-n{left:0;top:330px;width:1080px}
+.d-ph{left:140px;top:560px;width:270px;height:504px}
+.d-term{left:660px;top:600px;width:250px;height:433px}
+.d-ring{left:400px;top:690px;width:120px;height:120px}
+.d-rul{left:280px;top:1120px;width:520px;height:110px}
+.d-m{left:730px;top:1010px;width:290px;height:290px}
+.d-q{left:850px;top:880px}
+.d-src{left:40px;top:1220px}
+/* E — joke: metro hug and a borrowed face */
+.e-bg{left:0;top:0;width:1080px;height:1920px}
+.e-th{left:120px;top:740px;width:380px;height:456px}
+.e-thm{left:190px;top:808px;width:240px;height:195px}
+.e-term{left:40px;top:960px;width:130px;height:225px}
+.e-m{left:500px;top:820px;width:400px;height:400px}
+.e-ph{left:890px;top:1040px;width:110px;height:205px}
+.e-x{left:800px;top:880px}
+.e-mask{left:120px;top:560px;width:240px;height:420px}
+.e-shd1{left:140px;top:1170px;width:360px;height:56px}.e-shd2{left:590px;top:1190px;width:340px;height:56px}
+/* F — so what do I hand over? */
+.f-spot{left:140px;top:150px;width:800px;height:1200px;background:radial-gradient(40% 50% at 50% 55%,rgba(200,240,255,.30),rgba(200,240,255,0) 100%)}
+.f-ph{left:390px;top:480px;width:300px;height:560px}
+.f-m{left:20px;top:960px;width:300px;height:300px}
+.f-shd{left:400px;top:1070px;width:280px;height:56px}
+/* G — the twin number in a chip-safe, a code for one purchase */
+.g-c1{left:40px;top:200px}.g-c2{left:40px;top:200px}
+.g-chip{left:330px;top:380px;width:420px;height:420px}
+.g-card{left:60px;top:880px;width:360px;height:228px}
+.g-twin{left:560px;top:880px;width:440px;height:279px}
+.g-tk{left:600px;top:1110px;width:330px;height:174px}
+.g-ph{left:80px;top:860px;width:220px;height:411px}
+.g-m{left:790px;top:420px;width:270px;height:270px}
+.g-shd{left:340px;top:820px;width:400px;height:60px}
+/* H — joke: a stolen code is a punched ticket */
+.h-bg{left:0;top:0;width:1080px;height:1920px}
+.h-val{left:700px;top:430px;width:260px;height:420px}
+.h-th{left:60px;top:720px;width:380px;height:456px}
+.h-thm{left:130px;top:788px;width:240px;height:195px}
+.h-tk{left:330px;top:640px;width:300px;height:158px}
+.h-x{left:750px;top:240px}
+.h-m{left:640px;top:930px;width:360px;height:360px}
+.h-shd1{left:80px;top:1150px;width:360px;height:56px}.h-shd2{left:670px;top:1250px;width:300px;height:50px}
+/* I — НЕ БАЙТ, takeaway, loop */
+.i-st{left:240px;top:250px;width:600px;height:180px;border:18px solid var(--cy);color:var(--cy);font:900 104px/144px Unb}
+.i-n{left:0;top:270px;width:1080px}
+.i-strike{left:150px;top:300px;width:780px;height:100px}
+.i-src{left:40px;top:460px}
+.i-term{left:740px;top:560px;width:240px;height:416px}
+.i-ph{left:300px;top:580px;width:270px;height:504px}
+.i-card{left:40px;top:960px;width:330px;height:209px}
+.i-sg{left:105px;top:965px;width:200px;height:200px}
+.i-m{left:660px;top:920px;width:380px;height:380px}
+.i-shd1{left:300px;top:1110px;width:270px;height:56px}.i-shd2{left:690px;top:1260px;width:320px;height:50px}
+.fx{left:0;top:0}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="shelf"></div><div id="hall"></div><div id="floor"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="shd a-shd3"></div><div class="a-term"></div><div class="a-ph"></div><div class="nose a-nose"></div><div class="m a-m"></div><div class="a-t big">Я <i>ВРУ</i></div><div class="a-t2 lbl">КАССЕ</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="b-n big"><i class="bnum">0</i></div><div class="b-u lbl">ЦИФР</div><div class="b-card"></div><div class="b-ph"></div><div class="m b-m"></div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-cash"></div><div class="c-counter"></div><div class="c-belt"></div><div class="c-term"></div><div class="c-bub"></div><div class="c-bcard"></div><div class="c-ph"></div><div class="m c-m"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="d-chip nb-chip c chipL">РАДИО</div><div class="d-n big">4 <i>СМ</i></div><div class="d-term"></div><div class="d-rings"></div><div class="d-ph"></div><div class="d-rul"></div><div class="m d-m"></div><div class="d-src nb-panel c panT"><b>Android</b> · NFC до 4 см</div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="e-bg"></div><div class="shd e-shd1"></div><div class="shd e-shd2"></div><div class="m e-m"></div><div class="e-ph"></div><div class="e-th"></div><div class="e-thm"></div><div class="e-term"></div><div class="e-mask"></div><div class="e-hearts"></div><div class="xx e-x"></div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-spot"></div><div class="shd f-shd"></div><div class="f-ph"></div><div class="m f-m"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="shd g-shd"></div><div class="g-chip"></div><div class="g-card"></div><div class="g-twin"></div><div class="g-tk"></div><div class="g-ph"></div><div class="m g-m"></div><div class="g-c1 nb-chip y chipL y">ЧИП-СЕЙФ</div><div class="g-c2 nb-chip c chipL">КОД НА ОДНУ ПОКУПКУ</div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-bg"></div><div class="shd h-shd1"></div><div class="shd h-shd2"></div><div class="h-val"></div><div class="h-th"></div><div class="h-thm"></div><div class="h-tk"></div><div class="m h-m"></div><div class="xx h-x"></div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="shd i-shd1"></div><div class="shd i-shd2"></div><div class="i-term"></div><div class="i-ph"></div><div class="i-card"></div><div class="i-sg"></div><div class="m i-m"></div><div class="i-n big">16 <i>ЦИФР</i></div><div class="i-strike"></div><div class="i-src nb-panel c panT"><b>Apple Support</b> · 27.04.2026</div>
+  <div class="i-st stt">НЕ БАЙТ</div><div class="fx i-fx"></div></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
