@@ -427,3 +427,116 @@ function chipSafeSVG(id) {
       <g class="vdial" style="transform-origin:170px 160px"><circle cx="170" cy="160" r="40" fill="#3d4756" stroke="${PIK}" stroke-width="7"/><path d="M170 160 L170 128" stroke="#ffd34d" stroke-width="8" stroke-linecap="round"/><path d="M170 112 L170 120 M218 160 L210 160 M170 208 L170 200 M122 160 L130 160" stroke="#e6edf4" stroke-width="5"/></g>
       <rect x="240" y="135" width="14" height="50" rx="6" fill="#3d4756" stroke="${PIK}" stroke-width="5"/><path d="M86 96 L150 96" stroke="#fff" stroke-width="6" opacity=".45" stroke-linecap="round"/></g>`);
 }
+
+// ---------- added 04.11.2026 (ролик 022 «Утопил телефон — и в рис?») ----------
+// bowl of rice, viewBox 0 0 520 380 (bowl rim y 170, mound peak y 60). Rig: .rmound (s/sy squash, origin 260 180), .rgrain (single grains,
+// o/x/y for splashes), .rshine (o). Grains are placed with hash(), so every instance is identical and deterministic.
+function riceBowlSVG(id, rim = '#3d7fd8') {
+  let g = '';
+  for (let k = 0; k < 120; k++) {
+    const u = hash(k * 3.1 + 1), v = hash(k * 7.7 + 2), x = 70 + u * 380, top = 178 - 115 * Math.sin(Math.PI * (x - 70) / 380) * (0.55 + 0.45 * Math.sin(Math.PI * (x - 70) / 380));
+    const y = top + v * (180 - top), r = (hash(k * 1.9) - 0.5) * 140;
+    g += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="13" ry="6.5" transform="rotate(${r.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})" fill="${k % 5 ? '#fffdf4' : '#efe8d4'}" stroke="#c9bf9f" stroke-width="2.5"/>`;
+  }
+  return psv('0 0 520 380', `<defs>${lg('rb' + id, '#ffffff', '#d7dde6')}${rg('rm' + id, '#fffef8', '#e6dcc0', '45%', '30%')}</defs>
+    <ellipse cx="260" cy="356" rx="150" ry="18" fill="#000" opacity=".25"/>
+    <g class="rmound" style="transform-origin:260px 180px"><path d="M60 182 Q70 70 260 56 Q450 70 460 182 Z" fill="url(#rm${id})" stroke="#bdb391" stroke-width="5"/>${g}
+      <path class="rshine" d="M150 110 Q200 76 262 72" fill="none" stroke="#fff" stroke-width="12" opacity=".7" stroke-linecap="round"/></g>
+    <path d="M30 170 L490 170 Q480 330 330 346 L190 346 Q40 330 30 170 Z" fill="url(#rb${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M40 196 L480 196" stroke="${rim}" stroke-width="12"/><path d="M52 228 Q260 252 468 228" fill="none" stroke="${rim}" stroke-width="6" stroke-dasharray="22 14"/>
+    <path d="M70 270 Q120 320 190 330" fill="none" stroke="#fff" stroke-width="9" opacity=".7" stroke-linecap="round"/>
+    <rect x="200" y="340" width="120" height="24" rx="8" fill="#c9d2dc" stroke="${PIK}" stroke-width="8"/>`);
+}
+// water drop, viewBox 0 0 100 130 (tip at 50,0). Optional face (.dEye blink, .dMouth sy). Recolour with col.
+function dropSVG(id, face = false, col = '#5fc8ff') {
+  return psv('0 0 100 130', `<defs>${rg('dr' + id, '#e9fbff', col, '40%', '55%')}</defs>
+    <path d="M50 4 Q86 62 88 86 Q88 124 50 126 Q12 124 12 86 Q14 62 50 4 Z" fill="url(#dr${id})" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M30 80 Q30 62 42 50" fill="none" stroke="#fff" stroke-width="7" opacity=".85" stroke-linecap="round"/>
+    ${face ? `<g class="dEye" style="transform-origin:50px 88px"><circle cx="38" cy="88" r="6" fill="${PIK}"/><circle cx="62" cy="88" r="6" fill="${PIK}"/></g><path class="dMouth" style="transform-origin:50px 106px" d="M40 104 Q50 112 60 104" fill="none" stroke="${PIK}" stroke-width="5" stroke-linecap="round"/>` : ''}`);
+}
+// charging-port macro (USB-C style), viewBox 0 0 760 380: metal shell, tongue with 8 pins. Rig: .pin0...pin7 (gold contacts),
+// .prust (rust spots on the pins, o), .pzap (current bolts, o / s), .pwater (water inside the port, o / sx origin 380 190),
+// .pcrumb (rice crumbs stuck in the port, o), .pglow (inner dark glow)
+function portSVG(id) {
+  let pins = '', rust = '', crumbs = '';
+  for (let k = 0; k < 8; k++) {
+    const x = 214 + k * 44;
+    pins += `<rect class="pin${k}" x="${x}" y="168" width="26" height="44" rx="6" fill="url(#pp${id})" stroke="${PIK}" stroke-width="5"/>`;
+    rust += `<circle cx="${x + 8 + 10 * hash(k)}" cy="${178 + 22 * hash(k + 4)}" r="${8 + 5 * hash(k + 9)}" fill="#b5541c"/><circle cx="${x + 18 - 8 * hash(k + 2)}" cy="${200 - 14 * hash(k + 6)}" r="${5 + 4 * hash(k + 7)}" fill="#8a3a12"/>`;
+  }
+  for (let k = 0; k < 14; k++) { const x = 170 + hash(k * 2.3) * 420, y = 120 + hash(k * 5.1) * 140, r = (hash(k) - 0.5) * 120;
+    crumbs += `<ellipse cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" rx="15" ry="7" transform="rotate(${r.toFixed(0)} ${x.toFixed(0)} ${y.toFixed(0)})" fill="#fffdf4" stroke="#a89c78" stroke-width="3"/>`; }
+  return psv('0 0 760 380', `<defs>${lg('ps' + id, '#eef2f6', '#8a96a3')}${lg('pp' + id, '#fff1a8', '#d9a21b')}${lg('pi' + id, '#1a1f28', '#05070a')}</defs>
+    <rect x="20" y="20" width="720" height="340" rx="170" fill="url(#ps${id})" stroke="${PIK}" stroke-width="14"/>
+    <rect x="70" y="70" width="620" height="240" rx="120" fill="url(#pi${id})" stroke="${PIK}" stroke-width="10"/>
+    <ellipse class="pglow" cx="380" cy="190" rx="250" ry="80" fill="#2a3a5a" opacity=".5"/>
+    <rect x="180" y="150" width="400" height="80" rx="30" fill="#2a2f3a" stroke="${PIK}" stroke-width="8"/>${pins}
+    <g class="prust" opacity="0">${rust}</g>
+    <g class="pwater" opacity="0" style="transform-origin:380px 260px"><path d="M90 250 Q200 230 380 246 Q560 230 670 250 L660 290 Q380 320 100 290 Z" fill="#5fc8ff" opacity=".75"/><path d="M160 256 Q260 246 330 252" stroke="#fff" stroke-width="8" opacity=".7" stroke-linecap="round"/></g>
+    <g class="pzap" opacity="0" style="transform-origin:380px 190px"><path d="M300 40 L270 120 L310 120 L280 200" fill="none" stroke="#ffe14d" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/><path d="M470 30 L440 110 L480 110 L456 180" fill="none" stroke="#ffe14d" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g class="pcrumb" opacity="0">${crumbs}</g>
+    <path d="M90 120 Q140 60 240 52" fill="none" stroke="#fff" stroke-width="12" opacity=".6" stroke-linecap="round"/>`);
+}
+// hair dryer, viewBox 0 0 380 320 (nozzle to the right at x 370, y 100). Rig: .hdwind (hot air lines, o / x), .hdbody
+function hairDryerSVG(id, col = '#ff5fa2') {
+  return psv('0 0 380 320', `<defs>${lg('hd' + id, '#ffd0e6', col)}</defs>
+    <path d="M120 160 L100 300 Q100 312 114 312 L156 312 Q170 312 170 300 L176 170 Z" fill="url(#hd${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <rect x="122" y="220" width="40" height="30" rx="8" fill="#fff" stroke="${PIK}" stroke-width="6"/>
+    <g class="hdbody"><circle cx="130" cy="110" r="96" fill="url(#hd${id})" stroke="${PIK}" stroke-width="11"/><rect x="200" y="66" width="140" height="88" rx="18" fill="url(#hd${id})" stroke="${PIK}" stroke-width="10"/>
+      <rect x="330" y="58" width="34" height="104" rx="10" fill="#3a3f4f" stroke="${PIK}" stroke-width="8"/>
+      <circle cx="130" cy="110" r="48" fill="#3a3f4f" stroke="${PIK}" stroke-width="8"/><path d="M106 110 L154 110 M130 86 L130 134 M113 93 L147 127 M147 93 L113 127" stroke="#7a8292" stroke-width="6"/>
+      <path d="M70 60 Q96 30 140 26" fill="none" stroke="#fff" stroke-width="9" opacity=".6" stroke-linecap="round"/></g>
+    <g class="hdwind" opacity="0" fill="none" stroke="#ff9a4d" stroke-width="9" stroke-linecap="round"><path d="M380 80 Q420 70 460 84"/><path d="M380 110 Q430 100 480 114"/><path d="M380 140 Q420 130 460 144"/></g>`);
+}
+// cotton swab, viewBox 0 0 380 70 (horizontal), tips at x 10..70 and 310..370
+function swabSVG(id) {
+  return psv('0 0 380 70', `<rect x="50" y="29" width="280" height="12" rx="6" fill="#f4f6f8" stroke="${PIK}" stroke-width="5"/>
+    <ellipse cx="44" cy="35" rx="38" ry="24" fill="#fff" stroke="${PIK}" stroke-width="7"/><ellipse cx="336" cy="35" rx="38" ry="24" fill="#fff" stroke="${PIK}" stroke-width="7"/>
+    <path d="M24 26 Q34 18 50 20 M316 26 Q326 18 342 20" fill="none" stroke="#c9d2dc" stroke-width="5" stroke-linecap="round"/>`);
+}
+// sushi roll with a phone as the filling, viewBox 0 0 440 330 (front cut face, nori around). Rig: .sface (phone face inside: .seye sy, .smouth sy),
+// .schop (pair of chopsticks, r origin 380 40, o), .sseed (sesame, o)
+function sushiRollSVG(id) {
+  let rice = '', seed = '';
+  for (let k = 0; k < 46; k++) { const a = 2 * Math.PI * k / 46 + hash(k) * 0.1, r = 120 + 14 * hash(k + 3), x = 220 + r * Math.cos(a), y = 170 + r * 0.78 * Math.sin(a);
+    rice += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="14" ry="7" transform="rotate(${(a * 57.3 + 90).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})" fill="#fffdf4" stroke="#c9bf9f" stroke-width="2.5"/>`; }
+  for (let k = 0; k < 12; k++) { const x = 90 + hash(k * 4.1) * 260, y = 70 + hash(k * 2.7) * 200; seed += `<ellipse cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" rx="5" ry="3" fill="#f2e2b0"/>`; }
+  return psv('0 0 440 330', `<defs>${rg('sr' + id, '#ffffff', '#ece3c8')}${lg('sp' + id, '#6b7cff', '#3448c8')}</defs>
+    <ellipse cx="220" cy="306" rx="190" ry="20" fill="#000" opacity=".25"/>
+    <ellipse cx="220" cy="170" rx="196" ry="156" fill="#14261c" stroke="${PIK}" stroke-width="11"/>
+    <ellipse cx="220" cy="170" rx="172" ry="134" fill="url(#sr${id})"/>${rice}
+    <g class="sface"><rect x="152" y="96" width="136" height="150" rx="22" fill="url(#sp${id})" stroke="${PIK}" stroke-width="9"/><rect x="164" y="110" width="112" height="122" rx="12" fill="#cfe6ff"/>
+      <g class="seye" style="transform-origin:220px 152px"><circle cx="198" cy="152" r="10" fill="${PIK}"/><circle cx="242" cy="152" r="10" fill="${PIK}"/></g>
+      <path class="smouth" style="transform-origin:220px 196px" d="M200 200 Q220 186 240 200" fill="none" stroke="${PIK}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M190 132 L204 140 M250 132 L236 140" stroke="${PIK}" stroke-width="6" stroke-linecap="round"/></g>
+    <g class="sseed">${seed}</g>
+    <path d="M70 110 Q100 52 170 30" fill="none" stroke="#fff" stroke-width="9" opacity=".3" stroke-linecap="round"/>
+    <g class="schop" style="transform-origin:380px 40px"><path d="M400 10 L250 150" stroke="${PIK}" stroke-width="20" stroke-linecap="round"/><path d="M400 10 L250 150" stroke="#d9a46a" stroke-width="10" stroke-linecap="round"/>
+      <path d="M430 30 L270 160" stroke="${PIK}" stroke-width="20" stroke-linecap="round"/><path d="M430 30 L270 160" stroke="#c98d52" stroke-width="10" stroke-linecap="round"/></g>`);
+}
+// kitchen timer clock, viewBox 0 0 360 380 (dial centre 180 200, r 150). Rig: .chand (hour hand, r origin 180 200), .cmin (minute hand),
+// .cbell (bells on top, r origin 180 50 for a ring), .cface (dial, fill)
+function clockSVG(id, col = '#ff8a3d') {
+  let ticks = ''; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6, x1 = 180 + 122 * Math.sin(a), y1 = 200 - 122 * Math.cos(a), x2 = 180 + 136 * Math.sin(a), y2 = 200 - 136 * Math.cos(a);
+    ticks += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${PIK}" stroke-width="${k % 3 ? 6 : 11}" stroke-linecap="round"/>`; }
+  return psv('0 0 360 380', `<defs>${lg('ck' + id, '#ffd1a8', col)}${rg('cf' + id, '#ffffff', '#e3e8ef')}</defs>
+    <g class="cbell" style="transform-origin:180px 50px"><circle cx="86" cy="58" r="40" fill="url(#ck${id})" stroke="${PIK}" stroke-width="10"/><circle cx="274" cy="58" r="40" fill="url(#ck${id})" stroke="${PIK}" stroke-width="10"/></g>
+    <path d="M110 340 L80 376 M250 340 L280 376" stroke="${PIK}" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="180" cy="200" r="164" fill="url(#ck${id})" stroke="${PIK}" stroke-width="12"/>
+    <circle class="cface" cx="180" cy="200" r="142" fill="url(#cf${id})" stroke="${PIK}" stroke-width="8"/>${ticks}
+    <g class="chand" style="transform-origin:180px 200px"><path d="M180 200 L180 120" stroke="${PIK}" stroke-width="16" stroke-linecap="round"/></g>
+    <g class="cmin" style="transform-origin:180px 200px"><path d="M180 200 L180 80" stroke="#ff3b5c" stroke-width="10" stroke-linecap="round"/></g>
+    <circle cx="180" cy="200" r="16" fill="${PIK}"/><path d="M80 120 Q110 76 160 66" fill="none" stroke="#fff" stroke-width="10" opacity=".6" stroke-linecap="round"/>`);
+}
+// instruction booklet (open), viewBox 0 0 640 440: two pages with text lines. Rig: .mline0..mline5 (draw-on lines on the right page, pathLength 100, dash),
+// .mmark (red underline, dash), .mpage (right page, sx flip origin 320 220), title on the left page
+function manualSVG(id, title = 'ИНСТРУКЦИЯ') {
+  let lines = ''; for (let k = 0; k < 6; k++) lines += `<path class="mline${k}" pathLength="100" d="M360 ${120 + k * 44} L${560 - (k % 3) * 40} ${120 + k * 44}" stroke="#5a6474" stroke-width="12" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100"/>`;
+  return psv('0 0 640 440', `<defs>${lg('mn' + id, '#ffffff', '#e8e2d2')}</defs>
+    <path d="M20 40 Q170 10 320 40 L320 420 Q170 390 20 420 Z" fill="url(#mn${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <g class="mpage" style="transform-origin:320px 220px"><path d="M320 40 Q470 10 620 40 L620 420 Q470 390 320 420 Z" fill="url(#mn${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>${lines}
+      <path class="mmark" pathLength="100" d="M350 390 Q470 372 590 386" fill="none" stroke="#ff3b5c" stroke-width="12" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100"/></g>
+    <text x="170" y="120" text-anchor="middle" style="font:900 27px Unb" fill="#2a3346">${title}</text>
+    <circle cx="170" cy="240" r="62" fill="#5fc8ff" stroke="${PIK}" stroke-width="8"/><path d="M170 196 Q200 240 200 254 Q200 284 170 284 Q140 284 140 254 Q140 240 170 196 Z" fill="#fff" stroke="${PIK}" stroke-width="6"/>
+    <path d="M70 340 L270 340 M90 370 L250 370" stroke="#9aa4b2" stroke-width="10" stroke-linecap="round"/><path d="M320 40 L320 420" stroke="${PIK}" stroke-width="8"/>`);
+}

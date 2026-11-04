@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#2a160d;--acc:#b8ff3d;--paper:#f4ecd9;--red:#ff3b5c;--wat:#5fd7ff;--rice:#fff3d6;--pk:#ff8ab8;--amb:#ffb84d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: an evening kitchen — tiled wall with jars (far), cabinets / window / fridge (mid), wooden table (near) */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#3a2012 0%,#4a2a16 60%,#2a160d 100%)}
+#wall{position:absolute;left:0;top:-40px;width:4800px;height:1100px;will-change:transform;opacity:.9}
+#kit{position:absolute;left:-700px;top:120px;width:3400px;height:1160px;will-change:transform}
+#dim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,14,6,.42),rgba(30,14,6,.30) 55%,rgba(30,14,6,.10))}
+#table{position:absolute;left:-700px;top:1230px;width:3400px;height:700px;will-change:transform;background:repeating-linear-gradient(90deg,#b8773f 0 180px,#a96a35 180px 184px,#c4844a 184px 360px,#9e612f 360px 364px)}
+#table:before{content:'';position:absolute;left:0;top:0;width:100%;height:34px;background:linear-gradient(180deg,#e2a868,#b8773f);border-top:9px solid var(--ink);border-bottom:6px solid #6a3d1a}
+#table:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(40,18,6,0) 0,rgba(40,18,6,.55) 100%)}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(255,200,120,.16) 0%,rgba(255,200,120,.05) 45%,rgba(255,200,120,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(95,215,255,.12) 0%,rgba(95,215,255,.04) 45%,rgba(95,215,255,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.55) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--wat)}
+/* shared */
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.w{border-left-color:var(--wat);border-color:rgba(95,215,255,.35);background:linear-gradient(180deg,rgba(18,40,58,.95),rgba(8,22,34,.95))}
+.nb-chip.w{border-color:rgba(95,215,255,.6);background:rgba(8,22,34,.92)}
+.nb-chip.r{border-color:rgba(255,59,92,.7);background:rgba(44,8,14,.94)}
+.nb-chip.p{border-color:rgba(255,138,184,.7);background:rgba(50,14,34,.92)}
+.nb-chip.y{border-color:rgba(255,211,77,.6);background:rgba(34,24,8,.92)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:var(--wat);text-align:center;white-space:nowrap}
+.chipL.r{color:#ff6b80}.chipL.p{color:var(--pk)}.chipL.y{color:#ffd34d}
+.panT{padding:18px 40px 20px 46px;font:800 40px/1.24 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--wat);font-weight:900}
+.panQ{padding:22px 44px 24px 50px;font:900 54px/1.15 Unb;color:#fff;white-space:nowrap}
+.big{font:900 150px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--wat)}
+.lbl{font:900 96px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.m{width:370px;height:370px}
+.stt{border-radius:30px;text-align:center;background:rgba(20,6,10,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.drop{width:40px;height:52px}
+.grain{width:30px;height:15px;border-radius:50%;background:#fffdf4;border:3px solid #a89c78}
+.qm{font:900 120px/1 Unb;color:var(--wat);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.xx{width:150px;height:150px}
+/* A — hook */
+.a-t{left:0;top:170px;width:1080px}
+.a-t2{left:0;top:330px;width:1080px}
+.a-bowl{left:110px;top:850px;width:600px;height:438px}
+.a-ph{left:290px;top:450px;width:250px;height:467px}
+.a-phin{left:290px;top:750px;width:250px;height:467px}
+.a-m{left:690px;top:900px}
+.a-shd1{left:140px;top:1240px;width:560px;height:70px}.a-shd3{left:720px;top:1235px;width:320px;height:56px}
+/* B — the phone sees water and switches charging off; wet pins rust */
+.b-ph{left:110px;top:470px;width:300px;height:560px}
+.b-al{left:560px;top:330px;width:330px;height:280px}
+.b-cab{left:440px;top:1080px;width:520px;height:120px}
+.b-x{left:500px;top:900px}
+.b-chip{left:40px;top:200px}
+.b-port{left:120px;top:380px;width:840px;height:420px}
+.b-n{left:150px;top:850px;font-size:80px}
+.b-m{left:690px;top:640px;width:360px;height:360px}
+.b-shd1{left:120px;top:1060px;width:300px;height:56px}.b-shd2{left:720px;top:965px;width:300px;height:46px}
+/* C — expectation: the rice drinks the water like a sponge */
+.c-dream{left:-60px;top:120px;width:1200px;height:1260px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,190,230,.28),rgba(255,190,230,.10) 70%,rgba(255,190,230,0))}
+.c-chip{left:40px;top:200px}
+.c-bowl{left:180px;top:800px;width:640px;height:468px}
+.c-ph{left:420px;top:330px;width:240px;height:448px}
+.c-sp{left:160px;top:420px;width:200px;height:200px}
+.c-m{left:720px;top:950px;width:340px;height:340px}
+.c-shd{left:220px;top:1220px;width:560px;height:70px}
+/* D — Apple's instruction; step 1: tap the phone on the palm, port down */
+.d-man{left:220px;top:330px;width:640px;height:440px}
+.d-src{left:40px;top:800px}
+.d-chip{left:40px;top:200px}
+.d-ph{left:370px;top:570px;width:260px;height:485px}
+.d-palm{left:330px;top:960px;width:380px;height:240px}
+.d-arr{left:120px;top:620px;width:120px;height:200px}
+.d-m{left:700px;top:930px}
+.d-shd{left:360px;top:1200px;width:320px;height:50px}
+/* E — step 2: dry and a breeze; step 3: charge after 30 minutes; dries up to a day */
+.e-win{left:40px;top:300px;width:480px;height:520px;border-radius:26px;background:linear-gradient(180deg,#1a2f55,#36598c);border:12px solid var(--ink);box-shadow:0 0 0 14px #f4ecd9 inset}
+.e-win:after{content:'';position:absolute;left:222px;top:0;width:12px;height:100%;background:var(--ink)}
+.e-wind{left:120px;top:520px;width:600px;height:300px}
+.e-ph{left:560px;top:620px;width:240px;height:448px}
+.e-towel{left:500px;top:1030px;width:360px;height:70px;border-radius:20px;background:repeating-linear-gradient(90deg,#ff8ab8 0 30px,#fff 30px 60px);border:8px solid var(--ink)}
+.e-chip{left:40px;top:200px}
+.e-clock{left:60px;top:450px;width:360px;height:380px}
+.e-n{left:0;top:310px;width:1080px;font-size:130px}
+.e-cab{left:600px;top:840px;width:480px;height:110px}
+.e-lock{left:860px;top:780px;width:140px;height:175px}
+.e-m{left:60px;top:900px;width:360px;height:360px}
+.e-shd{left:540px;top:1075px;width:280px;height:50px}
+/* F — joke: no dryer, no cotton swab — it's a phone, not an ear */
+.f-ph{left:40px;top:600px;width:250px;height:467px}
+.f-m{left:300px;top:880px}
+.f-dry{left:560px;top:600px;width:300px;height:253px}
+.f-swab{left:330px;top:830px;width:330px;height:61px}
+.f-x1{left:640px;top:520px}.f-x2{left:420px;top:740px}
+.f-ear{left:470px;top:460px;width:860px;height:669px}
+.f-shd1{left:60px;top:1060px;width:240px;height:50px}.f-shd2{left:330px;top:1220px;width:320px;height:56px}
+/* G — reality: Apple writes "don't put it in rice"; rice crumbs can damage it */
+.g-chip{left:40px;top:200px}
+.g-man{left:260px;top:320px;width:560px;height:385px}
+.g-src{left:40px;top:720px}
+.g-q{left:1080px;top:730px}
+.g-bowl{left:40px;top:860px;width:520px;height:380px}
+.g-port{left:300px;top:330px;width:700px;height:350px}
+.g-x{left:880px;top:270px}
+.g-m{left:680px;top:910px}
+.g-shd1{left:70px;top:1200px;width:460px;height:60px}.g-shd2{left:710px;top:1250px;width:320px;height:50px}
+/* H — joke: not a dry phone, a «iPhone roll» */
+.h-bg{left:0;top:0;width:1080px;height:1920px}
+.h-plate{left:190px;top:1040px;width:700px;height:140px}
+.h-roll{left:250px;top:700px;width:580px;height:435px}
+.h-lab{left:1080px;top:480px}
+.h-m{left:-20px;top:990px;width:320px;height:320px}
+/* I — БАЙТ, the takeaway, loop */
+.i-t{left:0;top:220px;width:1080px;font-size:84px}
+.i-st{left:300px;top:260px;width:480px;height:180px;border:18px solid var(--red);color:var(--red);font:900 112px/144px Unb}
+.i-src{left:40px;top:480px}
+.i-bowl{left:40px;top:840px;width:420px;height:307px}
+.i-x{left:330px;top:820px}
+.i-ph{left:430px;top:600px;width:240px;height:448px}
+.i-wind{left:20px;top:560px;width:600px;height:300px}
+.i-m{left:680px;top:920px}
+.i-shd1{left:450px;top:1030px;width:200px;height:46px}.i-shd2{left:710px;top:1260px;width:320px;height:50px}
+.fx{left:0;top:0}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="wall"></div><div id="kit"></div><div id="dim"></div><div id="table"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd3"></div><div class="a-ph"></div><div class="a-drops fx"></div><div class="a-bowl"></div><div class="a-fx fx"></div><div class="m a-m"></div><div class="a-phin"></div><div class="a-t big">СУТКИ</div><div class="a-t2 lbl">В <i>РИСЕ?</i></div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="shd b-shd1"></div><div class="shd b-shd2"></div><div class="b-cab"></div><div class="xx b-x"></div><div class="b-ph"></div><div class="b-al"></div><div class="b-drop drop"></div><div class="b-port"></div><div class="b-n lbl">ЗАРЖАВЕЮТ</div><div class="m b-m"></div><div class="b-chip nb-chip w chipL">ВОДА В РАЗЪЁМЕ</div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-dream"></div><div class="shd c-shd"></div><div class="c-ph"></div><div class="c-drops fx"></div><div class="c-bowl"></div><div class="c-fx fx"></div><div class="m c-m"></div><div class="c-chip nb-chip p chipL p">ОЖИДАНИЕ</div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="d-man"></div><div class="d-src nb-panel w panT"><b>Apple Support</b> · 30.10.2024</div><div class="shd d-shd"></div><div class="d-ph"></div><div class="d-palm"></div><div class="d-drops fx"></div><div class="d-arr"></div><div class="m d-m"></div><div class="d-chip nb-chip y chipL y">ШАГ 1</div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="e-win"></div><div class="e-clock"></div><div class="e-n big">0 <i>МИН</i></div><div class="e-towel"></div><div class="shd e-shd"></div><div class="e-cab"></div><div class="e-ph"></div><div class="e-lock"></div><div class="e-wind"></div><div class="e-drops fx"></div><div class="m e-m"></div><div class="e-chip nb-chip y chipL y">ШАГ 2</div><div class="e-chip2 e-chip nb-chip y chipL y">ШАГ 3</div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="shd f-shd1"></div><div class="shd f-shd2"></div><div class="f-ear"></div><div class="f-ph"></div><div class="m f-m"></div><div class="f-dry"></div><div class="f-swab"></div><div class="xx f-x1"></div><div class="xx f-x2"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="g-man"></div><div class="g-port"></div><div class="xx g-x"></div><div class="g-src nb-panel w panT"><b>Apple Support</b> · 30.10.2024</div><div class="shd g-shd1"></div><div class="shd g-shd2"></div><div class="g-bowl"></div><div class="g-fx fx"></div><div class="m g-m"></div><div class="g-q nb-panel red panQ">НЕ КЛАДИ АЙФОН В РИС</div><div class="g-chip nb-chip r chipL r">РЕАЛЬНОСТЬ</div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-bg"></div><div class="h-plate"></div><div class="h-roll"></div><div class="h-fx fx"></div><div class="m h-m"></div><div class="h-lab nb-panel red panQ">РОЛЛ «АЙФОН»</div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="shd i-shd1"></div><div class="shd i-shd2"></div><div class="i-bowl"></div><div class="xx i-x"></div><div class="i-wind"></div><div class="i-ph"></div><div class="i-drops fx"></div><div class="m i-m"></div><div class="i-t lbl">РИС <i>СПАСАЕТ?</i></div><div class="i-src nb-panel w panT"><b>Apple Support</b> · 30.10.2024</div>
+  <div class="i-st stt">БАЙТ</div><div class="fx i-fx"></div></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
