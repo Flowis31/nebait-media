@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#f2b48a;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c;--or:#ff9f2e;--cy:#5fe0ff;--yl:#ffd34d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: an autumn park late in the afternoon — clouds (far), roofs and hills, autumn trees (mid), lamps and benches (near), path */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#7fc4d8 0%,#b9d9d6 30%,#ffd2a6 55%,#f2a07a 100%)}
+#sun{position:absolute;left:640px;top:250px;width:420px;height:420px;border-radius:50%;background:radial-gradient(closest-side,#fff6d8 0%,#ffe2a0 45%,rgba(255,200,120,.35) 70%,rgba(255,200,120,0) 100%);will-change:transform}
+#clouds{position:absolute;left:0;top:0;width:4800px;height:700px;will-change:transform}
+#hills{position:absolute;left:-700px;top:300px;width:3400px;height:900px;will-change:transform}
+#trees{position:absolute;left:-700px;top:160px;width:3400px;height:1100px;will-change:transform}
+#walk{position:absolute;left:-700px;top:1190px;width:3400px;height:760px;will-change:transform;background:linear-gradient(180deg,#c98a5a,#8a5a3a)}
+#walk:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 10px,transparent 10px 260px)}
+#near{position:absolute;left:-700px;top:60px;width:3400px;height:1300px;will-change:transform}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(255,240,200,.25) 0%,rgba(255,240,200,.07) 45%,rgba(255,240,200,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(255,120,60,.14) 0%,rgba(255,120,60,.05) 45%,rgba(255,120,60,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(40,10,0,.5) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--yl)}
+/* shared */
+.cam{left:0;top:70px;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.o{border-left-color:var(--or);border-color:rgba(255,159,46,.4);background:linear-gradient(180deg,rgba(50,24,20,.94),rgba(26,12,10,.94))}
+.nb-chip.o{border-color:rgba(255,159,46,.7);background:rgba(30,14,10,.92)}
+.nb-chip.c{border-color:rgba(95,224,255,.7);background:rgba(10,20,30,.92)}
+.nb-chip.r{border-color:rgba(255,59,92,.7);background:rgba(40,8,14,.92)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:var(--or);text-align:center;white-space:nowrap}
+.chipL.c{color:var(--cy)}.chipL.r{color:#ff6b80}
+.panT{padding:18px 40px 20px 46px;font:800 42px/1.24 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--or);font-weight:900}
+.big{font:900 150px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--yl)}
+.lbl{font:900 80px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(60,20,0,.5),rgba(60,20,0,0));transform-origin:center}
+.stt{border-radius:30px;text-align:center;background:rgba(20,10,6,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.dust{width:22px;height:22px;border-radius:50%;background:#e8f6ff}
+.sweat{width:26px;height:36px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#8fe0ff;border:5px solid var(--ink)}
+.qm{font:900 120px/1 Unb;color:var(--or);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.ex{font:900 160px/1 Unb;color:var(--red);-webkit-text-stroke:14px var(--ink);paint-order:stroke fill}
+.lf{width:90px;height:90px}
+.bub{width:300px;height:200px}
+.sayb{border-radius:44px;background:#fff;border:10px solid var(--ink);box-shadow:0 18px 40px rgba(0,0,0,.35);font:900 58px/1.08 Unb;color:var(--ink);text-align:center;padding:30px 30px}
+.sayb:after{content:'';position:absolute;left:70px;bottom:-46px;width:60px;height:60px;background:#fff;border-right:10px solid var(--ink);border-bottom:10px solid var(--ink);transform:rotate(45deg) skew(12deg,12deg)}
+.rays{border-radius:50%;background:repeating-conic-gradient(rgba(255,240,180,.35) 0 10deg,rgba(255,240,180,0) 10deg 24deg)}
+.spot{background:radial-gradient(40% 46% at 50% 50%,rgba(255,230,170,.42),rgba(255,230,170,0) 100%)}
+/* A — hook */
+.a-t{left:0;top:150px;width:1080px;font-size:104px}
+.a-t2{left:0;top:300px;width:1080px}
+.a-w{left:110px;top:480px;width:400px;height:600px}
+.a-m{left:600px;top:860px;width:400px;height:400px}
+.a-shd1{left:120px;top:1060px;width:380px;height:70px}.a-shd2{left:640px;top:1220px;width:320px;height:60px}
+/* B — missed what the friend said */
+.b-p{left:10px;top:610px;width:460px;height:552px}
+.b-m{left:640px;top:840px;width:400px;height:400px}
+.b-shd1{left:40px;top:1120px;width:400px;height:70px}.b-shd2{left:680px;top:1200px;width:320px;height:60px}
+
+.b-bub{left:330px;top:440px;width:300px;height:200px}
+.c-bub{left:30px;top:330px;width:300px;height:200px}
+/* C — double-press the crown: the last 15 seconds come back as text */
+.c-n{left:0;top:150px;width:1080px}
+.c-w{left:250px;top:420px;width:480px;height:720px}
+.c-m{left:680px;top:880px;width:330px;height:330px}
+.c-shd1{left:270px;top:1110px;width:440px;height:70px}.c-shd2{left:760px;top:1180px;width:290px;height:50px}
+.c-glove{left:770px;top:690px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#d9d0bb);border:8px solid var(--ink)}
+/* T — the text disappears half a minute after the screen goes dark */
+.t-w{left:70px;top:430px;width:440px;height:660px}
+.t-clk{left:580px;top:330px;width:360px;height:380px}
+.t-m{left:620px;top:880px;width:370px;height:370px}
+.t-shd1{left:90px;top:1060px;width:400px;height:70px}.t-shd2{left:680px;top:1220px;width:320px;height:60px}
+/* D — beta, English only */
+.d-w{left:330px;top:470px;width:420px;height:630px}
+.d-stk{left:560px;top:430px;width:220px;height:110px;border-radius:24px;background:linear-gradient(180deg,#ff6a3d,#e0401a);border:9px solid var(--ink);font:900 60px/92px Unb;color:#fff;text-align:center}
+.d-c1{left:40px;top:220px}
+.d-c2{left:40px;top:340px}
+.d-m{left:-10px;top:880px;width:360px;height:360px}
+.d-src{left:330px;top:1130px}
+.d-shd1{left:350px;top:1070px;width:380px;height:60px}.d-shd2{left:20px;top:1200px;width:300px;height:50px}
+/* J — joke: «я такого не говорил» */
+.j-say{left:60px;top:210px;width:560px;height:250px}
+.j-p{left:20px;top:560px;width:470px;height:564px}
+.j-m{left:600px;top:860px;width:400px;height:400px}
+.j-w{left:620px;top:500px;width:220px;height:330px}
+.j-rep{left:560px;top:190px;width:420px;height:280px}
+.j-shd1{left:50px;top:1090px;width:410px;height:70px}.j-shd2{left:660px;top:1230px;width:340px;height:60px}
+/* Q — will the friend know? */
+.q-spot{left:0;top:150px;width:1080px;height:1200px}
+.q-p{left:170px;top:320px;width:620px;height:744px}
+.q-m{left:680px;top:930px;width:330px;height:330px}
+.q-w{left:720px;top:1010px;width:110px;height:165px}
+.q-shd{left:250px;top:1030px;width:460px;height:70px}
+/* R — the watch chimes, even on silent */
+.r-w{left:290px;top:420px;width:480px;height:720px}
+.r-bell{left:-10px;top:130px;width:440px;height:440px}
+.r-rays{left:180px;top:420px;width:720px;height:720px}
+.r-p{left:700px;top:760px;width:380px;height:456px}
+.r-ex{left:900px;top:600px}
+.r-m{left:-20px;top:900px;width:340px;height:340px}
+.r-shd1{left:310px;top:1110px;width:440px;height:70px}.r-shd2{left:730px;top:1180px;width:320px;height:50px}
+/* H — НЕ БАЙТ, takeaway, loop */
+.h-st{left:240px;top:200px;width:600px;height:180px;border:18px solid var(--acc);color:var(--acc);font:900 104px/144px Unb}
+.h-w{left:90px;top:540px;width:360px;height:540px}
+.h-w2{left:720px;top:560px;width:280px;height:420px}
+.h-bell{left:720px;top:300px;width:280px;height:280px}
+.h-m{left:620px;top:860px;width:400px;height:400px}
+.h-chip{left:30px;top:1110px}
+.h-shd1{left:110px;top:1060px;width:320px;height:60px}.h-shd2{left:560px;top:1240px;width:340px;height:60px}
+.h-fx{left:0;top:0}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="sun"></div><div id="clouds"></div><div id="hills"></div><div id="trees"></div><div id="walk"></div><div id="near"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="a-w"></div><div class="a-m mm"></div><div class="a-t big"><i>−15</i> СЕКУНД</div><div class="a-t2 lbl">РАЗГОВОРА</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="shd b-shd1"></div><div class="shd b-shd2"></div><div class="b-p"></div><div class="b-bub bub"></div><div class="b-m mm"></div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="shd c-shd1"></div><div class="shd c-shd2"></div><div class="c-bub bub"></div><div class="c-w"></div><div class="c-m mm"></div><div class="c-glove"></div><div class="c-n big"><i class="cnum">0</i> СЕК</div></div></div>
+<div id="T" class="scene"><div class="cam"><div class="shd t-shd1"></div><div class="shd t-shd2"></div><div class="t-w"></div><div class="t-clk"></div><div class="t-m mm"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="shd d-shd1"></div><div class="shd d-shd2"></div><div class="d-w"></div><div class="d-stk">БЕТА</div><div class="d-m mm"></div>
+  <div class="d-c1 nb-chip o chipL">БЕТА-ВЕРСИЯ</div><div class="d-c2 nb-chip c chipL c">ТОЛЬКО АНГЛИЙСКИЙ</div><div class="d-src nb-panel o panT"><b>Apple Support</b> · 03.11.2026</div></div></div>
+<div id="J" class="scene"><div class="cam"><div class="shd j-shd1"></div><div class="shd j-shd2"></div><div class="j-p"></div><div class="j-m mm"></div><div class="j-w"></div><div class="j-say sayb">«Я ТАКОГО НЕ ГОВОРИЛ»</div><div class="j-rep"></div></div></div>
+<div id="Q" class="scene"><div class="cam"><div class="q-spot spot"></div><div class="shd q-shd"></div><div class="q-p"></div><div class="q-w"></div><div class="q-m mm"></div></div></div>
+<div id="R" class="scene"><div class="cam"><div class="r-rays rays"></div><div class="shd r-shd1"></div><div class="shd r-shd2"></div><div class="r-p"></div><div class="r-w"></div><div class="r-bell"></div><div class="r-m mm"></div><div class="r-ex ex">!</div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="shd h-shd1"></div><div class="shd h-shd2"></div><div class="h-w"></div><div class="h-w2"></div><div class="h-bell"></div><div class="h-m mm"></div><div class="h-chip nb-chip r chipL r">ЗВЯКНУЛО = ОТМОТАЛИ</div>
+  <div class="h-st stt">НЕ БАЙТ</div><div class="h-fx"></div></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>

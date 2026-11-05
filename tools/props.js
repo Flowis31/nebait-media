@@ -540,3 +540,56 @@ function manualSVG(id, title = 'ИНСТРУКЦИЯ') {
     <circle cx="170" cy="240" r="62" fill="#5fc8ff" stroke="${PIK}" stroke-width="8"/><path d="M170 196 Q200 240 200 254 Q200 284 170 284 Q140 284 140 254 Q140 240 170 196 Z" fill="#fff" stroke="${PIK}" stroke-width="6"/>
     <path d="M70 340 L270 340 M90 370 L250 370" stroke="#9aa4b2" stroke-width="10" stroke-linecap="round"/><path d="M320 40 L320 420" stroke="${PIK}" stroke-width="8"/>`);
 }
+
+// ---------- added 05.11.2026 (ролик 023 «Часы отматывают разговор») ----------
+// smartwatch, front view, viewBox 0 0 400 600: strap 120..280 from y 0 to 600, case 40..360 x 120..480 (rounded), screen 74..326 x 150..450,
+// crown on the right (356..396, y 230..300) with a side button below. Rig: .wcrown (press with x -14, origin 376 265), .wscr (screen content
+// group), .wclock (time face, o), .wrew (rewind ◀◀ arrows, o / r / s, origin 200 300), .wring (progress ring, dash, pathLength 100),
+// .wl0..wl3 (text lines that draw on, dash), .wmic (orange mic dot, o), .wdim (black overlay = dimmed display, o), .wglow (flash, o),
+// .wspk (speaker grill on the left side), .wmute (bell with a slash, o). col = case colour, strap = strap colour.
+function smartwatchSVG(id, col = '#2b3340', strap = '#ff7a3d') {
+  let lines = '';
+  const wl = [[104, 236, 296], [104, 286, 268], [104, 336, 300], [104, 386, 230]];
+  wl.forEach(([x, y, x2], k) => lines += `<path class="wl${k}" pathLength="100" d="M${x} ${y} L${x2} ${y}" stroke="${k % 2 ? '#9fe2ff' : '#ffffff'}" stroke-width="22" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100"/>`);
+  let holes = ''; for (let k = 0; k < 5; k++) holes += `<circle cx="200" cy="${528 + k * 15}" r="0"/>`;
+  return psv('0 0 400 600', `<defs>${lg('wst' + id, strap, '#b84a1a')}${lg('wc' + id, '#6a7586', col)}${rg('ws' + id, '#1d2a3a', '#05080d', '40%', '30%')}${lg('wcr' + id, '#e8edf3', '#8792a2')}</defs>
+    <path d="M120 0 L280 0 L290 140 L110 140 Z" fill="url(#wst${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M110 460 L290 460 L280 600 L120 600 Z" fill="url(#wst${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M140 20 L150 120 M260 20 L250 120 M150 480 L140 580 M250 480 L260 580" stroke="#fff" stroke-width="5" opacity=".25" stroke-linecap="round"/>
+    <circle cx="200" cy="530" r="9" fill="#7a2a10"/><circle cx="200" cy="562" r="9" fill="#7a2a10"/>
+    <rect x="40" y="120" width="320" height="360" rx="88" fill="url(#wc${id})" stroke="${PIK}" stroke-width="12"/>
+    <rect x="52" y="132" width="296" height="336" rx="78" fill="none" stroke="#fff" stroke-width="5" opacity=".28"/>
+    <g class="wspk"><path d="M40 250 L40 330" stroke="${PIK}" stroke-width="16" stroke-linecap="round"/><path d="M34 262 L34 318" stroke="#9aa4b2" stroke-width="5" stroke-dasharray="6 7"/></g>
+    <g class="wcrown" style="transform-origin:376px 265px"><rect x="352" y="228" width="44" height="74" rx="16" fill="url(#wcr${id})" stroke="${PIK}" stroke-width="9"/>
+      <path d="M366 238 L366 292 M378 236 L378 294 M390 240 L390 290" stroke="#5a6474" stroke-width="4"/></g>
+    <rect x="352" y="330" width="22" height="70" rx="10" fill="#5a6474" stroke="${PIK}" stroke-width="8"/>
+    <rect x="74" y="150" width="252" height="300" rx="62" fill="url(#ws${id})" stroke="${PIK}" stroke-width="8"/>
+    <g class="wscr">
+      <g class="wclock"><text x="200" y="300" text-anchor="middle" style="font:800 92px Mont" fill="#ffffff">10:09</text>
+        <text x="200" y="356" text-anchor="middle" style="font:700 30px Mont" fill="#ff9f2e">ЧТ 5</text>
+        <circle cx="200" cy="198" r="16" fill="#7dff8a" opacity=".85"/></g>
+      <path class="wring" pathLength="100" d="M200 170 A126 126 0 1 1 199.9 170" fill="none" stroke="#ff9f2e" stroke-width="12" stroke-linecap="round" transform="translate(0 10) scale(1 .98)" style="stroke-dasharray:100;stroke-dashoffset:100"/>
+      <g class="wrew" style="transform-origin:200px 300px;opacity:0"><path d="M206 250 L130 300 L206 350 Z M286 250 L210 300 L286 350 Z" fill="#ff9f2e" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/></g>
+      <g class="wtxt">${lines}</g>
+      <g class="wmute" style="opacity:0;transform-origin:200px 300px"><path d="M160 340 L240 340 L228 318 L228 272 Q228 236 200 232 Q172 236 172 272 L172 318 Z" fill="#ffd34d" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>
+        <circle cx="200" cy="352" r="12" fill="#ffd34d" stroke="${PIK}" stroke-width="6"/><path d="M140 230 L262 362" stroke="#ff3b5c" stroke-width="14" stroke-linecap="round"/></g>
+      <circle class="wmic" cx="200" cy="176" r="11" fill="#ff9f2e" style="opacity:0"/>
+    </g>
+    <rect class="wdim" x="74" y="150" width="252" height="300" rx="62" fill="#000" style="opacity:0"/>
+    <rect class="wglow" x="74" y="150" width="252" height="300" rx="62" fill="#fff6d0" style="opacity:0"/>
+    <path d="M96 210 Q104 170 150 162" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".35"/>`);
+}
+// chime bell with sound rings, viewBox 0 0 300 300 (bell centre 150,150). Rig: .cbell2 (swing r, origin 150 60), .cr1/.cr2/.cr3 (rings: o / s, origin 150 150)
+function chimeBellSVG(id, col = '#ffd34d') {
+  let rings = ''; [1, 2, 3].forEach(k => rings += `<g class="cr${k}" style="transform-origin:150px 150px;opacity:0"><path d="M${150 - 70 - k * 30} ${90 - k * 8} Q${150 - 100 - k * 34} 150 ${150 - 70 - k * 30} ${210 + k * 8}" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M${150 + 70 + k * 30} ${90 - k * 8} Q${150 + 100 + k * 34} 150 ${150 + 70 + k * 30} ${210 + k * 8}" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/></g>`);
+  return psv('0 0 300 300', `<defs>${lg('cb2' + id, '#fff3b0', col)}</defs>${rings}
+    <g class="cbell2" style="transform-origin:150px 60px"><circle cx="150" cy="56" r="14" fill="url(#cb2${id})" stroke="${PIK}" stroke-width="8"/>
+      <path d="M90 210 L210 210 L196 182 L196 120 Q196 70 150 66 Q104 70 104 120 L104 182 Z" fill="url(#cb2${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M120 120 Q122 92 146 84" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".7"/>
+      <circle cx="150" cy="228" r="18" fill="url(#cb2${id})" stroke="${PIK}" stroke-width="8"/></g>`);
+}
+// autumn leaf (maple-ish), viewBox 0 0 120 120. col = leaf colour
+function leafSVG(id, col = '#ff8a2e') {
+  return psv('0 0 120 120', `<path d="M60 8 L72 40 L104 30 L90 60 L114 74 L80 82 L84 110 L60 92 L36 110 L40 82 L6 74 L30 60 L16 30 L48 40 Z" fill="${col}" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M60 30 L60 114 M60 64 L86 48 M60 64 L34 48" stroke="${PIK}" stroke-width="4" opacity=".55" fill="none"/>`);
+}
