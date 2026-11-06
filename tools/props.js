@@ -593,3 +593,48 @@ function leafSVG(id, col = '#ff8a2e') {
   return psv('0 0 120 120', `<path d="M60 8 L72 40 L104 30 L90 60 L114 74 L80 82 L84 110 L60 92 L36 110 L40 82 L6 74 L30 60 L16 30 L48 40 Z" fill="${col}" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/>
     <path d="M60 30 L60 114 M60 64 L86 48 M60 64 L34 48" stroke="${PIK}" stroke-width="4" opacity=".55" fill="none"/>`);
 }
+
+// ---------- added 06.11.2026 (ролик 024 «3 897 новых игр в Steam») ----------
+// talking game box (a boxed game, not a real title), viewBox 0 0 360 520 (case 20..340 x 20..500, spine 20..58, cover 62..330 x 34..488).
+// Same face rig as talkPhoneSVG/keyCharSVG, so one talk/blink loop drives it: .keye (sy, origin 196 170), .kpup (x/y), .kbrow (y),
+// .kmouth (sy 0..1 talk), .karmL/.karmR (r, origin 24/336 300; white gloves), .klegL/.klegR (r, origin 130/250 500).
+// Cover art: a hero whose raised hand has six fingers (.ghand origin 268 352; fingers .gf0 .. .gf5, origin at the palm), .gtag (the
+// round «ИИ» sticker top right, o / s, origin 300 70), .gshine (sweep highlight with x). face=false gives a plain shelf box.
+function gameBoxSVG(id, c0 = '#ff5fd2', c1 = '#6a3cff', title = 'КВЕСТ', face = true, tag = true) {
+  const arm = (cls, x0, x1, ox) => `<g class="${cls}" style="transform-origin:${ox}px 300px"><path d="M${ox} 300 Q${x0} 330 ${x1} 392" fill="none" stroke="${PIK}" stroke-width="24" stroke-linecap="round"/><path d="M${ox} 300 Q${x0} 330 ${x1} 392" fill="none" stroke="${c1}" stroke-width="11" stroke-linecap="round"/><circle cx="${x1}" cy="400" r="24" fill="#fff" stroke="${PIK}" stroke-width="7"/><path d="M${x1 - 10} 392 Q${x1} 386 ${x1 + 10} 392" stroke="#c9d2dc" stroke-width="4" fill="none"/></g>`;
+  const leg = (cls, x) => `<g class="${cls}" style="transform-origin:${x}px 500px"><path d="M${x} 490 L${x} 550" stroke="${PIK}" stroke-width="20" stroke-linecap="round"/><path d="M${x} 490 L${x} 550" stroke="${c1}" stroke-width="8" stroke-linecap="round"/><path d="M${x - 26} 566 Q${x - 26} 544 ${x} 544 Q${x + 34} 544 ${x + 34} 566 Z" fill="#ffd34d" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/></g>`;
+  let fing = ''; for (let k = 0; k < 6; k++) { const a = -70 + k * 26, r = a * Math.PI / 180, x2 = 268 + Math.sin(r) * 46, y2 = 340 - Math.cos(r) * 46;
+    fing += `<g class="gf${k}" style="transform-origin:268px 344px"><path d="M268 344 L${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${PIK}" stroke-width="17" stroke-linecap="round"/><path d="M268 344 L${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="#ffcf9f" stroke-width="8" stroke-linecap="round"/></g>`; }
+  return psv('0 0 360 520', `<defs>${lg('gb' + id, c0, c1)}${lg('gs' + id, '#ffb36b', '#ff5f8a')}<clipPath id="gcl${id}"><rect x="62" y="34" width="268" height="454" rx="16"/></clipPath></defs>
+    ${face ? arm('karmL', 0, -22, 24) + arm('karmR', 360, 382, 336) + leg('klegL', 130) + leg('klegR', 250) : ''}
+    <rect x="20" y="20" width="320" height="480" rx="26" fill="#1e1830" stroke="${PIK}" stroke-width="12"/>
+    <rect x="26" y="30" width="30" height="460" rx="10" fill="#2e2648"/><path d="M41 60 L41 460" stroke="#4b3f70" stroke-width="6" stroke-dasharray="18 14"/>
+    <g clip-path="url(#gcl${id})">
+      <rect x="62" y="34" width="268" height="454" fill="url(#gb${id})"/>
+      <circle cx="270" cy="300" r="120" fill="url(#gs${id})" opacity=".55"/>
+      <path d="M62 420 Q140 380 200 410 Q260 440 330 400 L330 488 L62 488 Z" fill="#2a1a4a" opacity=".85"/>
+      <g class="ghero"><circle cx="188" cy="372" r="30" fill="#ffcf9f" stroke="${PIK}" stroke-width="8"/><path d="M160 360 Q188 322 218 356 Q200 346 188 350 Q176 346 160 360 Z" fill="#3a2414" stroke="${PIK}" stroke-width="6"/>
+        <path d="M150 488 Q150 412 188 404 Q226 412 228 488 Z" fill="#26c6ff" stroke="${PIK}" stroke-width="9"/><path d="M216 420 Q240 392 262 362" stroke="${PIK}" stroke-width="22" stroke-linecap="round" fill="none"/><path d="M216 420 Q240 392 262 362" stroke="#26c6ff" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <g class="ghand" style="transform-origin:268px 352px">${fing}<circle cx="268" cy="350" r="19" fill="#ffcf9f" stroke="${PIK}" stroke-width="7"/></g></g>
+      <rect class="gshine" x="-120" y="0" width="60" height="560" fill="#fff" opacity=".22" transform="rotate(18)"/>
+    </g>
+    <rect x="62" y="34" width="268" height="454" rx="16" fill="none" stroke="${PIK}" stroke-width="6"/>
+    <rect x="80" y="48" width="${face ? 150 : 200}" height="44" rx="12" fill="#0f0a1c" opacity=".75"/><text x="${face ? 155 : 180}" y="80" text-anchor="middle" style="font:900 28px Unb" fill="#fff">${title}</text>
+    ${face ? `<g class="keye" style="transform-origin:196px 170px"><ellipse cx="156" cy="170" rx="30" ry="35" fill="#fff" stroke="${PIK}" stroke-width="7"/><ellipse cx="236" cy="170" rx="30" ry="35" fill="#fff" stroke="${PIK}" stroke-width="7"/>
+      <g class="kpup"><circle cx="160" cy="176" r="14" fill="${PIK}"/><circle cx="240" cy="176" r="14" fill="${PIK}"/><circle cx="165" cy="169" r="5" fill="#fff"/><circle cx="245" cy="169" r="5" fill="#fff"/></g></g>
+    <g class="kbrow"><path d="M124 122 Q152 106 182 118" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/><path d="M210 118 Q240 106 268 122" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/></g>
+    <g class="kmouth" style="transform-origin:196px 242px;transform:scaleY(0.12)"><path d="M158 238 Q196 234 234 238 Q228 292 196 292 Q164 292 158 238 Z" fill="#5a1414" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/><ellipse cx="196" cy="278" rx="17" ry="8" fill="#ff7a8a"/></g>
+    <path d="M160 238 Q196 250 232 238" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="122" cy="214" rx="15" ry="9" fill="#ff8a7a" opacity=".5"/><ellipse cx="270" cy="214" rx="15" ry="9" fill="#ff8a7a" opacity=".5"/>` : ''}
+    ${tag ? `<g class="gtag" style="transform-origin:300px 70px"><circle cx="300" cy="70" r="40" fill="#fff36b" stroke="${PIK}" stroke-width="8"/><text x="300" y="84" text-anchor="middle" style="font:900 36px Unb" fill="${PIK}">ИИ</text></g>` : ''}
+    <path d="M74 50 Q120 40 170 42" fill="none" stroke="#fff" stroke-width="7" opacity=".5" stroke-linecap="round"/>`);
+}
+// tally counter clicker, viewBox 0 0 260 300 (window 50..210 x 120..190). Rig: .tbtn (button press y, origin 130 40), .tdig (text in the window)
+function tallySVG(id) {
+  return psv('0 0 260 300', `<defs>${lg('ty' + id, '#e8eef6', '#8a9bb0')}</defs>
+    <rect x="114" y="20" width="32" height="40" rx="8" class="tbtn" fill="#ff4d5e" stroke="${PIK}" stroke-width="8"/>
+    <circle cx="130" cy="170" r="118" fill="url(#ty${id})" stroke="${PIK}" stroke-width="12"/><circle cx="130" cy="170" r="96" fill="none" stroke="#fff" stroke-width="5" opacity=".5"/>
+    <rect x="50" y="130" width="160" height="70" rx="12" fill="#0f1420" stroke="${PIK}" stroke-width="7"/><text class="tdig" x="130" y="182" text-anchor="middle" style="font:800 48px JB" fill="#7dff8a">0000</text>
+    <path d="M230 250 Q260 280 250 296" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/><circle cx="252" cy="296" r="10" fill="#c9d2dc" stroke="${PIK}" stroke-width="6"/>
+    <path d="M60 110 Q90 74 140 70" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".6"/>`);
+}

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#1a0f33;--acc:#b8ff3d;--accd:#74c81c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa698;--line:#24382c;--amb:#ffb84d;--mus:#ffd34d;--ket:#ff4d5e;--cy:#ff8ae0;--gy:#ffd84d;--vi:#b36bff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: a game store at night — shelves of boxes (far), arcade hall with neon (mid), carpet (near) */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#140a2a 0%,#1f1240 55%,#2a1650 100%)}
+#shelf{position:absolute;left:0;top:40px;width:4800px;height:1000px;will-change:transform;opacity:.6}
+#hall{position:absolute;left:-700px;top:40px;width:3400px;height:1300px;will-change:transform;opacity:.9}
+#floor{position:absolute;left:-700px;top:1230px;width:3400px;height:700px;will-change:transform;background:radial-gradient(circle at 30px 30px,#5a2f8a 0 9px,transparent 10px) 0 0/60px 60px,#3a1d63}
+#floor:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,10,42,.35),rgba(20,10,42,.9))}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(255,95,210,.16) 0%,rgba(255,95,210,.05) 45%,rgba(255,95,210,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(38,198,255,.12) 0%,rgba(38,198,255,.04) 45%,rgba(38,198,255,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.55) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#stampL{position:absolute;left:0;top:0;width:1080px;height:1920px;pointer-events:none}
+#stampL *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--gy)}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.v{border-left-color:var(--cy);border-color:rgba(255,138,224,.35);background:linear-gradient(180deg,rgba(48,24,80,.95),rgba(26,12,48,.95))}
+.nb-chip.v{border-color:rgba(255,138,224,.6);background:rgba(26,12,48,.92)}
+.nb-chip.y{border-color:rgba(255,216,77,.65);background:rgba(36,26,8,.92)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:var(--cy);text-align:center;white-space:nowrap}
+.chipL.y{color:var(--gy)}
+.panT{padding:18px 40px 20px 46px;font:800 40px/1.24 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--cy);font-weight:900}
+.big{font:900 200px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--gy)}
+.lbl{font:900 96px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.sm{font-size:46px;-webkit-text-stroke:8px var(--ink)}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.m{width:340px;height:340px}
+.stt{border-radius:30px;text-align:center;background:rgba(14,6,28,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.qm{font:900 120px/1 Unb;color:var(--gy);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.num{font:900 64px/1 Unb;color:var(--gy);-webkit-text-stroke:9px var(--ink);paint-order:stroke fill}
+.tile{border-radius:34px;background:linear-gradient(180deg,#3a2468,#22143f);border:8px solid var(--ink);box-shadow:0 22px 50px rgba(0,0,0,.5)}
+.plank{height:30px;border-radius:10px;background:linear-gradient(180deg,#8a5a3a,#5a3a24);border:7px solid var(--ink)}
+.coin{width:96px;height:96px}
+/* A — hook */
+.a-n{left:0;top:170px;width:1080px}
+.a-u{left:0;top:400px;width:1080px}
+.a-chip{left:40px;top:528px}
+.a-box{left:330px;top:620px;width:380px;height:549px}
+.a-s1{left:20px;top:860px;width:230px;height:332px}.a-s2{left:50px;top:700px;width:200px;height:289px}
+.a-m{left:720px;top:930px;width:340px;height:340px}
+.a-shd1{left:330px;top:1160px;width:400px;height:60px}.a-shd2{left:10px;top:1170px;width:270px;height:50px}.a-shd3{left:740px;top:1235px;width:300px;height:50px}
+/* B — secret: a neural net painted me */
+.b-t{left:0;top:200px;width:1080px}
+.b-chip{left:560px;top:360px}
+.b-box{left:110px;top:520px;width:420px;height:607px}
+.b-bot{left:610px;top:560px;width:400px;height:440px}
+.b-brush{left:520px;top:600px;width:100px;height:300px;transform-origin:50px 20px}
+.b-paint{left:0;top:0;width:1080px;height:1920px}
+.b-m{left:760px;top:990px;width:300px;height:300px}
+.b-shd1{left:120px;top:1170px;width:420px;height:60px}.b-shd2{left:640px;top:980px;width:340px;height:50px}
+/* C — the store page and its mark */
+.c-page{left:190px;top:170px;width:820px;height:1025px}
+.c-thumb{left:244px;top:305px;width:250px;height:361px}
+.c-dev{left:-30px;top:870px;width:340px;height:408px}
+.c-pen{left:250px;top:1010px;width:60px;height:200px;transform-origin:30px 190px}
+.c-chip{left:330px;top:1215px}
+.c-m{left:790px;top:960px;width:290px;height:290px}
+/* D — the mark covers what you see and hear */
+.d-t{left:0;top:190px;width:1080px;font-size:76px}
+.d-eye{left:150px;top:360px;width:300px;height:185px}
+.d-ear{left:720px;top:330px;width:160px;height:231px}
+.d-t1{left:70px;top:620px;width:280px;height:280px}.d-t2{left:400px;top:620px;width:280px;height:280px}.d-t3{left:730px;top:620px;width:280px;height:280px}
+.d-i{left:12px;top:12px;width:240px;height:240px}
+.d-l1{left:10px;top:925px;width:400px}.d-l2{left:340px;top:925px;width:400px}.d-l3{left:670px;top:925px;width:400px}
+.d-m{left:370px;top:1000px;width:320px;height:320px}
+/* E — joke: six fingers on the cover */
+.e-n{left:0;top:170px;width:1080px}
+.e-box{left:140px;top:330px;width:600px;height:867px}
+.e-mag{left:690px;top:640px;width:260px;height:260px}
+.e-m{left:770px;top:960px;width:300px;height:300px}
+.e-shd1{left:150px;top:1250px;width:600px;height:70px}.e-shd2{left:790px;top:1240px;width:270px;height:50px}
+/* F — every second one? */
+.f-t1{left:0;top:180px;width:1080px}.f-t2{left:0;top:295px;width:1080px}
+.f-p1{left:20px;top:715px;width:1040px}.f-p2{left:20px;top:1005px;width:1040px}
+.f-m{left:390px;top:1010px;width:300px;height:300px}
+/* G — the researcher counts every page */
+.g-chip{left:40px;top:190px}
+.g-src{left:40px;top:310px}
+.g-r{left:40px;top:760px;width:380px;height:456px}
+.g-tal{left:330px;top:960px;width:150px;height:173px}
+.g-m{left:740px;top:990px;width:300px;height:300px}
+.g-pg{width:300px;height:375px}
+.g-shd1{left:60px;top:1190px;width:380px;height:60px}.g-shd2{left:770px;top:1265px;width:250px;height:46px}
+/* H — the result: 1 982 of 3 897 */
+.h-n1{left:0;top:520px;width:440px;font-size:84px}.h-n2{left:380px;top:520px;width:440px;font-size:84px}
+.h-c1{left:90px;top:640px;width:260px;height:610px;border-radius:26px;border:10px solid var(--ink);background:repeating-linear-gradient(180deg,#6a5a8e 0 40px,#56487a 40px 46px);overflow:hidden}
+.h-c2{left:470px;top:640px;width:260px;height:610px;border-radius:26px;border:10px solid var(--ink);background:rgba(20,10,40,.7);overflow:hidden}
+.h-f{left:0;bottom:0;top:auto;width:240px;height:590px;transform-origin:50% 100%;background:repeating-linear-gradient(180deg,#ff8ae0 0 40px,#e05cc0 40px 46px)}
+.h-half{left:60px;top:945px;width:720px;height:0;border-top:10px dashed #fff36b}
+.h-hl{left:40px;top:975px}
+.h-m{left:745px;top:950px;width:300px;height:300px}
+.h-shd{left:780px;top:1240px;width:280px;height:50px}
+/* stamp (persists from the verdict to the loop) */
+.st{left:240px;top:225px;width:600px;height:180px;border:18px solid var(--gy);color:var(--gy);font:900 104px/144px Unb}
+/* I — they rarely sell; takeaway; loop */
+.i-b1{left:70px;top:510px;width:280px;height:404px}.i-b2{left:680px;top:510px;width:280px;height:404px}
+.i-pc{left:590px;top:1000px;width:460px}
+.i-m{left:380px;top:760px;width:300px;height:300px}
+.i-page{left:200px;top:470px;width:680px;height:850px}
+.i-shd1{left:60px;top:890px;width:300px;height:50px}.i-shd2{left:680px;top:940px;width:300px;height:50px}
+.fx{left:0;top:0}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="shelf"></div><div id="hall"></div><div id="floor"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="shd a-shd3"></div><div class="a-s2"></div><div class="a-s1"></div><div class="a-box"></div><div class="m a-m"></div><div class="a-n big">3 <i>897</i></div><div class="a-u lbl">НОВЫХ ИГР</div><div class="a-chip nb-chip v chipL">STEAM · ОКТЯБРЬ</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="shd b-shd1"></div><div class="shd b-shd2"></div><div class="b-t lbl">СЕКРЕТ</div><div class="b-box"></div><div class="b-paint"></div><div class="b-bot"></div><div class="b-brush"></div><div class="m b-m"></div><div class="b-chip nb-chip y chipL y">НЕЙРОНКА</div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-page"></div><div class="c-thumb"></div><div class="c-dev"></div><div class="c-pen"></div><div class="m c-m"></div><div class="c-chip nb-chip v chipL">ПРАВИЛО STEAM</div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="d-t lbl">ОТМЕТКА — ПРО</div><div class="d-eye"></div><div class="d-ear"></div>
+  <div class="tile d-t1"><div class="d-i"></div></div><div class="tile d-t2"><div class="d-i"></div></div><div class="tile d-t3"><div class="d-i"></div></div>
+  <div class="d-l1 lbl sm">КАРТИНКИ</div><div class="d-l2 lbl sm">ЗВУК</div><div class="d-l3 lbl sm">ТЕКСТ</div><div class="m d-m"></div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="shd e-shd1"></div><div class="shd e-shd2"></div><div class="e-box"></div><div class="e-nums"></div><div class="m e-m"></div><div class="e-mag"></div><div class="e-n lbl"><i>6</i> ПАЛЬЦЕВ</div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-t1 lbl">КАЖДАЯ</div><div class="f-t2 lbl"><i>ВТОРАЯ?</i></div><div class="f-boxes"></div><div class="plank f-p1"></div><div class="plank f-p2"></div><div class="m f-m"></div><div class="f-q qm">?</div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="shd g-shd1"></div><div class="shd g-shd2"></div><div class="g-pages"></div><div class="g-r"></div><div class="g-tal"></div><div class="m g-m"></div><div class="g-chip nb-chip v chipL">ВСЕ НОВИНКИ ОКТЯБРЯ</div><div class="g-src nb-panel v panT"><b>Подсчёт</b> по страницам Steam · 04.11.2026</div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="shd h-shd"></div><div class="h-c1"></div><div class="h-c2"><div class="h-f"></div></div><div class="h-half"></div><div class="h-n1 lbl">3 897</div><div class="h-n2 lbl"><i class="hnum">0</i></div><div class="h-hl nb-chip y chipL y">ПОЛОВИНА</div><div class="m h-m"></div><div class="fx h-fx"></div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="shd i-shd1"></div><div class="shd i-shd2"></div><div class="i-b1"></div><div class="i-b2"></div><div class="i-coins"></div><div class="i-pc lbl"><i>12%</i></div><div class="i-page"></div><div class="m i-m"></div></div></div>
+<div id="A2" class="scene"></div>
+<div id="stampL"><div class="st stt">НЕ БАЙТ</div><div class="fx st-fx"></div></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
