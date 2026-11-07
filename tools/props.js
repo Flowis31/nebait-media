@@ -530,14 +530,15 @@ function clockSVG(id, col = '#ff8a3d') {
 }
 // instruction booklet (open), viewBox 0 0 640 440: two pages with text lines. Rig: .mline0..mline5 (draw-on lines on the right page, pathLength 100, dash),
 // .mmark (red underline, dash), .mpage (right page, sx flip origin 320 220), title on the left page
-function manualSVG(id, title = 'ИНСТРУКЦИЯ') {
+function manualSVG(id, title = 'ИНСТРУКЦИЯ', icon = 'drop') {   // icon: 'drop' (water, 022) | 'shield' (security memo, 025)
   let lines = ''; for (let k = 0; k < 6; k++) lines += `<path class="mline${k}" pathLength="100" d="M360 ${120 + k * 44} L${560 - (k % 3) * 40} ${120 + k * 44}" stroke="#5a6474" stroke-width="12" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100"/>`;
   return psv('0 0 640 440', `<defs>${lg('mn' + id, '#ffffff', '#e8e2d2')}</defs>
     <path d="M20 40 Q170 10 320 40 L320 420 Q170 390 20 420 Z" fill="url(#mn${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
     <g class="mpage" style="transform-origin:320px 220px"><path d="M320 40 Q470 10 620 40 L620 420 Q470 390 320 420 Z" fill="url(#mn${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>${lines}
       <path class="mmark" pathLength="100" d="M350 390 Q470 372 590 386" fill="none" stroke="#ff3b5c" stroke-width="12" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100"/></g>
     <text x="170" y="120" text-anchor="middle" style="font:900 27px Unb" fill="#2a3346">${title}</text>
-    <circle cx="170" cy="240" r="62" fill="#5fc8ff" stroke="${PIK}" stroke-width="8"/><path d="M170 196 Q200 240 200 254 Q200 284 170 284 Q140 284 140 254 Q140 240 170 196 Z" fill="#fff" stroke="${PIK}" stroke-width="6"/>
+    ${icon === 'shield' ? `<path d="M170 176 L224 196 Q226 268 170 304 Q114 268 116 196 Z" fill="#3de0ff" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/><path d="M146 240 L164 260 L198 222" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>` :
+    `<circle cx="170" cy="240" r="62" fill="#5fc8ff" stroke="${PIK}" stroke-width="8"/><path d="M170 196 Q200 240 200 254 Q200 284 170 284 Q140 284 140 254 Q140 240 170 196 Z" fill="#fff" stroke="${PIK}" stroke-width="6"/>`}
     <path d="M70 340 L270 340 M90 370 L250 370" stroke="#9aa4b2" stroke-width="10" stroke-linecap="round"/><path d="M320 40 L320 420" stroke="${PIK}" stroke-width="8"/>`);
 }
 
@@ -637,4 +638,135 @@ function tallySVG(id) {
     <rect x="50" y="130" width="160" height="70" rx="12" fill="#0f1420" stroke="${PIK}" stroke-width="7"/><text class="tdig" x="130" y="182" text-anchor="middle" style="font:800 48px JB" fill="#7dff8a">0000</text>
     <path d="M230 250 Q260 280 250 296" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/><circle cx="252" cy="296" r="10" fill="#c9d2dc" stroke="${PIK}" stroke-width="6"/>
     <path d="M60 110 Q90 74 140 70" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".6"/>`);
+}
+
+// =====================================================================================================================
+// added 07.11.2026 (ролик 025 «Выключать телефон раз в неделю»)
+// ---------- phone cutaway: the inside of a phone as a little room, viewBox 0 0 520 900.
+//   Top: the SHELF (= memory/storage, keeps things when off) — plank at y 320..346, items .shp1 (photo), .sha1/.sha2 (apps), .shp2 (photos).
+//   Bottom: the TABLE (= RAM, emptied when off) — top at y 690..716, items .tb1 (music), .tb2 (browser window), .tb3 (game pad).
+//   .pdark — black screen overlay (o 0..1, starts hidden), .pbtn — side power button (x to press), .pscr — the wall (screen).
+//   All item groups have transform-box: fill-box, so tween r/s/x/y around their own centre.
+function phoneCutawaySVG(id, body = '#2b3446') {
+  const fb = 'style="transform-box:fill-box;transform-origin:center"';
+  return psv('0 0 520 900', `<defs>${lg('pcb' + id, '#4a5670', body)}${lg('pcw' + id, '#1f6a7a', '#0d2d3c')}${lg('pcwd' + id, '#d9955a', '#9a5a2e')}
+    ${lg('pcg' + id, '#7dd3ff', '#3a7bd8')}${lg('pco' + id, '#ffcf5a', '#ff7a3d')}${lg('pcs' + id, '#ffe9a8', '#ffb84d')}</defs>
+  <rect x="10" y="10" width="500" height="880" rx="74" fill="url(#pcb${id})" stroke="${PIK}" stroke-width="12"/>
+  <path d="M40 120 Q40 40 120 40" fill="none" stroke="#fff" stroke-width="8" opacity=".22" stroke-linecap="round"/>
+  <g class="pbtn"><rect x="504" y="250" width="22" height="110" rx="9" fill="#ff5f6d" stroke="${PIK}" stroke-width="7"/></g>
+  <rect x="-6" y="230" width="18" height="70" rx="7" fill="#7a869c" stroke="${PIK}" stroke-width="6"/><rect x="-6" y="320" width="18" height="70" rx="7" fill="#7a869c" stroke="${PIK}" stroke-width="6"/>
+  <rect class="pscr" x="40" y="70" width="440" height="780" rx="44" fill="url(#pcw${id})"/>
+  <path d="M40 520 L480 520 L480 806 Q480 850 436 850 L84 850 Q40 850 40 806 Z" fill="#0b2430" opacity=".55"/>
+  <circle cx="380" cy="160" r="60" fill="#5fe0ff" opacity=".08"/><circle cx="120" cy="470" r="90" fill="#5fe0ff" opacity=".06"/>
+  <rect x="200" y="30" width="120" height="24" rx="12" fill="#0a0c10"/>
+  <!-- shelf -->
+  <path d="M110 346 L130 380 L150 346 Z M370 346 L390 380 L410 346 Z" fill="#7a4a26" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>
+  <rect x="66" y="318" width="388" height="30" rx="9" fill="url(#pcwd${id})" stroke="${PIK}" stroke-width="9"/><path d="M80 326 L440 326" stroke="#ffd29a" stroke-width="5" opacity=".6"/>
+  <g class="shp1" ${fb}><rect x="84" y="200" width="104" height="118" rx="10" fill="#f4ecd9" stroke="${PIK}" stroke-width="8"/><rect x="98" y="214" width="76" height="72" rx="4" fill="#8fd3ff"/>
+    <path d="M98 286 L124 248 L142 270 L156 254 L174 286 Z" fill="#3aa86a"/><circle cx="160" cy="232" r="9" fill="#ffd34d"/></g>
+  <g class="sha1" ${fb}><rect x="206" y="234" width="84" height="84" rx="22" fill="url(#pcg${id})" stroke="${PIK}" stroke-width="8"/><path d="M228 296 L248 256 L268 296 Z" fill="#fff"/><path d="M216 246 Q222 240 236 240" stroke="#fff" stroke-width="5" opacity=".6" fill="none" stroke-linecap="round"/></g>
+  <g class="sha2" ${fb}><rect x="302" y="234" width="84" height="84" rx="22" fill="url(#pco${id})" stroke="${PIK}" stroke-width="8"/><circle cx="344" cy="276" r="20" fill="none" stroke="#fff" stroke-width="9"/><path d="M312 246 Q318 240 332 240" stroke="#fff" stroke-width="5" opacity=".6" fill="none" stroke-linecap="round"/></g>
+  <g class="shp2" ${fb}><rect x="398" y="262" width="46" height="56" rx="6" fill="#f4ecd9" stroke="${PIK}" stroke-width="7" transform="rotate(-8 421 290)"/><rect x="402" y="256" width="46" height="62" rx="6" fill="#fff6e0" stroke="${PIK}" stroke-width="7" transform="rotate(6 425 287)"/></g>
+  <!-- table -->
+  <path d="M108 716 L100 836 M412 716 L420 836" stroke="${PIK}" stroke-width="26" stroke-linecap="round"/><path d="M108 716 L100 836 M412 716 L420 836" stroke="#9a5a2e" stroke-width="12" stroke-linecap="round"/>
+  <rect x="70" y="686" width="380" height="32" rx="10" fill="url(#pcwd${id})" stroke="${PIK}" stroke-width="9"/><path d="M84 695 L436 695" stroke="#ffd29a" stroke-width="5" opacity=".6"/>
+  <g class="tb1" ${fb}><rect x="88" y="598" width="92" height="88" rx="16" fill="#ff8ae0" stroke="${PIK}" stroke-width="8"/><circle cx="134" cy="642" r="24" fill="#3a1d50" stroke="${PIK}" stroke-width="5"/><circle cx="134" cy="642" r="9" fill="#ffd34d"/>
+    <g class="tbnote"><path d="M150 560 L150 520 L176 512 L176 552" fill="none" stroke="#ffd34d" stroke-width="8" stroke-linecap="round"/><ellipse cx="144" cy="562" rx="11" ry="8" fill="#ffd34d"/><ellipse cx="170" cy="554" rx="11" ry="8" fill="#ffd34d"/></g></g>
+  <g class="tb2" ${fb}><rect x="196" y="560" width="148" height="126" rx="12" fill="#f4f7ff" stroke="${PIK}" stroke-width="8"/><rect x="196" y="560" width="148" height="28" rx="12" fill="#3a7bd8" stroke="${PIK}" stroke-width="8"/>
+    <circle cx="214" cy="574" r="5" fill="#ff5f6d"/><circle cx="230" cy="574" r="5" fill="#ffd34d"/><rect x="212" y="604" width="116" height="12" rx="6" fill="#b6c3dc"/><rect x="212" y="626" width="86" height="12" rx="6" fill="#b6c3dc"/><rect x="212" y="648" width="100" height="12" rx="6" fill="#b6c3dc"/></g>
+  <g class="tb3" ${fb}><path d="M362 642 Q362 618 390 618 L414 618 Q442 618 442 642 L446 668 Q448 690 428 690 Q418 690 410 676 L394 676 Q386 690 376 690 Q356 690 358 668 Z" fill="#7dff8a" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M380 640 L380 656 M372 648 L388 648" stroke="${PIK}" stroke-width="6" stroke-linecap="round"/><circle cx="420" cy="642" r="5" fill="${PIK}"/><circle cx="430" cy="654" r="5" fill="${PIK}"/></g>
+  <rect class="pdark" x="40" y="70" width="440" height="780" rx="44" fill="#03070b" style="opacity:0"/>
+  <path d="M70 820 L460 120" stroke="#fff" stroke-width="18" opacity=".05" stroke-linecap="round"/>`);
+}
+
+// ---------- hacker / spy in a hoodie (small, cute, eyes glow), viewBox 0 0 220 280.
+//   Rig: .hkarmL/.hkarmR (origin 62/158 150), .hkeye (sy blink), .hkpup (x/y), .hkmouth (sy), .hkbody (whole, fill-box)
+function hackerSVG(id, hood = '#4a3a7a') {
+  return psv('0 0 220 280', `<defs>${lg('hk' + id, '#6a58a8', hood)}${rg('hkf' + id, '#2a2f44', '#0b0d16')}</defs>
+  <g class="hkbody">
+  <path d="M86 246 L80 272 M134 246 L140 272" stroke="${PIK}" stroke-width="20" stroke-linecap="round"/><path d="M86 246 L80 272 M134 246 L140 272" stroke="#2a2f44" stroke-width="9" stroke-linecap="round"/>
+  <g class="hkarmL" style="transform-origin:62px 150px"><path d="M62 150 Q30 180 40 214" fill="none" stroke="${PIK}" stroke-width="28" stroke-linecap="round"/><path d="M62 150 Q30 180 40 214" fill="none" stroke="${hood}" stroke-width="15" stroke-linecap="round"/><circle cx="40" cy="216" r="13" fill="#1a1d2a" stroke="${PIK}" stroke-width="6"/></g>
+  <g class="hkarmR" style="transform-origin:158px 150px"><path d="M158 150 Q190 180 180 214" fill="none" stroke="${PIK}" stroke-width="28" stroke-linecap="round"/><path d="M158 150 Q190 180 180 214" fill="none" stroke="${hood}" stroke-width="15" stroke-linecap="round"/><circle cx="180" cy="216" r="13" fill="#1a1d2a" stroke="${PIK}" stroke-width="6"/></g>
+  <path d="M56 140 Q110 116 164 140 L176 246 Q110 262 44 246 Z" fill="url(#hk${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M96 150 L100 200 M124 150 L120 200" stroke="#d9d2ff" stroke-width="5" stroke-linecap="round"/><path d="M80 214 Q110 224 140 214" fill="none" stroke="#2c2350" stroke-width="7" stroke-linecap="round"/>
+  <path d="M110 12 Q190 18 182 112 Q176 150 110 152 Q44 150 38 112 Q30 18 110 12 Z" fill="url(#hk${id})" stroke="${PIK}" stroke-width="10"/>
+  <ellipse cx="110" cy="96" rx="56" ry="48" fill="url(#hkf${id})" stroke="${PIK}" stroke-width="7"/>
+  <g class="hkeye" style="transform-box:fill-box;transform-origin:center"><ellipse cx="88" cy="90" rx="14" ry="11" fill="#7dfcff"/><ellipse cx="132" cy="90" rx="14" ry="11" fill="#7dfcff"/>
+    <g class="hkpup"><circle cx="91" cy="91" r="5" fill="${PIK}"/><circle cx="135" cy="91" r="5" fill="${PIK}"/></g></g>
+  <path d="M72 72 L102 80 M148 72 L118 80" stroke="#7dfcff" stroke-width="5" stroke-linecap="round" opacity=".9"/>
+  <g class="hkmouth" style="transform-box:fill-box;transform-origin:center"><path d="M92 118 Q110 132 128 118" fill="none" stroke="#7dfcff" stroke-width="6" stroke-linecap="round"/></g>
+  <path d="M60 40 Q80 22 110 20" fill="none" stroke="#fff" stroke-width="6" opacity=".3" stroke-linecap="round"/></g>`);
+}
+
+// ---------- app icon with a face (a sneaky/virus app), viewBox 0 0 220 220. Rig: .apeye (sy), .appup (x/y), .apmouth (sy), .apbrow (y/r), .apbadge (s)
+function appIconSVG(id, c0 = '#ff5f6d', c1 = '#8a1fd8', face = true, badge = true) {
+  const fb = 'style="transform-box:fill-box;transform-origin:center"';
+  return psv('0 0 220 220', `<defs>${lg('ap' + id, c0, c1)}</defs>
+  <rect x="12" y="12" width="196" height="196" rx="54" fill="url(#ap${id})" stroke="${PIK}" stroke-width="11"/>
+  <path d="M40 52 Q48 34 80 32" fill="none" stroke="#fff" stroke-width="9" opacity=".55" stroke-linecap="round"/>
+  ${face ? `<g class="apbrow" ${fb}><path d="M56 70 L96 86 M164 70 L124 86" stroke="${PIK}" stroke-width="11" stroke-linecap="round"/></g>
+  <g class="apeye" ${fb}><ellipse cx="80" cy="104" rx="20" ry="17" fill="#fff" stroke="${PIK}" stroke-width="7"/><ellipse cx="140" cy="104" rx="20" ry="17" fill="#fff" stroke="${PIK}" stroke-width="7"/>
+    <g class="appup"><circle cx="84" cy="108" r="8" fill="${PIK}"/><circle cx="144" cy="108" r="8" fill="${PIK}"/></g></g>
+  <g class="apmouth" ${fb}><path d="M66 146 Q110 186 154 146 Z" fill="#3a0a1a" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/><path d="M82 150 L90 162 L98 152 L106 164 L114 152 L122 164 L130 152 L138 160" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></g>` : ''}
+  ${badge ? `<g class="apbadge" ${fb}><circle cx="196" cy="24" r="26" fill="#ff3b5c" stroke="${PIK}" stroke-width="8"/><text x="196" y="36" text-anchor="middle" style="font:900 32px Unb" fill="#fff">!</text></g>` : ''}`);
+}
+
+// ---------- trash bin, viewBox 0 0 220 300. Rig: .tlid (lid, rotate around its left hinge 20,70)
+function trashBinSVG(id, col = '#5fb0ff') {
+  return psv('0 0 220 300', `<defs>${lg('tb' + id, '#c9e6ff', col)}</defs>
+  <path d="M28 88 L44 288 L176 288 L192 88 Z" fill="url(#tb${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+  <path d="M76 116 L82 260 M110 116 L110 260 M144 116 L138 260" stroke="${PIK}" stroke-width="8" stroke-linecap="round" opacity=".55"/>
+  <path d="M46 104 L56 270" stroke="#fff" stroke-width="7" opacity=".5" stroke-linecap="round"/>
+  <g class="tlid" style="transform-origin:20px 70px"><rect x="12" y="56" width="196" height="30" rx="12" fill="url(#tb${id})" stroke="${PIK}" stroke-width="10"/><path d="M84 56 Q84 30 110 30 Q136 30 136 56" fill="none" stroke="${PIK}" stroke-width="10"/></g>`);
+}
+
+// ---------- tear-off calendar, viewBox 0 0 260 300. txt = big text on the page (one or two words, \n splits lines), .cpage (flip, origin top)
+function calendarSVG(id, top = 'УБОРКА', txt = '', col = '#ff5f6d') {
+  const ls = txt.split('\n'); const fs = ls.length > 1 ? 50 : 70;
+  return psv('0 0 260 300', `<defs>${lg('cl' + id, '#ffffff', '#e9e1cf')}</defs>
+  <rect x="14" y="40" width="232" height="246" rx="22" fill="url(#cl${id})" stroke="${PIK}" stroke-width="10"/>
+  <path d="M14 62 Q14 40 36 40 L224 40 Q246 40 246 62 L246 108 L14 108 Z" fill="${col}" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <text x="130" y="88" text-anchor="middle" style="font:900 32px Unb" fill="#fff">${top}</text>
+  <g class="cpage" style="transform-origin:130px 108px">${ls.map((l, i) => `<text x="130" y="${190 + (i - (ls.length - 1) / 2) * 62}" text-anchor="middle" style="font:900 ${fs}px Unb" fill="${PIK}">${l}</text>`).join('')}</g>
+  <rect x="62" y="20" width="18" height="44" rx="9" fill="#9aa4b0" stroke="${PIK}" stroke-width="6"/><rect x="180" y="20" width="18" height="44" rx="9" fill="#9aa4b0" stroke="${PIK}" stroke-width="6"/>`);
+}
+
+// ---------- broom, viewBox 0 0 160 420 (handle top, bristles bottom). Rotate around the top hand ~ (80, 80)
+function broomSVG(id) {
+  return psv('0 0 160 420', `<defs>${lg('br' + id, '#ffe08a', '#e0a33a')}</defs>
+  <path d="M80 10 L80 280" stroke="${PIK}" stroke-width="26" stroke-linecap="round"/><path d="M80 10 L80 280" stroke="#b5643a" stroke-width="13" stroke-linecap="round"/>
+  <path d="M50 270 L110 270 L148 404 Q80 418 12 404 Z" fill="url(#br${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M60 290 L44 396 M80 290 L80 400 M100 290 L116 396" stroke="#b07a28" stroke-width="6" stroke-linecap="round"/><rect x="44" y="258" width="72" height="24" rx="8" fill="#ff5f6d" stroke="${PIK}" stroke-width="8"/>`);
+}
+
+// ---------- big power button on a pedestal, viewBox 0 0 300 240. Rig: .pwcap (press: y down / sy), .pwglow (o)
+function powerButtonSVG(id, col = '#ff5f6d') {
+  return psv('0 0 300 240', `<defs>${lg('pw' + id, '#ff9aa6', col)}${lg('pwb' + id, '#4a5670', '#1c2230')}</defs>
+  <ellipse class="pwglow" cx="150" cy="110" rx="130" ry="70" fill="${col}" opacity=".0"/>
+  <path d="M30 170 L270 170 L250 230 L50 230 Z" fill="url(#pwb${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+  <ellipse cx="150" cy="170" rx="120" ry="30" fill="#2b3446" stroke="${PIK}" stroke-width="10"/>
+  <g class="pwcap" style="transform-origin:150px 170px"><path d="M56 150 L56 110 Q150 60 244 110 L244 150 Q150 196 56 150 Z" fill="#a8283d" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <ellipse cx="150" cy="110" rx="94" ry="40" fill="url(#pw${id})" stroke="${PIK}" stroke-width="10"/>
+    <path d="M128 96 A30 22 0 1 0 172 96" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><path d="M150 82 L150 108" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+    <path d="M86 98 Q100 84 130 80" fill="none" stroke="#fff" stroke-width="7" opacity=".55" stroke-linecap="round"/></g>`);
+}
+
+// ---------- gauge with two zones (left lbl0, right lbl1; labels in pills under the base, .glbl0/.glbl1), viewBox 0 0 640 430. Rig: .gneedle (rotate around 320 340; -58 = left zone, +58 = right zone)
+function gaugeSVG(id, lbl0 = 'ИНОГДА', lbl1 = 'ВСЕГДА', c0 = '#ffb84d', c1 = '#5fe0ff') {
+  return psv('0 0 640 430', `<defs>${lg('gz' + id, '#3a4660', '#1c2230')}</defs>
+  <path d="M40 340 A280 280 0 0 1 600 340 Z" fill="url(#gz${id})" stroke="${PIK}" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M80 340 A240 240 0 0 1 320 100" fill="none" stroke="${c0}" stroke-width="40"/><path d="M320 100 A240 240 0 0 1 560 340" fill="none" stroke="${c1}" stroke-width="40"/>
+  <path d="M80 340 A240 240 0 0 1 560 340" fill="none" stroke="${PIK}" stroke-width="6" opacity=".5"/>
+  <rect x="40" y="356" width="250" height="64" rx="32" fill="#0d1a22" stroke="${c0}" stroke-width="6"/><rect x="350" y="356" width="250" height="64" rx="32" fill="#0d1a22" stroke="${c1}" stroke-width="6"/>
+  <text class="glbl0" x="165" y="401" text-anchor="middle" style="font:900 36px Unb" fill="${c0}">${lbl0}</text><text class="glbl1" x="475" y="401" text-anchor="middle" style="font:900 36px Unb" fill="${c1}">${lbl1}</text>
+  <g class="gneedle" style="transform-origin:320px 340px"><path d="M308 340 L320 120 L332 340 Z" fill="#fff" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/></g>
+  <circle cx="320" cy="340" r="30" fill="#ff5f6d" stroke="${PIK}" stroke-width="10"/>`);
+}
+
+// ---------- popcorn bucket, viewBox 0 0 200 240
+function popcornSVG(id) {
+  let k = ''; for (let i = 0; i < 9; i++) k += `<circle cx="${40 + (i % 5) * 30 + (i > 4 ? 15 : 0)}" cy="${i > 4 ? 40 : 66}" r="22" fill="#fff6d8" stroke="${PIK}" stroke-width="6"/>`;
+  return psv('0 0 200 240', `<path d="M24 80 L176 80 L156 232 L44 232 Z" fill="#fff" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M56 80 L66 232 M100 80 L100 232 M144 80 L134 232" stroke="#ff3b5c" stroke-width="18"/>${k}`);
 }

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#0b2329;--acc:#3de0ff;--accd:#1fa8c8;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fb0b8;--line:#1c3a42;--amb:#ffb84d;--cy:#3de0ff;--gy:#ffc93d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: the mascot's home lab at night — wall shelves with jars and round windows (far), pegboards, lamps and a bench (mid), wooden floor (near) */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#0a2027 0%,#0f2f37 55%,#123840 100%)}
+#far{position:absolute;left:0;top:30px;width:4800px;height:1000px;will-change:transform;opacity:.7}
+#far > div{position:absolute;top:0;width:2400px;height:1000px}
+#mid{position:absolute;left:-700px;top:60px;width:3400px;height:1300px;will-change:transform;opacity:.85}
+#floor{position:absolute;left:-700px;top:1230px;width:3400px;height:700px;will-change:transform;background:repeating-linear-gradient(90deg,#5a3a24 0 150px,#4a2e1c 150px 156px),#4a2e1c}
+#floor:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,26,31,.25),rgba(8,26,31,.92))}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(61,224,255,.14) 0%,rgba(61,224,255,.05) 45%,rgba(61,224,255,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(255,184,77,.12) 0%,rgba(255,184,77,.04) 45%,rgba(255,184,77,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.55) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#stampL{position:absolute;left:0;top:0;width:1080px;height:1920px;pointer-events:none}
+#stampL *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--gy)}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.c{border-left-color:var(--cy);border-color:rgba(61,224,255,.35);background:linear-gradient(180deg,rgba(14,52,62,.95),rgba(8,30,36,.95))}
+.nb-chip.c{border-color:rgba(61,224,255,.6);background:rgba(8,30,36,.92)}
+.nb-chip.y{border-color:rgba(255,201,61,.65);background:rgba(36,26,8,.92)}
+.nb-chip.r{border-color:rgba(255,59,92,.7);background:rgba(40,8,14,.92)}
+.chipL{height:92px;padding:0 40px;font:700 44px/86px JB;letter-spacing:3px;color:var(--cy);text-align:center;white-space:nowrap}
+.chipL.y{color:var(--gy)}.chipL.r{color:#ff6f86}
+.panT{padding:18px 40px 20px 46px;font:800 38px/1.24 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--cy);font-weight:900}
+.big{font:900 196px/1 Unb;color:var(--gy);-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.lbl{font:900 100px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.lbl i{position:static;font-style:normal;color:var(--gy)}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.m{width:310px;height:310px}
+.stt{border-radius:30px;text-align:center;background:rgba(6,22,26,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.dust{width:30px;height:30px;border-radius:50%;background:radial-gradient(closest-side,#bfe9f2,rgba(191,233,242,0))}
+.pix{width:22px;height:22px;background:#7dfcff;border:4px solid #0a130d}
+.qm{font:900 130px/1 Unb;color:var(--gy);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.arrow{left:0;top:0;width:1080px;height:1920px}
+.ph{width:520px;height:900px}
+.ph-a{left:60px;top:300px}
+.shd-ph{left:40px;top:1170px;width:560px;height:80px}
+.dark{left:100px;top:370px;width:440px;height:780px;border-radius:44px;background:#03070b}
+.scan{left:100px;top:755px;width:440px;height:10px;border-radius:5px;background:#e8fbff;box-shadow:0 0 30px #7dfcff}
+/* A — hook */
+.a-t1{left:0;top:200px;width:1080px;font-size:104px}
+.a-t2{left:0;top:335px;width:1080px;font-size:84px}
+.a-ph{left:360px;top:600px;width:340px;height:649px}
+.a-hk{left:620px;top:690px;width:250px;height:318px}
+.a-m{left:20px;top:910px;width:340px;height:340px}
+.a-q{left:840px;top:620px}
+.a-shd1{left:340px;top:1215px;width:380px;height:60px}.a-shd2{left:40px;top:1225px;width:300px;height:50px}
+/* B — the memo */
+.b-src{left:40px;top:190px}
+.b-memo{left:200px;top:330px;width:700px;height:481px}
+.b-chip{left:330px;top:820px}
+.b-ph{left:120px;top:880px;width:190px;height:363px}
+.b-m{left:700px;top:930px;width:320px;height:320px}
+.b-shd1{left:110px;top:1215px;width:220px;height:46px}.b-shd2{left:720px;top:1225px;width:280px;height:50px}
+/* C — shelf and table */
+.c-k1{left:610px;top:560px}.c-k2{left:600px;top:890px}
+.c-m{left:640px;top:1010px;width:300px;height:300px}
+.c-shd2{left:660px;top:1290px;width:260px;height:44px}
+/* D — joke: my desk */
+.d-desk{left:150px;top:560px;width:780px;height:575px}
+.d-cal{left:640px;top:170px;width:290px;height:335px}
+.d-brm{left:60px;top:480px;width:160px;height:420px;transform-origin:80px 60px}
+.d-m{left:20px;top:830px;width:320px;height:320px}
+.d-shd{left:170px;top:1110px;width:760px;height:70px}
+/* E — experiment 1: the spy in RAM */
+.e-k1{left:600px;top:200px}.e-k2{left:600px;top:330px}
+.e-msg{left:640px;top:520px;width:300px;height:200px}
+.e-hk{left:250px;top:775px;width:160px;height:204px}
+.e-mag{left:640px;top:520px;width:230px;height:230px}
+.e-m{left:640px;top:1010px;width:300px;height:300px}
+.e-shd2{left:660px;top:1290px;width:260px;height:44px}
+/* F — power off: the spy is gone, the hacker starts over */
+.f-pw{left:640px;top:1040px;width:300px;height:240px}
+.f-hk{left:640px;top:330px;width:220px;height:280px}
+.f-lap{left:620px;top:560px;width:380px;height:263px}
+.f-m{left:660px;top:760px;width:300px;height:300px}
+.f-shd3{left:650px;top:1250px;width:300px;height:50px}
+/* G — experiment 2: the app you downloaded */
+.g-k1{left:600px;top:200px}.g-k2{left:600px;top:330px}
+.g-app{left:390px;top:500px;width:120px;height:120px}
+.g-pop{left:470px;top:536px;width:76px;height:91px}
+.g-pw{left:640px;top:990px;width:300px;height:240px}
+.g-m{left:660px;top:690px;width:300px;height:300px}
+/* H — the verdict */
+.h-memo{left:230px;top:150px;width:620px;height:426px}
+.h-g{left:200px;top:570px;width:680px;height:457px}
+.h-m{left:395px;top:1035px;width:290px;height:290px}
+.h-q{left:830px;top:1000px}
+.h-shd{left:405px;top:1300px;width:280px;height:46px}
+/* stamp (from the verdict to the loop) */
+.st{left:200px;top:240px;width:680px;height:180px;border:18px solid var(--gy);color:var(--gy);font:900 108px/144px Unb}
+/* I — takeaway */
+.i-brm{left:300px;top:800px;width:150px;height:394px;transform-origin:75px 60px}
+.i-bin{left:730px;top:930px;width:220px;height:300px}
+.i-app{left:390px;top:500px;width:120px;height:120px}
+.i-m{left:620px;top:450px;width:300px;height:300px}
+.i-shd3{left:720px;top:1205px;width:250px;height:46px}
+.fx{left:0;top:0}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="far"></div><div id="mid"></div><div id="floor"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><div class="a-hk"></div><div class="a-ph"></div><div class="m a-m"></div><div class="a-t1 lbl">ВЫКЛЮЧАЙ</div><div class="a-t2 lbl"><i>РАЗ В НЕДЕЛЮ</i></div><div class="a-q qm">?</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="shd b-shd1"></div><div class="shd b-shd2"></div><div class="b-memo"></div><div class="b-ph"></div><div class="m b-m"></div><div class="b-chip nb-chip y chipL y">РАЗ В НЕДЕЛЮ</div><div class="b-src nb-panel c panT"><b>Памятка АНБ США</b> · октябрь 2020</div><div class="fx b-fx"></div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="shd shd-ph"></div><div class="shd c-shd2"></div><div class="ph ph-a c-ph"></div><svg class="arrow c-arr" viewBox="0 0 1080 1920"><path class="c-a1" pathLength="100" d="M600 606 Q560 610 520 620" fill="none" stroke="#3de0ff" stroke-width="10" stroke-linecap="round" stroke-dasharray="10 0" style="stroke-dasharray:100;stroke-dashoffset:100"/><path class="c-a2" pathLength="100" d="M590 936 Q560 960 520 985" fill="none" stroke="#ffc93d" stroke-width="10" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100"/></svg><div class="dark c-dark"></div><div class="m c-m"></div><div class="c-k1 nb-chip c chipL">ПАМЯТЬ</div><div class="c-k2 nb-chip y chipL y">ОПЕРАТИВКА</div><div class="fx c-fx"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="shd d-shd"></div><div class="d-desk"></div><div class="d-brm"></div><div class="m d-m"></div><div class="d-cal"></div><div class="fx d-fx"></div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="shd shd-ph"></div><div class="shd e-shd2"></div><div class="ph ph-a e-ph"></div><div class="e-hk"></div><div class="e-msg"></div><div class="e-mag"></div><div class="m e-m"></div><div class="e-k1 nb-chip c chipL">ОПЫТ 1</div><div class="e-k2 nb-chip r chipL r">БЕЗ КЛИКА</div><div class="fx e-fx"></div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="shd shd-ph"></div><div class="shd f-shd3"></div><div class="ph ph-a f-ph"></div><div class="f-hkin"></div><div class="dark f-dark"></div><div class="scan f-scan"></div><div class="f-pw"></div><div class="f-lap"></div><div class="f-hk"></div><div class="m f-m"></div><div class="fx f-fx"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="shd shd-ph"></div><div class="ph ph-a g-ph"></div><div class="g-app"></div><div class="g-pop"></div><div class="dark g-dark"></div><div class="scan g-scan"></div><div class="g-pw"></div><div class="m g-m"></div><div class="g-k1 nb-chip c chipL">ОПЫТ 2</div><div class="g-k2 nb-chip y chipL y">СКАЧАЛ САМ</div><div class="fx g-fx"></div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="shd h-shd"></div><div class="h-memo"></div><div class="h-g"></div><div class="m h-m"></div><div class="h-q qm">?</div><div class="fx h-fx"></div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="shd shd-ph"></div><div class="shd i-shd3"></div><div class="ph ph-a i-ph"></div><div class="i-app"></div><div class="i-brm"></div><div class="i-bin"></div><div class="m i-m"></div><div class="fx i-fx"></div></div></div>
+<div id="A2" class="scene"></div>
+<div id="stampL"><div class="st stt">НЕ БАЙТ</div><div class="fx st-fx"></div></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
