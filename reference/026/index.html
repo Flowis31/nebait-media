@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#080c2a;--acc:#ffcf3d;--accd:#e0a51a;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fa0c6;--line:#24305a;--gy:#ffcf3d;--cy:#5fd8ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: open space over the Earth — stars (far), the Earth limb with continents (mid), cloud wisps (near) */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#060924 0%,#0c1440 50%,#173070 66%,#0b1a4a 100%)}
+#stars{position:absolute;left:0;top:0;width:4800px;height:1300px;will-change:transform}
+#earth{position:absolute;left:-1160px;top:1080px;width:3400px;height:900px;will-change:transform}
+#clouds{position:absolute;left:-1200px;top:1170px;width:3480px;height:200px;will-change:transform}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(122,92,255,.18) 0%,rgba(122,92,255,.05) 45%,rgba(122,92,255,0) 100%)}
+#blob2{left:320px;top:700px;background:radial-gradient(closest-side,rgba(95,216,255,.12) 0%,rgba(95,216,255,.04) 45%,rgba(95,216,255,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.55) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#stampL{position:absolute;left:0;top:0;width:1080px;height:1920px;pointer-events:none}
+#stampL *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--gy)}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel.b{border-left-color:var(--cy);border-color:rgba(95,216,255,.35);background:linear-gradient(180deg,rgba(18,30,72,.95),rgba(10,16,44,.95))}
+.nb-chip.b{border-color:rgba(95,216,255,.6);background:rgba(10,16,44,.92)}
+.nb-chip.y{border-color:rgba(255,207,61,.65);background:rgba(36,26,8,.92)}
+.nb-chip.r{border-color:rgba(255,59,92,.7);background:rgba(44,8,16,.92)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:var(--cy);text-align:center;white-space:nowrap}
+.chipL.y{color:var(--gy)}.chipL.r{color:#ff8a9c}
+.panT{padding:18px 40px 20px 46px;font:800 38px/1.24 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--cy);font-weight:900}
+.big{font:900 160px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--gy)}
+.lbl{font:900 96px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.sm{font-size:52px;-webkit-text-stroke:8px var(--ink)}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.m{width:340px;height:340px}
+.stt{border-radius:30px;text-align:center;background:rgba(30,6,12,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.drop{width:26px;height:34px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#7cc4ff;border:5px solid var(--ink)}
+.qm{font:900 150px/1 Unb;color:var(--gy);-webkit-text-stroke:14px var(--ink);paint-order:stroke fill}
+.fx{left:0;top:0}
+.orb{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fffbe0 0%,#ffe36b 35%,rgba(255,200,60,.35) 62%,rgba(255,200,60,0) 72%)}
+.orb:after{content:'';position:absolute;left:38px;top:38px;width:44px;height:44px;border-radius:50%;border:5px solid #0a130d;background:#fff}
+.orb:before{content:'';position:absolute;left:58px;top:44px;width:5px;height:20px;background:#ff3b5c;z-index:2;transform-origin:2px 18px;transform:rotate(40deg)}
+.svgL{left:0;top:0;width:1080px;height:1920px;overflow:visible}
+.badge{width:76px;height:76px;border-radius:50%;background:var(--gy);border:7px solid var(--ink);font:900 40px/62px Unb;color:var(--ink);text-align:center}
+/* A — hook */
+.a-n{left:0;top:200px;width:1080px;font-size:124px;-webkit-text-stroke:14px var(--ink)}
+.a-sat{left:70px;top:400px;width:940px;height:617px}
+.a-chip{left:60px;top:370px}
+.a-chip2{left:600px;top:1010px}
+.a-m{left:110px;top:950px;width:330px;height:330px}
+.a-shd{left:130px;top:1240px;width:290px;height:50px}
+/* B — the phone knows where you are; so do I track you? */
+.b-sat{left:610px;top:170px;width:420px;height:276px}
+.b-ph{left:150px;top:380px;width:420px;height:802px}
+.b-pin{left:310px;top:590px;width:110px;height:143px}
+.b-m{left:640px;top:930px;width:360px;height:360px}
+.b-q{left:780px;top:560px}
+.b-chip{left:520px;top:780px}
+.b-shd1{left:170px;top:1160px;width:400px;height:60px}.b-shd2{left:670px;top:1250px;width:300px;height:50px}
+/* C — I only shout down: where I am and what time it is */
+.c-sat{left:170px;top:200px;width:740px;height:486px}
+.c-w{left:240px;top:700px;width:600px;height:500px}
+.c-b1{left:40px;top:760px;width:420px;height:280px}.c-b2{left:520px;top:840px;width:420px;height:280px}
+.c-pin{left:0px;top:690px;width:90px;height:117px}
+.c-ck{left:850px;top:740px;width:110px;height:116px}
+.c-m{left:380px;top:990px;width:320px;height:320px}
+/* D — the shout flies at light speed; the phone times it */
+.d-sat{left:330px;top:150px;width:420px;height:276px}
+.d-line{left:0;top:0}
+.d-ph{left:450px;top:930px;width:180px;height:344px}
+.d-sw{left:700px;top:620px;width:300px;height:360px}
+.d-m{left:90px;top:960px;width:330px;height:330px}
+.d-chip{left:40px;top:560px}
+.d-chip2{left:620px;top:520px}
+.d-shd1{left:460px;top:1260px;width:180px;height:40px}
+/* E — four satellites: three give the point, the fourth sets the clock */
+.e-s1{left:20px;top:300px;width:260px;height:171px}.e-s2{left:300px;top:170px;width:260px;height:171px}.e-s3{left:560px;top:230px;width:260px;height:171px}.e-s4{left:800px;top:380px;width:260px;height:171px}
+.e-ph{left:470px;top:960px;width:150px;height:286px}
+.e-ck{left:640px;top:880px;width:150px;height:158px}
+.e-pin{left:500px;top:945px;width:90px;height:117px}
+.e-m{left:60px;top:980px;width:310px;height:310px}
+/* F — up here time runs faster: 38 millionths of a second per day */
+.f-ck1{left:70px;top:420px;width:380px;height:401px}
+.f-ck2{left:630px;top:420px;width:380px;height:401px}
+.f-sat{left:640px;top:130px;width:380px;height:250px}
+.f-l1{left:120px;top:840px}.f-l2{left:640px;top:840px}
+.f-n{left:0;top:600px;width:1080px}
+.f-u{left:40px;top:980px}
+.f-m{left:700px;top:990px;width:280px;height:280px}
+/* G — joke: the map drives off 11 km, into the lake */
+.g-map{left:60px;top:300px;width:960px;height:811px}
+.g-pin{left:250px;top:600px;width:120px;height:156px}
+.g-m{left:220px;top:830px;width:220px;height:220px}
+.g-path{left:0;top:0}
+.g-km{left:470px;top:180px;width:540px}
+.g-chip{left:40px;top:180px}
+/* H — joke: the clock was slowed down on Earth (before launch) */
+.h-tab{left:90px;top:1010px;width:880px;height:293px}
+.h-sat{left:360px;top:740px;width:560px;height:368px}
+.h-tech{left:40px;top:620px;width:360px;height:432px}
+.h-sd{left:595px;top:500px;width:90px;height:315px}
+.h-sn{left:720px;top:560px;width:220px;height:165px}
+.h-chip{left:40px;top:200px}
+.h-m{left:700px;top:1020px;width:270px;height:270px}
+/* I — verdict + takeaway */
+.i-sat{left:560px;top:430px;width:480px;height:315px}
+.i-ph{left:330px;top:740px;width:260px;height:496px}
+.i-arr{left:0;top:0}
+.i-x{left:640px;top:690px}
+.i-m{left:0px;top:990px;width:300px;height:300px}
+.i-chip{left:60px;top:450px}
+.i-chip2{left:620px;top:900px}
+.i-shd{left:340px;top:1220px;width:260px;height:44px}
+.st{left:240px;top:250px;width:600px;height:180px;border:18px solid var(--red);color:var(--red);font:900 112px/144px Unb}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="stars"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div><div id="earth"></div><div id="clouds"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd"></div><svg class="svgL a-line" viewBox="0 0 1080 1920"><path class="a-dl" pathLength="100" d="M540 960 L300 1060" fill="none" stroke="#ffe36b" stroke-width="10" stroke-dasharray="4 7" stroke-linecap="round"/></svg><div class="a-sat"></div><div class="m a-m"></div><div class="a-n big">20 000 <i>КМ</i></div><div class="a-chip nb-chip y chipL y">СПУТНИК GPS</div><div class="a-chip2 nb-chip b chipL">НАД ТОБОЙ</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="shd b-shd1"></div><div class="shd b-shd2"></div><svg class="svgL b-eye" viewBox="0 0 1080 1920"><path class="b-el" pathLength="100" d="M820 400 Q620 520 365 700" fill="none" stroke="#ff3b5c" stroke-width="10" stroke-dasharray="18 14" stroke-linecap="round" style="stroke-dashoffset:100"/></svg><div class="b-ph"></div><div class="b-pin"></div><div class="b-sat"></div><div class="m b-m"></div><div class="b-q qm">?</div><div class="b-chip nb-chip r chipL r">СЛЕЖКА?</div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-w"></div><div class="c-sat"></div><div class="c-b1"></div><div class="c-pin"></div><div class="c-b2"></div><div class="c-ck"></div><div class="m c-m"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="shd d-shd1"></div><svg class="svgL d-line" viewBox="0 0 1080 1920"><path class="d-tr" pathLength="100" d="M540 440 L540 940" fill="none" stroke="#ffe36b" stroke-width="14" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100" opacity=".8"/>
+  <g class="d-ruler" opacity="0"><path class="d-rl" pathLength="100" d="M330 450 L330 1110" fill="none" stroke="#5fd8ff" stroke-width="10" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100"/><path d="M300 450 L360 450 M300 1110 L360 1110" stroke="#5fd8ff" stroke-width="10" stroke-linecap="round"/><path d="M330 450 L310 490 M330 450 L350 490 M330 1110 L310 1070 M330 1110 L350 1070" stroke="#5fd8ff" stroke-width="10" stroke-linecap="round"/></g></svg>
+  <div class="d-sat"></div><div class="d-ph"></div><div class="orb d-o1"></div><div class="orb d-o2"></div><div class="d-sw"></div><div class="m d-m"></div><div class="d-chip nb-chip y chipL y">СКОРОСТЬ СВЕТА</div><div class="d-chip2 nb-chip b chipL">ДАЛЕКО</div></div></div>
+<div id="E" class="scene"><div class="cam"><svg class="svgL e-rings" viewBox="0 0 1080 1920"></svg><div class="e-s1"></div><div class="e-s2"></div><div class="e-s3"></div><div class="e-s4"></div><div class="e-ph"></div><div class="e-ck"></div><div class="e-pin"></div><div class="m e-m"></div><div class="e-badges"></div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-sat"></div><div class="f-ck1"></div><div class="f-ck2"></div><div class="f-l1 nb-chip b chipL">ЗЕМЛЯ</div><div class="f-l2 nb-chip y chipL y">НАВЕРХУ</div><div class="m f-m"></div><div class="f-n big"><i>38</i></div><div class="f-u nb-panel b panT"><b>миллионных</b> секунды за сутки</div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="g-map"></div><svg class="svgL g-path" viewBox="0 0 1080 1920"><path class="g-pl" pathLength="100" d="M310 760 Q480 560 720 640 T820 760" fill="none" stroke="#ff3b5c" stroke-width="12" stroke-dasharray="3 5" stroke-linecap="round" style="stroke-dashoffset:100"/></svg><div class="m g-m"></div><div class="g-pin"></div><div class="g-fx fx"></div><div class="g-km lbl"><i>11 КМ</i></div><div class="g-chip nb-chip r chipL r">БЕЗ ПОПРАВКИ</div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-tab"></div><div class="h-sat"></div><div class="h-tech"></div><div class="h-sd"></div><div class="h-sn"></div><div class="m h-m"></div><div class="h-chip nb-chip b chipL">ЕЩЁ НА ЗЕМЛЕ</div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="shd i-shd"></div><svg class="svgL i-arr" viewBox="0 0 1080 1920"><path class="i-al" pathLength="100" d="M480 760 Q520 640 700 640" fill="none" stroke="#5fd8ff" stroke-width="12" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100"/></svg><div class="i-sat"></div><div class="i-ph"></div><div class="i-x qm" style="color:#ff3b5c">✕</div><div class="m i-m"></div><div class="i-chip nb-chip b chipL">СЧИТАЕТ ТЕЛЕФОН</div><div class="i-fx fx"></div></div></div>
+<div id="A2" class="scene"></div>
+<div id="stampL"><div class="st stt">БАЙТ</div><div class="fx st-fx"></div></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>

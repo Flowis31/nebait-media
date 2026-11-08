@@ -770,3 +770,61 @@ function popcornSVG(id) {
   return psv('0 0 200 240', `<path d="M24 80 L176 80 L156 232 L44 232 Z" fill="#fff" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
   <path d="M56 80 L66 232 M100 80 L100 232 M144 80 L134 232" stroke="#ff3b5c" stroke-width="18"/>${k}`);
 }
+
+// ---------- added 08.11.2026 (ролик 026 «Спутник GPS») ----------
+// satellite with a face (the GPS narrator), viewBox 0 0 640 420: gold-foil body 240..400 x 120..300, solar wings left/right,
+// transmitter horn at the bottom (300, 330), atomic-clock dial on the top (320, 92). Rig: .spanL/.spanR (wings, r origin 240/400 210),
+// .seye (sy blink, origin 320 196), .spup (x/y ±8), .sbrow (y / r), .smouth (sy 0 closed .. 1 open, origin 320 252), .shorn (s pulse,
+// origin 320 320), .sclockh (clock hand, r origin 320 92), .sglow (horn glow, o). face=false draws a plain satellite (eyes off).
+function satelliteSVG(id, face = true, foil = '#ffcc4d') {
+  const wing = (cls, x0, dir) => { let cells = '';
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) { const x = x0 + dir * (34 + c * 46) - (dir < 0 ? 42 : 0); cells += `<rect x="${x}" y="${150 + r * 42}" width="40" height="36" rx="5" fill="url(#sw${id})" stroke="#0f2a5a" stroke-width="3"/>`; }
+    const xe = x0 + dir * 222, xa = Math.min(x0 + dir * 26, xe), xb = Math.max(x0 + dir * 26, xe);
+    return `<g class="${cls}" style="transform-origin:${x0}px 210px"><path d="M${x0} 210 L${x0 + dir * 30} 210" stroke="${PIK}" stroke-width="16"/><path d="M${x0} 210 L${x0 + dir * 30} 210" stroke="#c9ced8" stroke-width="7"/>
+      <rect x="${xa}" y="142" width="${xb - xa}" height="138" rx="12" fill="#1a3d7a" stroke="${PIK}" stroke-width="10"/>${cells}
+      <path d="M${xa + 10} 152 L${xb - 30} 152" stroke="#bfe6ff" stroke-width="5" stroke-linecap="round" opacity=".7"/></g>`; };
+  let quilt = ''; for (let k = 0; k < 5; k++) quilt += `<path d="M${258 + k * 32} 132 Q${266 + k * 32} 210 ${254 + k * 32} 290" fill="none" stroke="#b07a10" stroke-width="3" opacity=".45"/>`;
+  const faceG = face ? `<g class="seye" style="transform-origin:320px 196px"><ellipse cx="284" cy="196" rx="25" ry="29" fill="#fff" stroke="${PIK}" stroke-width="7"/><ellipse cx="356" cy="196" rx="25" ry="29" fill="#fff" stroke="${PIK}" stroke-width="7"/>
+      <g class="spup"><circle cx="288" cy="200" r="12" fill="${PIK}"/><circle cx="360" cy="200" r="12" fill="${PIK}"/><circle cx="292" cy="195" r="4" fill="#fff"/><circle cx="364" cy="195" r="4" fill="#fff"/></g></g>
+    <g class="sbrow" style="transform-origin:320px 158px"><path d="M262 160 Q284 148 304 158" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/><path d="M336 158 Q356 148 378 160" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/></g>
+    <path d="M296 248 Q320 260 344 248" fill="none" stroke="${PIK}" stroke-width="7" stroke-linecap="round"/>
+    <g class="smouth" style="transform-origin:320px 250px;transform:scaleY(0)"><path d="M294 248 Q320 296 346 248 Z" fill="#5a1020" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/><ellipse cx="320" cy="270" rx="12" ry="7" fill="#ff7a8a"/></g>
+    <ellipse cx="262" cy="232" rx="13" ry="7" fill="#ff8a6a" opacity=".45"/><ellipse cx="378" cy="232" rx="13" ry="7" fill="#ff8a6a" opacity=".45"/>` : '';
+  return psv('0 0 640 420', `<defs>${lg('sb' + id, '#fff0b0', foil)}${lg('sw' + id, '#4f9bff', '#1f4fb0')}${rg('sg' + id, 'rgba(255,240,150,1)', 'rgba(255,200,60,0)', '50%', '50%')}${lg('sh' + id, '#e8ecf2', '#8a93a3')}</defs>
+    ${wing('spanL', 240, -1)}${wing('spanR', 400, 1)}
+    <g class="sglow" style="opacity:0"><circle cx="320" cy="350" r="70" fill="url(#sg${id})"/></g>
+    <g class="shorn" style="transform-origin:320px 320px"><path d="M290 298 L350 298 L372 346 L268 346 Z" fill="url(#sh${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/><path d="M282 338 L358 338" stroke="#fff" stroke-width="4" opacity=".6"/></g>
+    <path d="M320 120 L320 106" stroke="${PIK}" stroke-width="10"/>
+    <circle cx="320" cy="88" r="30" fill="#fff" stroke="${PIK}" stroke-width="8"/><path d="M320 64 L320 70 M344 88 L338 88 M320 112 L320 106 M296 88 L302 88" stroke="${PIK}" stroke-width="4"/>
+    <g class="sclockh" style="transform-origin:320px 88px"><path d="M320 88 L320 68" stroke="#ff3b5c" stroke-width="6" stroke-linecap="round"/></g><circle cx="320" cy="88" r="5" fill="${PIK}"/>
+    <rect x="240" y="120" width="160" height="180" rx="22" fill="url(#sb${id})" stroke="${PIK}" stroke-width="11"/>${quilt}
+    <path d="M254 140 Q256 128 270 128" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+    <rect x="370" y="270" width="18" height="18" rx="4" fill="#3dff8a" stroke="${PIK}" stroke-width="4"/>${faceG}`);
+}
+// stopwatch, viewBox 0 0 300 360 (dial centre 150 205, r 118). Rig: .swhand (r origin 150 205), .swbtn (crown button, y press),
+// .swring (progress arc, dash, pathLength 100)
+function stopwatchSVG(id, col = '#ff5f6d') {
+  let ticks = ''; for (let k = 0; k < 20; k++) { const a = k * Math.PI / 10, r0 = k % 5 ? 100 : 92; ticks += `<path d="M${(150 + r0 * Math.sin(a)).toFixed(1)} ${(205 - r0 * Math.cos(a)).toFixed(1)} L${(150 + 110 * Math.sin(a)).toFixed(1)} ${(205 - 110 * Math.cos(a)).toFixed(1)}" stroke="${PIK}" stroke-width="${k % 5 ? 4 : 8}" stroke-linecap="round"/>`; }
+  return psv('0 0 300 360', `<defs>${lg('swb' + id, '#ffb0b8', col)}${rg('swf' + id, '#ffffff', '#dfe6ee')}</defs>
+    <g class="swbtn"><rect x="128" y="16" width="44" height="34" rx="8" fill="url(#swb${id})" stroke="${PIK}" stroke-width="8"/></g>
+    <path d="M150 50 L150 74" stroke="${PIK}" stroke-width="18"/><path d="M226 82 L246 62" stroke="${PIK}" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="150" cy="205" r="138" fill="url(#swb${id})" stroke="${PIK}" stroke-width="11"/>
+    <circle cx="150" cy="205" r="118" fill="url(#swf${id})" stroke="${PIK}" stroke-width="7"/>${ticks}
+    <path class="swring" pathLength="100" d="M150 125 A80 80 0 1 1 149.9 125" fill="none" stroke="#5fc8ff" stroke-width="14" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100" opacity=".85"/>
+    <g class="swhand" style="transform-origin:150px 205px"><path d="M150 225 L150 112" stroke="#ff3b5c" stroke-width="8" stroke-linecap="round"/></g><circle cx="150" cy="205" r="12" fill="${PIK}"/>
+    <path d="M62 150 Q86 104 136 90" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".7"/>`);
+}
+// screwdriver, viewBox 0 0 120 420: handle on top (y 0..170), shaft to the tip at (60, 410). Rotate around the top or the tip.
+function screwdriverSVG(id, col = '#ff7a3d') {
+  return psv('0 0 120 420', `<defs>${lg('sd' + id, '#ffd0a8', col, false)}${lg('sds' + id, '#f2f5f8', '#8a93a3', false)}</defs>
+    <rect x="44" y="160" width="32" height="226" rx="6" fill="url(#sds${id})" stroke="${PIK}" stroke-width="8"/><path d="M44 386 L60 414 L76 386 Z" fill="#c9ced8" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>
+    <rect x="18" y="10" width="84" height="170" rx="36" fill="url(#sd${id})" stroke="${PIK}" stroke-width="9"/>
+    <path d="M42 40 L42 150 M60 34 L60 156 M78 40 L78 150" stroke="${PIK}" stroke-width="4" opacity=".35"/><path d="M32 46 Q34 26 52 22" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".7"/>`);
+}
+// map location pin, viewBox 0 0 200 260, the tip at (100, 250). Rig: .pdot (inner dot, s)
+function pinSVG(id, col = '#ff3b5c') {
+  return psv('0 0 200 260', `<defs>${lg('pn' + id, '#ff9aa8', col)}</defs>
+    <path d="M100 250 Q30 160 30 96 A70 70 0 1 1 170 96 Q170 160 100 250 Z" fill="url(#pn${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <circle class="pdot" cx="100" cy="96" r="30" fill="#fff" stroke="${PIK}" stroke-width="8" style="transform-origin:100px 96px"/>
+    <path d="M52 76 Q60 46 88 36" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".6"/>`);
+}
