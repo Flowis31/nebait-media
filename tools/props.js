@@ -828,3 +828,54 @@ function pinSVG(id, col = '#ff3b5c') {
     <circle class="pdot" cx="100" cy="96" r="30" fill="#fff" stroke="${PIK}" stroke-width="8" style="transform-origin:100px 96px"/>
     <path d="M52 76 Q60 46 88 36" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".6"/>`);
 }
+
+// ---------- added 09.11.2026 (ролик 027 «320 млн заказов за неделю. Сколько сделали нейронки?») ----------
+// talking taxi, FRONT view, viewBox 0 0 600 520: roof sign 230..370 x 34..92, cabin with windshield (122..478 x 112..236), body 40..560 x 246..440,
+// wheels below to y 500. Face: headlights are the eyes. Same face rig as talkPhoneSVG/keyCharSVG, so one talk/blink loop drives it:
+// .keye (sy blink, origin 300 330), .kpup (x/y ±10), .kbrow (y), .kmouth (grille mouth, sy 0.12 closed .. 1 open, origin 300 352),
+// .tmirL/.tmirR (side mirrors = little arms, r, origin 96/504 236), .tsign (roof sign glow, o), .tbeam (headlight beams, o),
+// riders = 0..4 small bot heads behind the windshield: .rider0 .. .rider3 (o / y, transform-box fill-box), .twin (windshield glass).
+// col0/col1 = body gradient (yellow by default). face=false draws a plain car (eyes become ordinary lamps).
+function taxiSVG(id, riders = 0, face = true, col0 = '#ffe066', col1 = '#f2a900') {
+  const chk = Array.from({ length: 13 }, (_, i) => `<rect x="${66 + i * 36}" y="398" width="18" height="16" fill="${PIK}"/><rect x="${84 + i * 36}" y="414" width="18" height="16" fill="${PIK}"/>`).join('');
+  const rider = k => { const x = [190, 300, 410, 245][k], y = [192, 178, 192, 226][k], c = ['#6ad1ff', '#ff8ad8', '#7dff8a', '#ffd34d'][k];
+    return `<g class="rider${k}" style="transform-box:fill-box;transform-origin:50% 100%"><rect x="${x - 44}" y="${y - 40}" width="88" height="74" rx="22" fill="${c}" stroke="${PIK}" stroke-width="7"/>
+      <rect x="${x - 32}" y="${y - 28}" width="64" height="44" rx="14" fill="#16263a"/><circle cx="${x - 14}" cy="${y - 6}" r="8" fill="#8ff0ff"/><circle cx="${x + 14}" cy="${y - 6}" r="8" fill="#8ff0ff"/>
+      <path d="M${x} ${y - 40} L${x} ${y - 58}" stroke="${PIK}" stroke-width="6"/><circle cx="${x}" cy="${y - 62}" r="8" fill="#ffd34d" stroke="${PIK}" stroke-width="5"/></g>`; };
+  const eye = (cx) => face ? `<circle cx="${cx}" cy="330" r="50" fill="#fffbe8" stroke="${PIK}" stroke-width="10"/><circle cx="${cx}" cy="330" r="38" fill="url(#tl${id})"/>`
+    : `<circle cx="${cx}" cy="330" r="46" fill="url(#tl${id})" stroke="${PIK}" stroke-width="10"/>`;
+  return psv('0 0 600 520', `<defs>${lg('tb' + id, col0, col1)}${lg('tw' + id, '#33507a', '#0f1a2e')}${rg('tl' + id, '#ffffff', '#ffe9a0', '40%', '35%')}${lg('tr' + id, '#2a2f3a', '#0c0f15')}
+    <clipPath id="tc${id}"><path d="M172 112 L428 112 L478 236 L122 236 Z"/></clipPath></defs>
+    <g class="tbeam" opacity="0"><path d="M150 330 L-60 520 L250 520 Z" fill="#fff6c8" opacity=".35"/><path d="M450 330 L350 520 L660 520 Z" fill="#fff6c8" opacity=".35"/></g>
+    <rect x="62" y="400" width="96" height="104" rx="22" fill="url(#tr${id})" stroke="${PIK}" stroke-width="10"/><rect x="442" y="400" width="96" height="104" rx="22" fill="url(#tr${id})" stroke="${PIK}" stroke-width="10"/>
+    <g class="tsign"><rect x="232" y="36" width="136" height="56" rx="14" fill="#fff3b0" stroke="${PIK}" stroke-width="9"/><text x="300" y="76" text-anchor="middle" style="font:900 30px Unb" fill="${PIK}">ТАКСИ</text></g>
+    <rect x="238" y="40" width="124" height="14" rx="7" fill="#fff" opacity=".6"/>
+    <path d="M150 92 L450 92 Q470 92 478 110 L528 246 L72 246 L122 110 Q130 92 150 92 Z" fill="url(#tb${id})" stroke="${PIK}" stroke-width="12" stroke-linejoin="round"/>
+    <path class="twin" d="M172 112 L428 112 L478 236 L122 236 Z" fill="url(#tw${id})" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/>
+    <g clip-path="url(#tc${id})"><path d="M200 236 Q300 150 400 236" fill="#1f2c44"/>${Array.from({ length: riders }, (_, k) => rider(k)).join('')}
+      <path d="M190 124 L150 220" stroke="#fff" stroke-width="16" opacity=".22" stroke-linecap="round"/><path d="M228 124 L206 176" stroke="#fff" stroke-width="9" opacity=".18" stroke-linecap="round"/></g>
+    <g class="tmirL" style="transform-origin:96px 236px"><path d="M96 236 L52 214" stroke="${PIK}" stroke-width="12" stroke-linecap="round"/><rect x="10" y="186" width="56" height="40" rx="12" fill="url(#tb${id})" stroke="${PIK}" stroke-width="8"/></g>
+    <g class="tmirR" style="transform-origin:504px 236px"><path d="M504 236 L548 214" stroke="${PIK}" stroke-width="12" stroke-linecap="round"/><rect x="534" y="186" width="56" height="40" rx="12" fill="url(#tb${id})" stroke="${PIK}" stroke-width="8"/></g>
+    <path d="M40 270 Q40 244 66 244 L534 244 Q560 244 560 270 L560 420 Q560 444 536 444 L64 444 Q40 444 40 420 Z" fill="url(#tb${id})" stroke="${PIK}" stroke-width="12" stroke-linejoin="round"/>
+    <path d="M70 262 L530 262" stroke="#fff" stroke-width="8" opacity=".45" stroke-linecap="round"/>
+    <rect x="44" y="392" width="512" height="44" fill="#f6f6f6" stroke="${PIK}" stroke-width="7"/>${chk}
+    <path d="M40 392 L560 392" stroke="${PIK}" stroke-width="8"/>
+    <g class="keye" style="transform-origin:300px 330px">${eye(150)}${eye(450)}
+      ${face ? `<g class="kpup"><circle cx="158" cy="336" r="20" fill="${PIK}"/><circle cx="458" cy="336" r="20" fill="${PIK}"/><circle cx="165" cy="327" r="7" fill="#fff"/><circle cx="465" cy="327" r="7" fill="#fff"/></g>` : ''}</g>
+    ${face ? `<g class="kbrow"><path d="M98 270 Q148 252 200 266" fill="none" stroke="${PIK}" stroke-width="13" stroke-linecap="round"/><path d="M400 266 Q452 252 502 270" fill="none" stroke="${PIK}" stroke-width="13" stroke-linecap="round"/></g>` : ''}
+    <g class="kmouth" style="transform-origin:300px 352px;transform:scaleY(0.14)"><path d="M232 340 Q300 334 368 340 Q362 392 300 392 Q238 392 232 340 Z" fill="#3a0f14" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+      <path d="M252 344 L252 364 M276 342 L276 370 M300 341 L300 372 M324 342 L324 370 M348 344 L348 364" stroke="#c9d2dc" stroke-width="7" stroke-linecap="round"/><ellipse cx="300" cy="380" rx="26" ry="9" fill="#ff7a8a"/></g>
+    <path d="M236 342 Q300 362 364 342" fill="none" stroke="${PIK}" stroke-width="9" stroke-linecap="round"/>
+    ${face ? `<ellipse cx="226" cy="300" rx="16" ry="9" fill="#ff7a5a" opacity=".35"/><ellipse cx="374" cy="300" rx="16" ry="9" fill="#ff7a5a" opacity=".35"/>` : ''}`);
+}
+// jack-o'-lantern pumpkin, viewBox 0 0 240 220 (stem at the top centre). Rig: .pkglow (candle glow inside the carved face, o), .pkface
+function pumpkinSVG(id, face = true) {
+  return psv('0 0 240 220', `<defs>${rg('pk' + id, '#ffb347', '#e0661a', '40%', '35%')}${rg('pkg' + id, '#fff3a0', '#ff9a1a')}</defs>
+    <path d="M120 40 Q128 14 150 8" fill="none" stroke="#3d6b2a" stroke-width="16" stroke-linecap="round"/>
+    <ellipse cx="72" cy="124" rx="62" ry="78" fill="url(#pk${id})" stroke="${PIK}" stroke-width="9"/><ellipse cx="168" cy="124" rx="62" ry="78" fill="url(#pk${id})" stroke="${PIK}" stroke-width="9"/>
+    <ellipse cx="120" cy="124" rx="58" ry="84" fill="url(#pk${id})" stroke="${PIK}" stroke-width="9"/>
+    <path d="M60 70 Q50 90 52 116" fill="none" stroke="#fff" stroke-width="8" opacity=".35" stroke-linecap="round"/>
+    ${face ? `<g class="pkface"><path d="M70 104 L96 104 L83 82 Z M144 104 L170 104 L157 82 Z" fill="url(#pkg${id})" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M62 140 Q120 190 178 140 L162 150 L150 140 L136 156 L120 142 L104 156 L90 140 L78 150 Z" fill="url(#pkg${id})" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/>
+      <g class="pkglow"><circle cx="120" cy="126" r="70" fill="#ffd060" opacity=".18"/></g></g>` : ''}`);
+}
