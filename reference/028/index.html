@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#0f2629;--acc:#ffb547;--accd:#e08a1c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#8fb0b0;--line:#24494c;--gy:#ffb547;--cy:#7df9ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: a kitchen in the evening — wall tiles (far), upper cabinets + lamp (mid), wooden counter (near) */
+#bg{position:absolute;inset:0;background:#0f2629}
+#tiles{position:absolute;left:0;top:0;width:4800px;height:1400px;will-change:transform}
+#cabs{position:absolute;left:-200px;top:0;width:3000px;height:260px;will-change:transform}
+#counter{position:absolute;left:-400px;top:1150px;width:3200px;height:300px;will-change:transform}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-420px;top:60px;background:radial-gradient(closest-side,rgba(255,181,71,.22) 0%,rgba(255,181,71,.06) 45%,rgba(255,181,71,0) 100%)}
+#blob2{left:360px;top:760px;background:radial-gradient(closest-side,rgba(125,249,255,.13) 0%,rgba(125,249,255,.04) 45%,rgba(125,249,255,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.6) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#stampL{position:absolute;left:0;top:0;width:1080px;height:1920px;pointer-events:none}
+#stampL *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--gy)}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel{border-left-color:var(--acc);border-color:rgba(255,181,71,.3);background:linear-gradient(180deg,rgba(40,30,18,.95),rgba(20,16,10,.95))}
+.nb-panel.b{border-left-color:var(--cy);border-color:rgba(125,249,255,.35);background:linear-gradient(180deg,rgba(14,40,48,.95),rgba(8,24,30,.95))}
+.nb-chip{border-color:rgba(255,181,71,.6);background:rgba(30,20,8,.92)}
+.nb-chip.b{border-color:rgba(125,249,255,.6);background:rgba(8,26,32,.92)}
+.nb-chip.r{border-color:rgba(255,59,92,.7);background:rgba(44,8,16,.92)}
+.chipL{height:96px;padding:0 40px;font:700 44px/90px JB;letter-spacing:3px;color:var(--gy);text-align:center;white-space:nowrap}
+.chipL.b{color:var(--cy)}.chipL.r{color:#ff8a9c}
+.panT{padding:18px 36px 20px 42px;font:800 34px/1.28 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--gy);font-weight:900}
+.big{font:900 170px/1 Unb;color:#fff;text-shadow:8.0px 0.0px 0 #0a130d,7.4px 3.1px 0 #0a130d,5.7px 5.7px 0 #0a130d,3.1px 7.4px 0 #0a130d,-0.0px 8.0px 0 #0a130d,-3.1px 7.4px 0 #0a130d,-5.7px 5.7px 0 #0a130d,-7.4px 3.1px 0 #0a130d,-8.0px -0.0px 0 #0a130d,-7.4px -3.1px 0 #0a130d,-5.7px -5.7px 0 #0a130d,-3.1px -7.4px 0 #0a130d,0.0px -8.0px 0 #0a130d,3.1px -7.4px 0 #0a130d,5.7px -5.7px 0 #0a130d,7.4px -3.1px 0 #0a130d,0 12px 0 rgba(0,0,0,.45);text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--gy)}
+.lbl{font:900 96px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.stt{border-radius:30px;text-align:center;background:rgba(30,6,12,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.qm{font:900 150px/1 Unb;color:var(--gy);-webkit-text-stroke:14px var(--ink);paint-order:stroke fill}
+.fx{left:0;top:0}
+.svgL{left:0;top:0;width:1080px;height:1920px;overflow:visible}
+.wv{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.mr{border:5px solid var(--ink);border-radius:10px}
+.mr i{top:-24px;width:8px;height:26px;background:#232b3d;border:3px solid var(--ink);border-radius:4px}
+.mr b{right:8px;bottom:6px;width:10px;height:10px;border-radius:50%;background:#7dff8a}
+.critter{width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff1b0,#ff9a3d 60%,#e0612a);border:6px solid var(--ink)}
+.critter:before,.critter:after{content:'';position:absolute;top:20px;width:12px;height:16px;border-radius:50%;background:var(--ink)}
+.critter:before{left:16px}.critter:after{left:36px}
+/* A — hook */
+.a-n{left:0;top:178px;width:1080px}
+.a-mw{left:20px;top:690px;width:700px;height:481px}
+.a-rt{left:700px;top:905px;width:350px;height:263px}
+.a-m{left:150px;top:400px;width:310px;height:310px}
+.a-chip{left:40px;top:1190px}.a-chip2{left:760px;top:1190px}
+.a-shd1{left:60px;top:1125px;width:640px;height:60px}.a-shd2{left:720px;top:1128px;width:320px;height:46px}
+/* B — why doesn't the router heat you like soup */
+.b-rt{left:40px;top:300px;width:380px;height:285px}
+.b-shelf{left:20px;top:575px;width:430px;height:30px;background:#6b4a33;border:7px solid var(--ink);border-radius:10px}
+.b-m{left:600px;top:540px;width:380px;height:380px}
+.b-th{left:930px;top:560px;width:110px;height:367px}
+.b-soup{left:90px;top:870px;width:460px;height:345px}
+.b-th2{left:500px;top:860px;width:100px;height:333px}
+.b-q{left:700px;top:330px}
+.b-shd{left:620px;top:900px;width:340px;height:50px}
+/* C — how the microwave heats: water molecules shake */
+.c-mw{left:30px;top:300px;width:760px;height:522px}
+.c-m{left:760px;top:600px;width:310px;height:310px}
+.c-lens{left:240px;top:440px;width:640px;height:640px;border-radius:50%;overflow:hidden;border:22px solid #cfd6dc;box-shadow:0 0 0 9px var(--ink),0 30px 80px rgba(0,0,0,.6),inset 0 0 0 7px var(--ink);background:radial-gradient(circle at 50% 45%,#ffbb6b,#e26a2a 70%,#a8401a)}
+.c-handle{left:790px;top:990px;width:60px;height:230px;border-radius:30px;background:linear-gradient(90deg,#a8703c,#6b4423);border:9px solid var(--ink);transform-origin:30px 0;rotate:-40deg}
+.c-th{left:900px;top:760px;width:120px;height:400px}
+.c-chip{left:40px;top:330px}
+/* D — metal walls and a mesh in the door */
+.d-cut{left:60px;top:300px;width:960px;height:683px}
+.d-m{left:740px;top:960px;width:300px;height:300px}
+.d-chip{left:40px;top:1000px}.d-chip2{left:420px;top:200px}
+/* E — a palm-long wave vs tiny holes */
+.e-sheet{left:640px;top:240px;width:440px;height:900px}
+.e-glove{left:90px;top:300px;width:250px;height:283px}
+.e-m{left:40px;top:960px;width:300px;height:300px}
+.e-chip{left:40px;top:200px}.e-chip2{left:370px;top:1010px}
+.e-lens{left:690px;top:520px;width:340px;height:340px}
+/* F — joke: the video lags while the soup heats */
+.f-mw{left:470px;top:735px;width:590px;height:405px}
+.f-rt{left:30px;top:300px;width:320px;height:240px}
+.f-shelf{left:10px;top:520px;width:380px;height:30px;background:#6b4a33;border:7px solid var(--ink);border-radius:10px}
+.f-m{left:40px;top:820px;width:360px;height:360px}
+.f-ph{left:330px;top:840px;width:220px;height:420px}
+.f-chip{left:560px;top:420px}
+.f-wifi{left:420px;top:470px;width:180px;height:144px}
+.f-shd{left:470px;top:1120px;width:590px;height:50px}
+/* G — floor plan from above: the router whispers everywhere */
+.g-plan{left:60px;top:220px;width:960px;height:1018px}
+.g-mw{left:640px;top:330px;width:200px;height:140px}
+.g-rt{left:430px;top:650px;width:200px;height:150px}
+.g-m{left:150px;top:400px;width:180px;height:180px}
+.g-chip{left:40px;top:1130px}
+/* H — the answer: ten thousand times weaker */
+.h-sc{left:90px;top:440px;width:900px;height:828px}
+.h-mw{left:66px;top:636px;width:300px;height:206px}
+.h-rt{left:764px;top:692px;width:200px;height:150px}
+.h-n{left:0;top:196px;width:1080px}
+.h-m{left:780px;top:960px;width:270px;height:270px}
+.h-src{left:30px;top:392px}
+/* I — joke: a mountain of routers */
+.i-world{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 470px}
+.i-soup{left:400px;top:340px;width:280px;height:210px}
+.i-m{left:420px;top:225px;width:240px;height:240px}
+.i-chip{left:40px;top:1150px}
+/* J — verdict + takeaway */
+.j-mw{left:20px;top:620px;width:560px;height:385px}
+.j-rt{left:640px;top:740px;width:400px;height:300px}
+.j-m{left:380px;top:930px;width:330px;height:330px}
+.j-ph{left:430px;top:450px;width:420px;height:802px}
+.j-chip{left:40px;top:470px}
+.j-shd1{left:40px;top:990px;width:520px;height:50px}.j-shd2{left:660px;top:1020px;width:360px;height:44px}
+.st{left:200px;top:250px;width:680px;height:180px;border:18px solid var(--red);color:var(--red);font:900 104px/144px Unb}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="tiles"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div><div id="cabs"></div><div id="counter"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="shd a-shd2"></div><svg class="svgL a-wv" viewBox="0 0 1080 1920"></svg><div class="a-mw"></div><div class="a-rt"></div><div class="m a-m"></div><div class="a-n big">2,4 <i>ГГц</i></div><div class="a-chip nb-chip chipL">МИКРОВОЛНОВКА</div><div class="a-chip2 nb-chip b chipL b">WI-FI</div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="shd b-shd"></div><div class="b-shelf"></div><svg class="svgL b-wv" viewBox="0 0 1080 1920"></svg><div class="b-rt"></div><div class="m b-m"></div><div class="b-th"></div><div class="b-soup"></div><div class="b-th2"></div><div class="b-q qm">?</div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-mw"></div><div class="m c-m"></div><div class="c-handle"></div><div class="c-lens"><svg class="svgL c-wv" viewBox="0 0 640 640" style="width:640px;height:640px"></svg><div class="c-mols fx"></div></div><div class="c-th"></div><div class="c-chip nb-chip chipL">ВОДА В ЕДЕ</div><div class="c-fx fx"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="d-cut"></div><svg class="svgL d-wv" viewBox="0 0 1080 1920"></svg><div class="d-crit fx"></div><div class="m d-m"></div><div class="d-chip nb-chip chipL">МЕТАЛЛ</div><div class="d-chip2 nb-chip b chipL b">СЕТКА В ДВЕРЦЕ</div><div class="d-fx fx"></div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="e-sheet"></div><svg class="svgL e-wv" viewBox="0 0 1080 1920"></svg><div class="e-glove"></div><div class="m e-m"></div><div class="e-lens"></div><div class="e-chip nb-chip chipL">ВОЛНА ≈ ЛАДОНЬ</div><div class="e-chip2 nb-chip b chipL b">ДЫРОЧКИ КРОШЕЧНЫЕ</div><div class="e-fx fx"></div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="shd f-shd"></div><svg class="svgL f-wv" viewBox="0 0 1080 1920"></svg><div class="f-shelf"></div><div class="f-rt"></div><div class="f-mw"></div><div class="m f-m"></div><div class="f-ph"></div><div class="f-wifi"></div><div class="f-chip nb-chip r chipL r">ГЛУШИТ WI-FI</div><div class="f-fx fx"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="g-plan"></div><svg class="svgL g-wv" viewBox="0 0 1080 1920"></svg><div class="g-mw"></div><div class="g-rt"></div><div class="m g-m"></div><div class="g-chip nb-chip b chipL b">ВО ВСЕ СТОРОНЫ</div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-sc"></div><div class="h-mw"></div><div class="h-rt"></div><div class="m h-m"></div><div class="h-n big">×<i class="h-cnt">0</i></div><div class="h-src nb-panel b panT">печь ≈ <b>1000 Вт</b> · роутер ≤ <b>0,1 Вт</b><br><span style="position:static;font:700 24px JB;color:#9cc">ETSI EN 300 328 · Physics Factbook</span></div><div class="h-fx fx"></div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="i-world"><div class="i-pile fx"></div><svg class="svgL i-wv" viewBox="0 0 1080 1920"></svg><div class="m i-m"></div><div class="i-soup"></div></div><div class="i-chip nb-chip chipL">10 000 РОУТЕРОВ</div><div class="i-fx fx"></div></div></div>
+<div id="J" class="scene"><div class="cam"><div class="shd j-shd1"></div><div class="shd j-shd2"></div><svg class="svgL j-wv" viewBox="0 0 1080 1920"></svg><div class="j-mw"></div><div class="j-rt"></div><div class="m j-m"></div><div class="j-ph"></div><div class="j-chip nb-chip b chipL b">5 ГГц</div><div class="j-fx fx"></div></div></div>
+<div id="A2" class="scene"></div>
+<div id="stampL"><div class="st stt">НЕ БАЙТ</div><div class="fx st-fx"></div></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>

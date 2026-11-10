@@ -879,3 +879,108 @@ function pumpkinSVG(id, face = true) {
       <path d="M62 140 Q120 190 178 140 L162 150 L150 140 L136 156 L120 142 L104 156 L90 140 L78 150 Z" fill="url(#pkg${id})" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/>
       <g class="pkglow"><circle cx="120" cy="126" r="70" fill="#ffd060" opacity=".18"/></g></g>` : ''}`);
 }
+// ---------- added 10.11.2026 (ролик 028 «Wi-Fi и микроволновка на одной волне») ----------
+// microwave oven with a face on the control panel, viewBox 0 0 640 440: body 20..620 x 30..400, door glass 56..410 x 76..344
+// (cavity seen through the mesh), panel 440..600 x 60..370. Same face rig as talkPhoneSVG/keyCharSVG/taxiSVG, so one talk/blink loop
+// drives it: .keye (sy blink, origin 520 120), .kpup (x/y ±7), .kbrow (y), .kmouth (sy 0.12 closed .. 1 open, origin 520 186).
+// Rig: .mwglow (warm light inside, o), .mwplate (turntable + bowl, r is not used: spin it with sx 1..-1..1), .mwsteam (steam over the
+// bowl, o / y), .mwmesh (dot grid on the glass, o), .mwdial (dial, r origin 520 270), .mwdisp (display group, text in .mwtxt),
+// .mwdoor (whole door, sx opens it to the left: origin 40 215), .mwbtn (start button, y press). face=false: plain appliance.
+function microwaveSVG(id, face = true, col = '#e9eef2') {
+  let mesh = ''; for (let y = 92; y < 336; y += 15) for (let x = 72 + ((y / 15) % 2) * 7; x < 400; x += 15) mesh += `<circle cx="${x}" cy="${y}" r="3.2"/>`;
+  const fc = face ? `<g class="keye" style="transform-origin:520px 120px"><ellipse cx="490" cy="122" rx="22" ry="26" fill="#fff" stroke="${PIK}" stroke-width="6"/><ellipse cx="550" cy="122" rx="22" ry="26" fill="#fff" stroke="${PIK}" stroke-width="6"/>
+      <g class="kpup"><circle cx="493" cy="127" r="10" fill="${PIK}"/><circle cx="553" cy="127" r="10" fill="${PIK}"/><circle cx="497" cy="122" r="3.6" fill="#fff"/><circle cx="557" cy="122" r="3.6" fill="#fff"/></g></g>
+    <g class="kbrow"><path d="M466 88 Q488 76 510 86" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/><path d="M530 86 Q552 76 574 88" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/></g>
+    <g class="kmouth" style="transform-origin:520px 176px;transform:scaleY(0.12)"><path d="M494 174 Q520 171 546 174 Q541 214 520 214 Q499 214 494 174 Z" fill="#5a1414" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/><ellipse cx="520" cy="203" rx="12" ry="6" fill="#ff7a8a"/></g>
+    <path d="M495 174 Q520 184 545 174" fill="none" stroke="${PIK}" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="470" cy="164" rx="11" ry="7" fill="#ff8a7a" opacity=".45"/><ellipse cx="570" cy="164" rx="11" ry="7" fill="#ff8a7a" opacity=".45"/>` : '';
+  return psv('0 0 640 440', `<defs>${lg('mwb' + id, '#ffffff', col)}${lg('mwd' + id, '#3a4652', '#151b22')}${rg('mwg' + id, '#fff1b0', '#ff9a3d', '50%', '55%')}
+      ${lg('mws' + id, '#ffb36b', '#e0612a')}${lg('mwp' + id, '#d8dee4', '#9aa6b2')}<clipPath id="mwc${id}"><rect x="56" y="76" width="354" height="268" rx="22"/></clipPath></defs>
+    <rect x="60" y="392" width="44" height="26" rx="8" fill="#5b6672" stroke="${PIK}" stroke-width="7"/><rect x="536" y="392" width="44" height="26" rx="8" fill="#5b6672" stroke="${PIK}" stroke-width="7"/>
+    <rect x="20" y="30" width="600" height="370" rx="40" fill="url(#mwb${id})" stroke="${PIK}" stroke-width="12"/>
+    <path d="M44 60 Q60 44 120 42" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".9"/>
+    <rect x="34" y="352" width="572" height="34" rx="16" fill="#000" opacity=".07"/>
+    <g class="mwdoor" style="transform-origin:40px 215px">
+      <rect x="38" y="58" width="390" height="304" rx="30" fill="#cfd6dc" stroke="${PIK}" stroke-width="9"/>
+      <rect x="56" y="76" width="354" height="268" rx="22" fill="url(#mwd${id})" stroke="${PIK}" stroke-width="7"/>
+      <g clip-path="url(#mwc${id})">
+        <rect class="mwglow" x="56" y="76" width="354" height="268" fill="url(#mwg${id})" opacity="0"/>
+        <g class="mwplate" style="transform-origin:233px 300px"><ellipse cx="233" cy="302" rx="150" ry="26" fill="url(#mwp${id})" stroke="${PIK}" stroke-width="6"/>
+          <path d="M150 300 Q160 236 233 236 Q306 236 316 300 Z" fill="#ffffff" stroke="${PIK}" stroke-width="7"/><ellipse cx="233" cy="244" rx="80" ry="14" fill="url(#mws${id})" stroke="${PIK}" stroke-width="5"/>
+          <path d="M176 258 Q182 280 200 290" stroke="#e6edf2" stroke-width="7" fill="none" stroke-linecap="round"/></g>
+        <g class="mwsteam" opacity="0"><path d="M205 222 q-14 -20 0 -40 q14 -20 0 -40" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".8"/><path d="M245 216 q-14 -20 0 -40 q14 -20 0 -40" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".7"/></g>
+        <g class="mwmesh" fill="#0b1015" opacity=".55">${mesh}</g>
+        <path d="M74 96 L170 84" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".28"/><path d="M74 120 L120 114" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".2"/>
+      </g>
+      <rect x="400" y="150" width="20" height="120" rx="10" fill="#9aa6b2" stroke="${PIK}" stroke-width="6"/>
+    </g>
+    <rect x="440" y="60" width="160" height="310" rx="22" fill="#dfe5ea" stroke="${PIK}" stroke-width="7"/>
+    ${fc}
+    <g class="mwdisp"><rect x="462" y="226" width="116" height="26" rx="8" fill="#13241a" stroke="${PIK}" stroke-width="5"/><text class="mwtxt" x="520" y="246" text-anchor="middle" font-family="JB" font-weight="800" font-size="20" fill="#7dff8a">0:30</text></g>
+    <g class="mwdial" style="transform-origin:520px 300px"><circle cx="520" cy="300" r="34" fill="#f4f7fa" stroke="${PIK}" stroke-width="7"/><path d="M520 300 L520 272" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/></g>
+    <g class="mwbtn"><rect x="478" y="344" width="84" height="18" rx="9" fill="#7dff8a" stroke="${PIK}" stroke-width="5"/></g>`);
+}
+// home Wi-Fi router with a face, viewBox 0 0 480 360: body 40..440 x 190..320 (top face 70..410 x 160..190), three antennas
+// .rantL/.rantM/.rantR (r, origins at their feet 110/240/370 x 175), status LEDs .rled0 .. .rled3 (o), .rglow (o, soft halo).
+// Same face rig: .keye (sy, origin 240 238), .kpup (x/y ±7), .kbrow (y), .kmouth (sy, origin 240 280). face=false: plain router.
+function routerSVG(id, face = true, col = '#2f3a52') {
+  const ant = (cls, x, r) => `<g class="${cls}" style="transform-origin:${x}px 175px"><g transform="rotate(${r} ${x} 175)"><rect x="${x - 13}" y="30" width="26" height="150" rx="13" fill="url(#rta${id})" stroke="${PIK}" stroke-width="7"/><path d="M${x - 4} 46 L${x - 4} 150" stroke="#fff" stroke-width="5" opacity=".35" stroke-linecap="round"/><circle cx="${x}" cy="30" r="7" fill="#7df9ff" stroke="${PIK}" stroke-width="4"/></g></g>`;
+  const fc = face ? `<g class="keye" style="transform-origin:240px 238px"><ellipse cx="205" cy="238" rx="22" ry="25" fill="#fff" stroke="${PIK}" stroke-width="6"/><ellipse cx="275" cy="238" rx="22" ry="25" fill="#fff" stroke="${PIK}" stroke-width="6"/>
+      <g class="kpup"><circle cx="208" cy="243" r="10" fill="${PIK}"/><circle cx="278" cy="243" r="10" fill="${PIK}"/><circle cx="212" cy="238" r="3.6" fill="#fff"/><circle cx="282" cy="238" r="3.6" fill="#fff"/></g></g>
+    <g class="kbrow"><path d="M180 206 Q202 194 224 204" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/><path d="M256 204 Q278 194 300 206" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/></g>
+    <g class="kmouth" style="transform-origin:240px 280px;transform:scaleY(0.12)"><path d="M218 278 Q240 275 262 278 Q258 310 240 310 Q222 310 218 278 Z" fill="#5a1414" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/><ellipse cx="240" cy="300" rx="10" ry="5" fill="#ff7a8a"/></g>
+    <path d="M219 278 Q240 287 261 278" fill="none" stroke="${PIK}" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="168" cy="272" rx="11" ry="7" fill="#ff8a7a" opacity=".45"/><ellipse cx="312" cy="272" rx="11" ry="7" fill="#ff8a7a" opacity=".45"/>` : '';
+  const leds = [0, 1, 2, 3].map(k => `<circle class="rled${k}" cx="${360 + k * 18}" cy="296" r="6" fill="${k === 3 ? '#ffcf3d' : '#7dff8a'}"/>`).join('');
+  return psv('0 0 480 360', `<defs>${lg('rtb' + id, '#56658a', col)}${lg('rtt' + id, '#7484aa', '#4a5878')}${lg('rta' + id, '#4a5878', '#232b3d')}
+      <radialGradient id="rtg${id}"><stop offset="0" stop-color="#7df9ff" stop-opacity=".55"/><stop offset="1" stop-color="#7df9ff" stop-opacity="0"/></radialGradient></defs>
+    <ellipse class="rglow" cx="240" cy="200" rx="260" ry="190" fill="url(#rtg${id})" opacity="0"/>
+    ${ant('rantL', 110, -16)}${ant('rantM', 240, 0)}${ant('rantR', 370, 16)}
+    <path d="M70 160 L410 160 L440 196 L40 196 Z" fill="url(#rtt${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+    <rect x="40" y="190" width="400" height="130" rx="26" fill="url(#rtb${id})" stroke="${PIK}" stroke-width="10"/>
+    <path d="M62 206 L150 204" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".3"/>
+    <g fill="#1a2030" opacity=".55"><rect x="70" y="170" width="40" height="6" rx="3"/><rect x="120" y="170" width="40" height="6" rx="3"/><rect x="320" y="170" width="40" height="6" rx="3"/><rect x="370" y="170" width="20" height="6" rx="3"/></g>
+    ${leds}<rect x="60" y="322" width="40" height="14" rx="6" fill="#1a2030"/><rect x="380" y="322" width="40" height="14" rx="6" fill="#1a2030"/>
+    ${fc}`);
+}
+// water molecule H2O, viewBox 0 0 200 170: oxygen (100,102) r 54, hydrogens (34,44) and (166,44) r 30. Optional tiny face. .wmh (both H, o/s)
+function waterMolSVG(id, face = true) {
+  return psv('0 0 200 170', `<defs>${rg('wmo' + id, '#ffb0b0', '#e2384f')}${rg('wmh' + id, '#ffffff', '#c9d8e8')}</defs>
+    <path d="M100 102 L34 44 M100 102 L166 44" stroke="${PIK}" stroke-width="16" stroke-linecap="round"/><path d="M100 102 L34 44 M100 102 L166 44" stroke="#f4f7fa" stroke-width="6" stroke-linecap="round"/>
+    <g class="wmh"><circle cx="34" cy="44" r="30" fill="url(#wmh${id})" stroke="${PIK}" stroke-width="7"/><circle cx="166" cy="44" r="30" fill="url(#wmh${id})" stroke="${PIK}" stroke-width="7"/>
+      <circle cx="26" cy="35" r="7" fill="#fff"/><circle cx="158" cy="35" r="7" fill="#fff"/></g>
+    <circle cx="100" cy="102" r="54" fill="url(#wmo${id})" stroke="${PIK}" stroke-width="8"/><circle cx="82" cy="84" r="11" fill="#fff" opacity=".7"/>
+    ${face ? `<circle cx="84" cy="108" r="7" fill="${PIK}"/><circle cx="116" cy="108" r="7" fill="${PIK}"/><path d="M88 126 Q100 134 112 126" fill="none" stroke="${PIK}" stroke-width="5" stroke-linecap="round"/>` : ''}`);
+}
+// soup bowl with steam, viewBox 0 0 320 240 (rim y 96). Rig: .sbsteam (o / y), .sbsoup (fill colour layer), .sbspoon (r origin 250 60)
+function soupBowlSVG(id, soup = '#ff9a3d') {
+  return psv('0 0 320 240', `<defs>${lg('sbb' + id, '#ffffff', '#cfd8e2')}${lg('sbs' + id, '#ffc27a', soup)}</defs>
+    <g class="sbsteam" opacity="0"><path d="M110 80 q-16 -22 0 -44 q16 -22 0 -44" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".85"/>
+      <path d="M160 70 q-16 -22 0 -44 q16 -22 0 -44" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".75"/><path d="M210 80 q-16 -22 0 -44 q16 -22 0 -44" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".65"/></g>
+    <g class="sbspoon" style="transform-origin:250px 60px"><path d="M250 60 L190 104" stroke="${PIK}" stroke-width="18" stroke-linecap="round"/><path d="M250 60 L190 104" stroke="#d6dde4" stroke-width="8" stroke-linecap="round"/></g>
+    <ellipse cx="160" cy="226" rx="90" ry="12" fill="#000" opacity=".18"/>
+    <path d="M24 96 Q30 214 160 214 Q290 214 296 96 Z" fill="url(#sbb${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <ellipse class="sbsoup" cx="160" cy="98" rx="132" ry="24" fill="url(#sbs${id})" stroke="${PIK}" stroke-width="8"/>
+    <circle cx="120" cy="96" r="7" fill="#fff" opacity=".6"/><circle cx="190" cy="102" r="5" fill="#7dd35a"/><circle cx="150" cy="104" r="5" fill="#ff5f4d"/>
+    <path d="M52 128 Q64 180 110 196" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".9"/><path d="M60 160 L270 160" stroke="${soup}" stroke-width="10" opacity=".55"/>`);
+}
+// thermometer, viewBox 0 0 120 400: tube 40..80 x 20..320, bulb centre (60,340) r 44. Rig: .thfill (mercury column, sy 0..1 from the bulb,
+// origin 60 320; recolour its fill), .thbulb (bulb fill), .thshine (o)
+function thermometerSVG(id, col = '#ff3b5c') {
+  let ticks = ''; for (let y = 60; y <= 290; y += 26) ticks += `<path d="M82 ${y} L${y % 52 === 8 ? 100 : 94} ${y}" stroke="${PIK}" stroke-width="5" stroke-linecap="round"/>`;
+  return psv('0 0 120 400', `<defs>${lg('thg' + id, '#ffffff', '#dde8f0', false)}</defs>
+    <rect x="34" y="14" width="52" height="320" rx="26" fill="url(#thg${id})" stroke="${PIK}" stroke-width="9"/>${ticks}
+    <rect class="thfill" x="50" y="40" width="20" height="290" rx="10" fill="${col}" style="transform-origin:60px 320px"/>
+    <circle class="thbulb" cx="60" cy="342" r="44" fill="${col}" stroke="${PIK}" stroke-width="9"/><circle cx="46" cy="328" r="11" fill="#fff" opacity=".6"/>
+    <path d="M46 40 L46 290" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".7"/>`);
+}
+// Wi-Fi signal icon (three arcs + dot), viewBox 0 0 200 160. Rig: .wf0 (dot) .wf1 .wf2 .wf3 (arcs, o / recolour), .wfx (red cross, o)
+function wifiIconSVG(id, col = '#7df9ff') {
+  const arc = (k, r) => `<path class="wf${k}" d="M${100 - r} ${140 - r * 0.62} A${r} ${r} 0 0 1 ${100 + r} ${140 - r * 0.62}" fill="none" stroke="${col}" stroke-width="18" stroke-linecap="round"/>`;
+  return psv('0 0 200 160', `<g stroke="${PIK}" stroke-width="30" fill="none" stroke-linecap="round"><path d="M70 121 A50 50 0 0 1 130 121"/><path d="M40 103 A88 88 0 0 1 160 103"/><path d="M12 84 A126 126 0 0 1 188 84"/></g>
+    <path class="wf1" d="M70 121 A50 50 0 0 1 130 121" fill="none" stroke="${col}" stroke-width="16" stroke-linecap="round"/>
+    <path class="wf2" d="M40 103 A88 88 0 0 1 160 103" fill="none" stroke="${col}" stroke-width="16" stroke-linecap="round"/>
+    <path class="wf3" d="M12 84 A126 126 0 0 1 188 84" fill="none" stroke="${col}" stroke-width="16" stroke-linecap="round"/>
+    <circle class="wf0" cx="100" cy="142" r="15" fill="${col}" stroke="${PIK}" stroke-width="7"/>
+    <g class="wfx" opacity="0"><path d="M140 20 L190 70 M190 20 L140 70" stroke="${PIK}" stroke-width="26" stroke-linecap="round"/><path d="M140 20 L190 70 M190 20 L140 70" stroke="#ff3b5c" stroke-width="13" stroke-linecap="round"/></g>`);
+}
