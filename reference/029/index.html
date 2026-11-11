@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#1c1645;--acc:#ffb84d;--accd:#e08a1c;--paper:#f4ecd9;--red:#ff3b5c;--dim:#a9a0d8;--line:#3a2f78;--gy:#ffb84d;--cy:#7df9ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: an evening bedroom — the sky behind the windows (far), the wall with windows, frames and string lights (mid), the floor (near) */
+#bg{position:absolute;inset:0;background:#1c1645}
+#sky{position:absolute;left:0;top:100px;width:2400px;height:900px;will-change:transform}
+#skyN,#skyM{position:absolute;left:0;top:0;width:2400px;height:900px}
+#wall{position:absolute;left:-300px;top:0;width:3000px;height:1400px;will-change:transform}
+#floor{position:absolute;left:-600px;top:1240px;width:3200px;height:700px;will-change:transform}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-420px;top:60px;background:radial-gradient(closest-side,rgba(255,184,77,.22) 0%,rgba(255,184,77,.06) 45%,rgba(255,184,77,0) 100%)}
+#blob2{left:360px;top:760px;background:radial-gradient(closest-side,rgba(125,249,255,.13) 0%,rgba(125,249,255,.04) 45%,rgba(125,249,255,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,0,0,.6) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#stampL{position:absolute;left:0;top:0;width:1080px;height:1920px;pointer-events:none}
+#stampL *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--gy)}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel{border-left-color:var(--acc);border-color:rgba(255,184,77,.3);background:linear-gradient(180deg,rgba(44,32,70,.96),rgba(24,18,46,.96))}
+.nb-panel.b{border-left-color:var(--cy);border-color:rgba(125,249,255,.35);background:linear-gradient(180deg,rgba(14,40,48,.95),rgba(8,24,30,.95))}
+.nb-chip{border-color:rgba(255,184,77,.6);background:rgba(30,20,8,.92)}
+.nb-chip.b{border-color:rgba(125,249,255,.6);background:rgba(8,26,32,.92)}
+.nb-chip.r{border-color:rgba(255,59,92,.7);background:rgba(44,8,16,.92)}
+.chipL{height:96px;padding:0 40px;font:700 44px/90px JB;letter-spacing:3px;color:var(--gy);text-align:center;white-space:nowrap}
+.chipL.b{color:var(--cy)}.chipL.r{color:#ff8a9c}
+.panT{padding:18px 36px 20px 42px;font:800 34px/1.28 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:var(--gy);font-weight:900}
+.big{font:900 170px/1 Unb;color:#fff;text-shadow:8.0px 0.0px 0 #0a130d,7.4px 3.1px 0 #0a130d,5.7px 5.7px 0 #0a130d,3.1px 7.4px 0 #0a130d,-0.0px 8.0px 0 #0a130d,-3.1px 7.4px 0 #0a130d,-5.7px 5.7px 0 #0a130d,-7.4px 3.1px 0 #0a130d,-8.0px -0.0px 0 #0a130d,-7.4px -3.1px 0 #0a130d,-5.7px -5.7px 0 #0a130d,-3.1px -7.4px 0 #0a130d,0.0px -8.0px 0 #0a130d,3.1px -7.4px 0 #0a130d,5.7px -5.7px 0 #0a130d,7.4px -3.1px 0 #0a130d,0 12px 0 rgba(0,0,0,.45);text-align:center;white-space:nowrap}
+.big i,.lbl i{position:static;font-style:normal;color:var(--gy)}
+.lbl{font:900 96px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0));transform-origin:center}
+.stt{border-radius:30px;text-align:center;background:rgba(30,6,12,.92);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.qm{font:900 150px/1 Unb;color:var(--gy);-webkit-text-stroke:14px var(--ink);paint-order:stroke fill}
+.fx{left:0;top:0}
+.svgL{left:0;top:0;width:1080px;height:1920px;overflow:visible}
+.wv{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.mr{border:5px solid var(--ink);border-radius:10px}
+.mr i{top:-24px;width:8px;height:26px;background:#232b3d;border:3px solid var(--ink);border-radius:4px}
+.mr b{right:8px;bottom:6px;width:10px;height:10px;border-radius:50%;background:#7dff8a}
+.critter{width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff1b0,#ff9a3d 60%,#e0612a);border:6px solid var(--ink)}
+.critter:before,.critter:after{content:'';position:absolute;top:20px;width:12px;height:16px;border-radius:50%;background:var(--ink)}
+.critter:before{left:16px}.critter:after{left:36px}
+.bar{border:8px solid var(--ink);border-radius:20px}
+.brick{border:7px solid var(--ink);border-radius:14px}
+.ico{border:7px solid var(--ink);border-radius:28px}
+.prog{border:7px solid var(--ink);border-radius:20px;background:#251d52;overflow:hidden}
+.prog i{left:0;top:0;bottom:0;width:100%;background:linear-gradient(90deg,#ffe39a,#ffb84d);transform-origin:0 50%}
+.dotE{width:26px;height:26px;border-radius:50%;background:#ffe14d;border:5px solid var(--ink)}
+.crumb{width:22px;height:22px;border-radius:5px;background:#7dff8a;border:4px solid var(--ink)}
+.plank{border:7px solid var(--ink);border-radius:8px;background:linear-gradient(180deg,#f0b27a,#c9824a)}
+/* A — hook: 20 apps swiped every evening */
+.a-n{left:0;top:150px;width:1080px;font-size:240px}
+.a-sub{left:0;top:405px;width:1080px;font-size:54px}
+.a-ph{left:330px;top:520px;width:480px;height:912px}
+.a-cards{left:0;top:0;width:1080px;height:1920px}
+.a-card{width:250px;height:423px}
+.a-app{left:400px;top:690px;width:330px;height:440px}
+.a-m{left:-10px;top:850px;width:380px;height:380px}
+.a-shd1{left:330px;top:1395px;width:480px;height:60px}
+/* B — close-up: you think I eat the battery */
+.b-cloud{left:20px;top:200px;width:1040px;height:1080px}
+.b-app{left:40px;top:400px;width:540px;height:720px}
+.b-bat{left:570px;top:820px;width:460px;height:215px}
+.b-fork{left:520px;top:560px;width:90px;height:340px}
+.b-m{left:770px;top:330px;width:290px;height:290px}
+.b-c1{left:40px;top:1180px}.b-c2{left:620px;top:1180px}
+.b-fx{left:0;top:0}
+/* C — wide: the inside of the phone */
+.c-cut{left:420px;top:240px;width:560px;height:969px}
+.c-grid{left:470px;top:330px;width:460px;height:300px}
+.c-app{left:640px;top:420px;width:150px;height:200px}
+.c-m{left:20px;top:870px;width:330px;height:330px}
+.c-chip{left:40px;top:300px}
+.c-q{left:720px;top:620px}
+.c-shd{left:440px;top:1190px;width:520px;height:50px}
+/* D — close-up: asleep on the memory table, like a bookmark */
+.d-table{left:-40px;top:1040px;width:1160px;height:70px;background:linear-gradient(180deg,#e0a066,#9a5a2e);border:9px solid var(--ink);border-radius:16px}
+.d-leg1{left:80px;top:1100px;width:60px;height:260px;background:#9a5a2e;border:9px solid var(--ink)}
+.d-leg2{left:940px;top:1100px;width:60px;height:260px;background:#9a5a2e;border:9px solid var(--ink)}
+.d-app{left:140px;top:480px;width:420px;height:560px}
+.d-book{left:580px;top:786px;width:440px;height:287px}
+.d-m{left:700px;top:310px;width:330px;height:330px}
+.d-chip{left:600px;top:660px}
+/* E — Apple: apps spend charge only when active */
+.e-bat{left:260px;top:240px;width:560px;height:261px}
+.e-pan{left:40px;top:560px}
+.e-app{left:120px;top:800px;width:330px;height:440px}
+.e-m{left:600px;top:850px;width:380px;height:380px}
+.e-shd1{left:120px;top:1215px;width:330px;height:50px}
+/* F — close-up: the swipe */
+.f-ph{left:180px;top:160px;width:720px;height:1368px}
+.f-card{left:300px;top:330px;width:480px;height:812px}
+.f-face{left:420px;top:560px;width:240px;height:240px}
+.f-hand{left:400px;top:1000px;width:280px;height:754px}
+/* G — medium: thrown out of memory */
+.g-cut{left:240px;top:220px;width:600px;height:1038px}
+.g-app{left:470px;top:820px;width:150px;height:200px}
+.g-bin{left:20px;top:940px;width:220px;height:300px}
+.g-m{left:770px;top:920px;width:280px;height:280px}
+.g-shd{left:20px;top:1215px;width:220px;height:40px}
+/* H — close-up: morning, tap the icon, rebuilt from zero */
+.h-ph{left:110px;top:180px;width:860px;height:1634px}
+.h-grid{left:0;top:0;width:1080px;height:1920px}
+.h-icon{left:420px;top:660px;width:240px;height:240px}
+.h-hand{left:420px;top:1000px;width:280px;height:754px}
+.h-app{left:360px;top:500px;width:360px;height:480px}
+.h-gear1{left:180px;top:480px;width:180px;height:180px}.h-gear2{left:730px;top:620px;width:140px;height:140px}
+.h-prog{left:260px;top:1080px;width:560px;height:60px}
+.h-bat{left:720px;top:262px;width:170px;height:79px}
+/* I — medium: cold start = a staircase, after a pause = one step */
+.i-stairs{left:400px;top:700px;width:480px;height:532px}
+.i-step{left:90px;top:1120px;width:240px;height:144px}
+.i-hot{left:140px;top:930px;width:140px;height:187px}
+.i-m{left:280px;top:1012px;width:240px;height:240px}
+.i-carry{left:345px;top:858px;width:110px;height:147px}
+.i-chip{left:40px;top:250px}.i-pan{left:40px;top:380px}
+.i-chip2{left:40px;top:780px}
+.i-fx{left:0;top:0}
+/* J — wide: the bed taken apart and put back */
+.j-world{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 1000px}
+.j-bed{left:250px;top:850px;width:640px;height:395px}
+.j-m{left:50px;top:960px;width:280px;height:280px}
+.j-sd{left:250px;top:960px;width:60px;height:210px}
+.j-shd{left:250px;top:1215px;width:640px;height:50px}
+/* K — verdict + takeaway */
+.k-app{left:110px;top:740px;width:360px;height:480px}
+.k-m{left:560px;top:830px;width:400px;height:400px}
+.k-bat{left:620px;top:560px;width:330px;height:154px}
+.k-chip{left:40px;top:1180px}
+.k-shd1{left:110px;top:1200px;width:360px;height:50px}
+.st{left:200px;top:250px;width:680px;height:180px;border:18px solid var(--red);color:var(--red);font:900 112px/144px Unb}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="sky"><div id="skyN"></div><div id="skyM"></div></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div><div id="wall"></div><div id="floor"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"><div class="shd a-shd1"></div><div class="a-ph"></div><div class="a-cards fx"></div><div class="m a-m"></div><div class="a-app ap"></div><div class="a-n big">20</div><div class="a-sub lbl">ПРИЛОЖЕНИЙ НА НОЧЬ</div><div class="a-fx fx"></div></div></div>
+<div id="B" class="scene"><div class="cam"><div class="b-cloud"></div><div class="b-bat"></div><div class="b-app ap"></div><div class="b-fork"></div><div class="m b-m"></div><div class="b-c1 nb-chip r chipL r">БАЙТ?</div><div class="b-c2 nb-chip b chipL b">НЕ БАЙТ?</div><div class="b-fx fx"></div></div></div>
+<div id="C" class="scene"><div class="cam"><div class="shd c-shd"></div><div class="c-cut"></div><div class="c-grid fx"></div><div class="c-app ap"></div><div class="m c-m"></div><div class="c-q qm">?</div><div class="c-chip nb-chip b chipL b">ГЛАВНЫЙ ЭКРАН</div><div class="c-fx fx"></div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="d-leg1"></div><div class="d-leg2"></div><div class="d-table"></div><div class="m d-m"></div><div class="d-app ap"></div><div class="d-book"></div><div class="d-chip nb-chip b chipL b">ПАМЯТЬ</div></div></div>
+<div id="E" class="scene"><div class="cam"><div class="shd e-shd1"></div><svg class="svgL e-wv" viewBox="0 0 1080 1920"></svg><div class="e-bat"></div><div class="e-dots fx"></div><div class="e-app ap"></div><div class="m e-m"></div><div class="e-pan nb-panel panT" style="font-size:42px">тратят заряд, <b>только когда активны</b><br><span style="position:static;font:700 30px JB;color:#b9b0e8">Apple Support · 16.10.2026</span></div><div class="e-fx fx"></div></div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-ph"></div><div class="f-card"></div><div class="f-face"></div><div class="f-hand"></div><div class="f-fx fx"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="shd g-shd"></div><div class="g-cut"></div><div class="g-app ap"></div><div class="g-bin"></div><div class="m g-m"></div><div class="g-fx fx"></div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-ph"></div><div class="h-grid fx"></div><div class="h-icon"></div><div class="h-bricks fx"></div><div class="h-gear1"></div><div class="h-gear2"></div><div class="h-app ap"></div><div class="h-prog prog"><i></i></div><div class="h-bat"></div><div class="h-hand"></div><div class="h-fx fx"></div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="i-stairs"></div><div class="i-step"></div><div class="i-hot ap"></div><div class="m i-m"></div><div class="i-carry ap"></div><div class="i-chip nb-chip b chipL b">ХОЛОДНЫЙ СТАРТ</div><div class="i-pan nb-panel b panT" style="font-size:36px">Android Developers · <b style="color:var(--cy)">23.10.2026</b></div><div class="i-chip2 nb-chip chipL">ПОСЛЕ ПАУЗЫ</div><div class="i-fx fx"></div></div></div>
+<div id="J" class="scene"><div class="cam"><div class="j-world"><div class="shd j-shd"></div><div class="j-bed"></div><div class="m j-m"></div><div class="j-sd"></div><div class="j-fx fx"></div></div></div></div>
+<div id="K" class="scene"><div class="cam"><div class="shd k-shd1"></div><div class="k-bat"></div><div class="k-app ap"></div><div class="m k-m"></div><div class="k-chip nb-chip r chipL r">ТОЛЬКО ЕСЛИ ЗАВИС</div><div class="k-fx fx"></div></div></div>
+<div id="A2" class="scene"></div>
+<div id="stampL"><div class="st stt">БАЙТ</div><div class="fx st-fx"></div></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>

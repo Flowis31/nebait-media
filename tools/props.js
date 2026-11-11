@@ -984,3 +984,84 @@ function wifiIconSVG(id, col = '#7df9ff') {
     <circle class="wf0" cx="100" cy="142" r="15" fill="${col}" stroke="${PIK}" stroke-width="7"/>
     <g class="wfx" opacity="0"><path d="M140 20 L190 70 M190 20 L140 70" stroke="${PIK}" stroke-width="26" stroke-linecap="round"/><path d="M140 20 L190 70 M190 20 L140 70" stroke="#ff3b5c" stroke-width="13" stroke-linecap="round"/></g>`);
 }
+
+// ---------- added 11.11.2026 (ролик 029 «Смахиваешь 20 приложений на ночь») ----------
+// talking app (an app icon as a character), viewBox 0 0 300 400: rounded-square body 30..270 x 20..260 (a small glyph top left),
+// gloved arms, legs with shoes down to y 390. Same face rig as talkPhoneSVG/keyCharSVG/taxiSVG, so one talk/blink loop drives it:
+// .keye (sy blink, origin 150 130), .kpup (x/y ±9), .kbrow (y), .kmouth (sy 0.12 closed .. 1 open, origin 150 200),
+// .karmL/.karmR (r, origin 32/268 180), .klegL/.klegR (r, origin 110/190 262).
+// Extra states: .alid (closed sleepy eyelids over the eyes, o), .azz (three Z letters, o / y), .apause (pause badge on the forehead, o / s),
+// .aice (ice block + icicles = «завис», o), .anap (night cap, o). transform-box fill-box on the badge groups.
+function appCharSVG(id, c0 = '#ffb84d', c1 = '#ff5f6d') {
+  const fb = 'style="transform-box:fill-box;transform-origin:center"';
+  const arm = (cls, ox, x1, y1) => `<g class="${cls}" style="transform-origin:${ox}px 180px"><path d="M${ox} 180 Q${(ox + x1) / 2} ${y1 - 30} ${x1} ${y1}" fill="none" stroke="${PIK}" stroke-width="24" stroke-linecap="round"/>
+    <path d="M${ox} 180 Q${(ox + x1) / 2} ${y1 - 30} ${x1} ${y1}" fill="none" stroke="${c1}" stroke-width="11" stroke-linecap="round"/>
+    <circle cx="${x1}" cy="${y1 + 6}" r="25" fill="#fff" stroke="${PIK}" stroke-width="8"/><path d="M${x1 - 10} ${y1 - 8} L${x1 - 10} ${y1 + 8} M${x1 + 2} ${y1 - 10} L${x1 + 2} ${y1 + 8}" stroke="${PIK}" stroke-width="4" stroke-linecap="round" opacity=".45"/></g>`;
+  const leg = (cls, x) => `<g class="${cls}" style="transform-origin:${x}px 262px"><path d="M${x} 250 L${x} 350" stroke="${PIK}" stroke-width="22" stroke-linecap="round"/><path d="M${x} 250 L${x} 350" stroke="${c1}" stroke-width="9" stroke-linecap="round"/>
+    <path d="M${x - 30} 378 Q${x - 30} 344 ${x} 344 Q${x + 34} 344 ${x + 38} 372 Q${x + 38} 386 ${x + 20} 386 L${x - 22} 386 Q${x - 30} 386 ${x - 30} 378 Z" fill="#3a3f5c" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M${x - 16} 356 Q${x - 4} 350 ${x + 10} 352" stroke="#fff" stroke-width="5" opacity=".5" stroke-linecap="round" fill="none"/></g>`;
+  return psv('0 0 300 400', `<defs>${lg('ac' + id, c0, c1)}${rg('acs' + id, 'rgba(255,255,255,.55)', 'rgba(255,255,255,0)')}</defs>
+    ${arm('karmL', 32, -26, 250)}${arm('karmR', 268, 326, 250)}${leg('klegL', 110)}${leg('klegR', 190)}
+    <rect x="30" y="20" width="240" height="240" rx="66" fill="url(#ac${id})" stroke="${PIK}" stroke-width="12"/>
+    <rect x="44" y="30" width="212" height="110" rx="54" fill="url(#acs${id})" opacity=".55"/>
+    <path d="M64 74 Q72 44 112 40" fill="none" stroke="#fff" stroke-width="10" opacity=".6" stroke-linecap="round"/>
+    <path d="M48 232 Q150 268 252 232" fill="none" stroke="${PIK}" stroke-width="7" opacity=".18"/>
+    <g class="keye" style="transform-origin:150px 130px"><ellipse cx="108" cy="130" rx="30" ry="34" fill="#fff" stroke="${PIK}" stroke-width="7"/><ellipse cx="192" cy="130" rx="30" ry="34" fill="#fff" stroke="${PIK}" stroke-width="7"/>
+      <g class="kpup"><circle cx="112" cy="136" r="14" fill="${PIK}"/><circle cx="196" cy="136" r="14" fill="${PIK}"/><circle cx="117" cy="129" r="5" fill="#fff"/><circle cx="201" cy="129" r="5" fill="#fff"/></g></g>
+    <g class="alid" opacity="0"><path d="M78 124 Q108 98 138 124 L138 132 Q108 150 78 132 Z M162 124 Q192 98 222 124 L222 132 Q192 150 162 132 Z" fill="${c0}" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M80 132 Q108 152 136 132 M164 132 Q192 152 220 132" fill="none" stroke="${PIK}" stroke-width="7" stroke-linecap="round"/></g>
+    <g class="kbrow"><path d="M76 84 Q104 68 134 80" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/><path d="M166 80 Q196 68 224 84" fill="none" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/></g>
+    <g class="kmouth" style="transform-origin:150px 200px;transform:scaleY(0.12)"><path d="M112 196 Q150 192 188 196 Q182 250 150 250 Q118 250 112 196 Z" fill="#5a1414" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/><ellipse cx="150" cy="236" rx="18" ry="8" fill="#ff7a8a"/></g>
+    <path d="M114 196 Q150 208 186 196" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="74" cy="182" rx="15" ry="9" fill="#ff3b5c" opacity=".3"/><ellipse cx="226" cy="182" rx="15" ry="9" fill="#ff3b5c" opacity=".3"/>
+    <g class="anap" opacity="0"><path d="M60 54 Q150 -40 250 50 Q200 30 150 34 Q100 34 60 54 Z" fill="#5f6cff" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M200 10 Q270 -10 296 40" fill="none" stroke="${PIK}" stroke-width="22" stroke-linecap="round"/><path d="M200 10 Q270 -10 296 40" fill="none" stroke="#5f6cff" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="298" cy="46" r="18" fill="#fff" stroke="${PIK}" stroke-width="7"/><path d="M62 54 Q150 26 248 50" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/></g>
+    <g class="apause" opacity="0" ${fb}><circle cx="150" cy="-30" r="40" fill="#7df9ff" stroke="${PIK}" stroke-width="8"/><rect x="132" y="-50" width="12" height="40" rx="4" fill="${PIK}"/><rect x="156" y="-50" width="12" height="40" rx="4" fill="${PIK}"/></g>
+    <g class="azz" opacity="0"><text x="250" y="20" style="font:900 54px Unb" fill="#fff" stroke="${PIK}" stroke-width="8" paint-order="stroke">Z</text><text x="290" y="-34" style="font:900 40px Unb" fill="#fff" stroke="${PIK}" stroke-width="7" paint-order="stroke">Z</text><text x="320" y="-74" style="font:900 30px Unb" fill="#fff" stroke="${PIK}" stroke-width="6" paint-order="stroke">Z</text></g>
+    <g class="aice" opacity="0"><rect x="10" y="0" width="280" height="280" rx="40" fill="#bff3ff" opacity=".55" stroke="#e8fbff" stroke-width="10"/>
+      <path d="M30 40 L90 20 M200 260 L270 220 M40 200 L70 250" stroke="#fff" stroke-width="8" opacity=".8" stroke-linecap="round"/>
+      <path d="M40 280 L52 330 L64 280 M120 280 L128 314 L136 280 M200 280 L214 342 L228 280" fill="#d8f7ff" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/></g>`);
+}
+// app card from the phone's app switcher (a mini window), viewBox 0 0 260 440: header with a round app badge, content lines.
+// col = header colour. Rig: .acbadge (o / s). Stack several, tween y up to "swipe away".
+function appCardSVG(id, col = '#5fb0ff', kind = 0) {
+  const lines = kind % 3 === 0 ? `<rect x="30" y="120" width="200" height="110" rx="14" fill="${col}" opacity=".35"/><rect x="30" y="250" width="170" height="16" rx="8" fill="#b6c3dc"/><rect x="30" y="280" width="130" height="16" rx="8" fill="#b6c3dc"/><rect x="30" y="320" width="200" height="70" rx="14" fill="#e3e9f5"/>`
+    : kind % 3 === 1 ? `<circle cx="80" cy="150" r="30" fill="${col}" opacity=".5"/><rect x="124" y="132" width="100" height="14" rx="7" fill="#b6c3dc"/><rect x="124" y="156" width="70" height="14" rx="7" fill="#d4dbe9"/><circle cx="80" cy="240" r="30" fill="${col}" opacity=".35"/><rect x="124" y="222" width="100" height="14" rx="7" fill="#b6c3dc"/><rect x="124" y="246" width="60" height="14" rx="7" fill="#d4dbe9"/><circle cx="80" cy="330" r="30" fill="${col}" opacity=".25"/><rect x="124" y="312" width="100" height="14" rx="7" fill="#b6c3dc"/>`
+    : `<rect x="30" y="120" width="94" height="94" rx="12" fill="${col}" opacity=".4"/><rect x="136" y="120" width="94" height="94" rx="12" fill="${col}" opacity=".25"/><rect x="30" y="226" width="94" height="94" rx="12" fill="${col}" opacity=".3"/><rect x="136" y="226" width="94" height="94" rx="12" fill="${col}" opacity=".45"/><rect x="30" y="340" width="200" height="16" rx="8" fill="#b6c3dc"/>`;
+  return psv('0 0 260 440', `<rect x="6" y="6" width="248" height="428" rx="34" fill="#f4f7ff" stroke="${PIK}" stroke-width="10"/>
+    <path d="M6 70 L6 40 Q6 6 40 6 L220 6 Q254 6 254 40 L254 70 Z" fill="${col}" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <g class="acbadge" style="transform-box:fill-box;transform-origin:center"><rect x="22" y="18" width="40" height="40" rx="12" fill="#fff" stroke="${PIK}" stroke-width="6"/></g>
+    <rect x="76" y="30" width="110" height="14" rx="7" fill="#fff" opacity=".8"/>${lines}
+    <path d="M24 90 L24 400" stroke="#fff" stroke-width="6" opacity=".7" stroke-linecap="round"/>`);
+}
+// bed, side view, viewBox 0 0 680 420: headboard (left) 20..110 x 40..380, footboard (right) 570..660 x 170..380, frame rail y 250..290,
+// slats under the mattress, mattress 100..580 x 196..252, pillow, blanket. Every part is its own group with transform-box fill-box,
+// so the bed can be taken apart plank by plank: .bdhead .bdfoot .bdrail .bdslat0..bdslat4 .bdmat .bdpil .bdblk (tween x/y/r, o).
+function bedSVG(id, wood = '#c9824a', blanket = '#5f6cff') {
+  const fb = 'style="transform-box:fill-box;transform-origin:center"';
+  const slats = [0, 1, 2, 3, 4].map(k => `<g class="bdslat${k}" ${fb}><rect x="${132 + k * 90}" y="244" width="66" height="22" rx="6" fill="url(#bdw${id})" stroke="${PIK}" stroke-width="7"/></g>`).join('');
+  return psv('0 0 680 420', `<defs>${lg('bdw' + id, '#f0b27a', wood)}${lg('bdb' + id, '#8a96ff', blanket)}${lg('bdm' + id, '#ffffff', '#d8e0f0')}</defs>
+    <g class="bdrail" ${fb}><rect x="96" y="262" width="490" height="40" rx="10" fill="url(#bdw${id})" stroke="${PIK}" stroke-width="9"/><path d="M112 272 L570 272" stroke="#ffe0bb" stroke-width="5" opacity=".7"/></g>
+    ${slats}
+    <g class="bdhead" ${fb}><path d="M20 390 L20 80 Q20 36 64 36 Q110 36 110 80 L110 390 Z" fill="url(#bdw${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M40 110 L40 330 M64 90 L64 330 M88 110 L88 330" stroke="#8a5028" stroke-width="7" opacity=".55" stroke-linecap="round"/><path d="M34 70 Q42 50 62 48" stroke="#fff" stroke-width="7" opacity=".5" fill="none" stroke-linecap="round"/></g>
+    <g class="bdfoot" ${fb}><path d="M570 390 L570 200 Q570 168 614 168 Q660 168 660 200 L660 390 Z" fill="url(#bdw${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M594 210 L594 340 M636 210 L636 340" stroke="#8a5028" stroke-width="7" opacity=".55" stroke-linecap="round"/></g>
+    <g class="bdmat" ${fb}><rect x="104" y="196" width="470" height="56" rx="24" fill="url(#bdm${id})" stroke="${PIK}" stroke-width="9"/><path d="M130 224 L548 224" stroke="#b9c4dc" stroke-width="5" stroke-dasharray="14 12"/></g>
+    <g class="bdpil" ${fb}><path d="M118 196 Q112 150 150 146 L238 148 Q262 152 256 196 Z" fill="#fff" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/><path d="M140 164 Q180 156 226 162" stroke="#d8e0f0" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+    <g class="bdblk" ${fb}><path d="M262 188 Q420 168 586 192 L592 262 Q560 286 520 270 Q470 290 420 272 Q360 292 300 270 Q270 260 262 236 Z" fill="url(#bdb${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+      <path d="M300 204 Q420 190 560 208" stroke="#fff" stroke-width="7" opacity=".45" fill="none" stroke-linecap="round"/><circle cx="360" cy="236" r="9" fill="#fff" opacity=".5"/><circle cx="450" cy="230" r="9" fill="#fff" opacity=".5"/><circle cx="530" cy="240" r="9" fill="#fff" opacity=".5"/></g>`);
+}
+// open book with a ribbon bookmark, viewBox 0 0 460 300: pages 30..430 x 40..270, spine at x 230. Rig: .bkmark (ribbon, y / o),
+// .bkpage (a page that flips around the spine: sx 1 -> -1, origin 230 155), .bkline0..5 (text lines)
+function bookSVG(id, cover = '#ff5f6d') {
+  const ln = (k, x) => `<rect class="bkline${k}" x="${x}" y="${84 + (k % 3) * 44}" width="150" height="14" rx="7" fill="#b9ad92"/>`;
+  return psv('0 0 460 300', `<defs>${lg('bkc' + id, '#ff8a7a', cover)}</defs>
+    <path d="M14 60 L230 76 L446 60 L446 286 L230 300 L14 286 Z" fill="url(#bkc${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M30 40 Q130 26 230 56 L230 276 Q130 246 30 262 Z" fill="#fbf3e0" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M430 40 Q330 26 230 56 L230 276 Q330 246 430 262 Z" fill="#fbf3e0" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+    ${ln(0, 56)}${ln(1, 56)}${ln(2, 56)}${ln(3, 254)}${ln(4, 254)}${ln(5, 254)}
+    <g class="bkpage" style="transform-origin:230px 155px"><path d="M430 44 Q330 30 232 58 L232 272 Q330 244 430 258 Z" fill="#fffaf0" stroke="${PIK}" stroke-width="7" stroke-linejoin="round" opacity=".001"/></g>
+    <g class="bkmark"><path d="M262 30 L262 236 L284 214 L306 236 L306 30 Z" fill="#ffd34d" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/><path d="M272 40 L272 200" stroke="#fff" stroke-width="5" opacity=".6"/></g>`);
+}
