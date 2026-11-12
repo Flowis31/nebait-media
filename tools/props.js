@@ -1117,3 +1117,71 @@ function xrayPhoneSVG(id, col = '#43f0ff') {
       <path d="M162 250 L124 342 L152 342 L138 420 L184 318 L156 318 Z" fill="#ffe14d" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/></g>
     <g class="xglow" opacity="0"><rect x="10" y="10" width="280" height="540" rx="50" fill="none" stroke="${col}" stroke-width="14" opacity=".6"/></g>`);
 }
+
+// ---------- added 12.11.2026 (ролик 031 «Наушники меняют канал до 1 600 раз в секунду») ----------
+// music note = a packet of sound, viewBox 0 0 120 140. Rig: .ntx (red cross over a lost note, o). col = note colour
+function noteSVG(id, col = '#7dff8a') {
+  return psv('0 0 120 140', `<defs>${rg('nt' + id, '#ffffff', col)}</defs>
+    <path d="M46 104 L46 22 L104 10 L104 90" fill="none" stroke="${PIK}" stroke-width="22" stroke-linejoin="round" stroke-linecap="round"/><path d="M46 48 L104 36" stroke="${PIK}" stroke-width="22"/>
+    <path d="M46 104 L46 22 L104 10 L104 90" fill="none" stroke="${col}" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><path d="M46 48 L104 36" stroke="${col}" stroke-width="9"/>
+    <ellipse cx="30" cy="108" rx="25" ry="19" fill="url(#nt${id})" stroke="${PIK}" stroke-width="7" transform="rotate(-18 30 108)"/>
+    <ellipse cx="88" cy="94" rx="25" ry="19" fill="url(#nt${id})" stroke="${PIK}" stroke-width="7" transform="rotate(-18 88 94)"/>
+    <circle cx="22" cy="101" r="5" fill="#fff" opacity=".85"/><circle cx="80" cy="87" r="5" fill="#fff" opacity=".85"/>
+    <g class="ntx" opacity="0"><path d="M18 18 L102 122 M102 18 L18 122" stroke="${PIK}" stroke-width="26" stroke-linecap="round"/><path d="M18 18 L102 122 M102 18 L18 122" stroke="#ff3b5c" stroke-width="13" stroke-linecap="round"/></g>`);
+}
+// «no entry» road sign (red disc, white bar), viewBox 0 0 200 200. Rig: .nebar (the white bar, sx draw-in)
+function noEntrySVG(id) {
+  return psv('0 0 200 200', `<defs>${rg('ne' + id, '#ff8a8a', '#d81f3c')}</defs>
+    <ellipse cx="100" cy="190" rx="70" ry="9" fill="#000" opacity=".25"/>
+    <circle cx="100" cy="100" r="88" fill="#fff" stroke="${PIK}" stroke-width="10"/><circle cx="100" cy="100" r="72" fill="url(#ne${id})" stroke="${PIK}" stroke-width="6"/>
+    <rect class="nebar" x="44" y="82" width="112" height="36" rx="10" fill="#fff" stroke="${PIK}" stroke-width="7" style="transform-origin:100px 100px"/>
+    <path d="M44 62 Q62 34 96 30" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".55"/>`);
+}
+// dumbbell lying on the floor, viewBox 0 0 360 180. Rig: .dweb (cobweb between the plates, draw with dash: pathLength 100), .dspider (o / y), .ddust (o)
+function dumbbellSVG(id, col = '#5a6478') {
+  const plate = (x, w, h) => `<rect x="${x}" y="${90 - h / 2}" width="${w}" height="${h}" rx="12" fill="url(#db${id})" stroke="${PIK}" stroke-width="9"/><path d="M${x + 8} ${96 - h / 2} L${x + 8} ${70 + h / 4}" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".35"/>`;
+  return psv('0 0 360 180', `<defs>${lg('db' + id, '#8d98ad', col)}${lg('dbb' + id, '#e6ebf2', '#9aa6b8')}</defs>
+    <ellipse cx="180" cy="168" rx="170" ry="12" fill="#000" opacity=".3"/>
+    <rect x="70" y="76" width="220" height="28" rx="10" fill="url(#dbb${id})" stroke="${PIK}" stroke-width="8"/>
+    ${plate(14, 34, 110)}${plate(52, 40, 150)}${plate(268, 40, 150)}${plate(312, 34, 110)}
+    <g class="dweb" fill="none" stroke="#e8eef6" stroke-width="3.5" stroke-linecap="round" opacity=".9">
+      <path pathLength="100" style="stroke-dasharray:100" d="M96 16 L180 76 L264 16 M96 16 Q180 40 264 16 M124 36 Q180 56 236 36 M150 55 Q180 66 210 55 M180 76 L180 8 M180 76 L138 12 M180 76 L222 12"/></g>
+    <g class="dspider"><path d="M236 36 L236 62" stroke="#e8eef6" stroke-width="3"/><circle cx="236" cy="68" r="8" fill="${PIK}"/><path d="M228 64 L220 58 M228 70 L220 76 M244 64 L252 58 M244 70 L252 76" stroke="${PIK}" stroke-width="3" stroke-linecap="round"/></g>
+    <g class="ddust" fill="#cfd6e0" opacity=".7"><circle cx="40" cy="160" r="5"/><circle cx="330" cy="158" r="4"/><circle cx="176" cy="162" r="3"/></g>`);
+}
+// sofa seen from the front, viewBox 0 0 700 360. part 'back' = back, arms, seat; part 'front' = a blanket thrown over the seat edge
+// (draw a personSVG between the two parts and he sits ON the sofa). Rig: .sfpillow (r/y)
+function sofaSVG(id, col = '#5f6cff', part = 'back') {
+  if (part === 'front') return psv('0 0 700 360', `<defs>${lg('sfk' + id, '#ffd98a', '#f2a23d')}</defs>
+    <path d="M150 232 Q350 214 560 232 L574 318 Q350 336 136 318 Z" fill="url(#sfk${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M180 252 Q350 238 530 252 M176 284 Q350 270 536 284" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".45"/>
+    <path d="M150 316 l-6 22 M190 322 l-4 22 M520 322 l4 22 M560 316 l6 22" stroke="${PIK}" stroke-width="7" stroke-linecap="round"/>`);
+  return psv('0 0 700 360', `<defs>${lg('sfb' + id, '#8f99ff', col)}${lg('sfs' + id, '#7a86ff', '#3d47b8')}</defs>
+    <ellipse cx="350" cy="346" rx="330" ry="14" fill="#000" opacity=".3"/>
+    <rect x="96" y="320" width="34" height="30" rx="8" fill="#3a2414" stroke="${PIK}" stroke-width="8"/><rect x="570" y="320" width="34" height="30" rx="8" fill="#3a2414" stroke="${PIK}" stroke-width="8"/>
+    <path d="M90 60 Q350 20 610 60 L620 250 L80 250 Z" fill="url(#sfb${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M130 84 Q350 52 570 84" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".35"/>
+    <path d="M350 52 L350 240" stroke="${PIK}" stroke-width="6" opacity=".35"/>
+    <rect x="70" y="220" width="560" height="104" rx="30" fill="url(#sfs${id})" stroke="${PIK}" stroke-width="11"/>
+    <path d="M20 170 Q20 130 60 130 Q104 130 104 170 L104 330 L20 330 Z" fill="url(#sfb${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M596 170 Q596 130 640 130 Q680 130 680 170 L680 330 L596 330 Z" fill="url(#sfb${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M36 160 Q40 146 58 144 M612 160 Q616 146 634 144" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".5"/>
+    <g class="sfpillow" style="transform-origin:520px 210px"><rect x="466" y="140" width="110" height="96" rx="24" fill="#ff7aa8" stroke="${PIK}" stroke-width="9" transform="rotate(10 520 190)"/><path d="M490 164 Q520 156 548 170" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".5" transform="rotate(10 520 190)"/></g>`);
+}
+// radio interference as a little monster («помеха»), viewBox 0 0 240 200: spiky red blob, angry eyes, biting jaw.
+// Rig: .nbjaw (lower jaw, r 0 closed .. 28 open, origin 70 128), .nbeye (sy blink), .nbpup (x/y), .nbspark (zigzags around, o / s)
+function noiseBugSVG(id, col = '#ff3b5c') {
+  let sp = ''; for (let k = 0; k < 11; k++) { const a = (k / 11) * 2 * Math.PI, r0 = 74, r1 = 104 + 10 * (k % 2); sp += `<path d="M${(120 + r0 * Math.cos(a - .2)).toFixed(0)} ${(96 + r0 * .8 * Math.sin(a - .2)).toFixed(0)} L${(120 + r1 * Math.cos(a)).toFixed(0)} ${(96 + r1 * .8 * Math.sin(a)).toFixed(0)} L${(120 + r0 * Math.cos(a + .2)).toFixed(0)} ${(96 + r0 * .8 * Math.sin(a + .2)).toFixed(0)} Z" fill="${col}" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/>`; }
+  return psv('0 0 240 200', `<defs>${rg('nb' + id, '#ff9aa8', col)}</defs>
+    <g class="nbspark" fill="none" stroke="#ffe14d" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 40 l14 10 l-10 10 l16 10"/><path d="M214 30 l12 12 l-12 8 l14 12"/><path d="M200 168 l14 8 l-8 12"/></g>
+    ${sp}
+    <g class="nbjaw" style="transform-origin:70px 128px"><path d="M58 124 Q120 190 186 124 Z" fill="#7a0f22" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+      <path d="M78 128 l10 16 l10 -16 M106 128 l10 18 l10 -18 M136 128 l10 16 l10 -16" fill="#fff" stroke="${PIK}" stroke-width="5" stroke-linejoin="round"/></g>
+    <ellipse cx="120" cy="92" rx="84" ry="62" fill="url(#nb${id})" stroke="${PIK}" stroke-width="10"/>
+    <path d="M66 126 Q120 140 178 126" fill="none" stroke="${PIK}" stroke-width="9" stroke-linecap="round"/>
+    <path d="M84 126 l9 -14 l9 14 M112 127 l9 -15 l9 15 M140 126 l9 -14 l9 14" fill="#fff" stroke="${PIK}" stroke-width="5" stroke-linejoin="round"/>
+    <g class="nbeye" style="transform-origin:120px 80px"><ellipse cx="92" cy="80" rx="20" ry="22" fill="#fff" stroke="${PIK}" stroke-width="6"/><ellipse cx="150" cy="80" rx="20" ry="22" fill="#fff" stroke="${PIK}" stroke-width="6"/>
+      <g class="nbpup"><circle cx="96" cy="84" r="9" fill="${PIK}"/><circle cx="154" cy="84" r="9" fill="${PIK}"/></g></g>
+    <path d="M66 54 L112 68 M176 54 L130 68" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/>
+    <path d="M62 60 Q80 40 110 38" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".5"/>`);
+}
