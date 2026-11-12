@@ -1065,3 +1065,55 @@ function bookSVG(id, cover = '#ff5f6d') {
     <g class="bkpage" style="transform-origin:230px 155px"><path d="M430 44 Q330 30 232 58 L232 272 Q330 244 430 258 Z" fill="#fffaf0" stroke="${PIK}" stroke-width="7" stroke-linejoin="round" opacity=".001"/></g>
     <g class="bkmark"><path d="M262 30 L262 236 L284 214 L306 236 L306 30 Z" fill="#ffd34d" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/><path d="M272 40 L272 200" stroke="#fff" stroke-width="5" opacity=".6"/></g>`);
 }
+
+// ---------- added 12.11.2026 (ролик 030 «Батарея вдвое больше»: ёмкость = бак) ----------
+// fuel tank / jerrycan with level, viewBox 0 0 360 460. Rig: .tfill (sy from the bottom, origin 180 436), .tcap (r, origin 270 70)
+function tankSVG(id, col = '#43f0ff') {
+  return psv('0 0 360 460', `<defs><linearGradient id="tk${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd34d"/><stop offset="1" stop-color="#e09a10"/></linearGradient>
+    <linearGradient id="tl${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfffff"/><stop offset="1" stop-color="${col}"/></linearGradient>
+    <clipPath id="tc${id}"><path d="M40 110 Q40 84 66 84 L294 84 Q320 84 320 110 L320 410 Q320 436 294 436 L66 436 Q40 436 40 410 Z"/></clipPath></defs>
+    <path d="M40 110 Q40 84 66 84 L294 84 Q320 84 320 110 L320 410 Q320 436 294 436 L66 436 Q40 436 40 410 Z" fill="#2b3446"/>
+    <g clip-path="url(#tc${id})"><g class="tfill" style="transform-origin:180px 436px"><rect x="40" y="110" width="280" height="326" fill="url(#tl${id})"/>
+      <path d="M40 110 Q110 92 180 110 Q250 128 320 110 L320 130 L40 130 Z" fill="#fff" opacity=".45"/>
+      <circle cx="110" cy="300" r="10" fill="#fff" opacity=".5"/><circle cx="210" cy="360" r="7" fill="#fff" opacity=".5"/><circle cx="260" cy="250" r="12" fill="#fff" opacity=".4"/></g></g>
+    <path d="M40 110 Q40 84 66 84 L294 84 Q320 84 320 110 L320 410 Q320 436 294 436 L66 436 Q40 436 40 410 Z" fill="none" stroke="${PIK}" stroke-width="12"/>
+    <rect x="60" y="94" width="18" height="320" rx="9" fill="#fff" opacity=".25"/>
+    <path d="M40 180 L320 180 M40 260 L320 260 M40 340 L320 340" stroke="${PIK}" stroke-width="5" opacity=".35" stroke-dasharray="20 14"/>
+    <path d="M90 84 L90 40 Q90 24 106 24 L180 24" fill="none" stroke="${PIK}" stroke-width="14" stroke-linecap="round"/>
+    <g class="tcap" style="transform-origin:270px 70px"><rect x="240" y="44" width="64" height="44" rx="10" fill="#ff3b5c" stroke="${PIK}" stroke-width="10"/></g>`);
+}
+// glass jug with a straw, viewBox 0 0 300 420. Rig: .jfill (sy from the bottom, origin 150 408), .jstraw (hide it to draw your own straw)
+function jugSVG(id) {
+  return psv('0 0 300 420', `<defs><clipPath id="jc${id}"><path d="M40 120 Q40 90 70 90 L230 90 Q260 90 260 120 L260 380 Q260 408 232 408 L68 408 Q40 408 40 380 Z"/></clipPath>
+    <linearGradient id="jl${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfffff"/><stop offset="1" stop-color="#43f0ff"/></linearGradient></defs>
+    <path d="M40 120 Q40 90 70 90 L230 90 Q260 90 260 120 L260 380 Q260 408 232 408 L68 408 Q40 408 40 380 Z" fill="#d9e6f2" opacity=".35"/>
+    <g clip-path="url(#jc${id})"><g class="jfill" style="transform-origin:150px 408px"><rect x="40" y="110" width="220" height="300" fill="url(#jl${id})"/>
+      <path d="M40 112 Q95 98 150 112 Q205 126 260 112 L260 126 L40 126 Z" fill="#fff" opacity=".5"/></g></g>
+    <path d="M40 120 Q40 90 70 90 L230 90 Q260 90 260 120 L260 380 Q260 408 232 408 L68 408 Q40 408 40 380 Z" fill="none" stroke="${PIK}" stroke-width="11"/>
+    <path d="M62 120 L62 370" stroke="#fff" stroke-width="12" opacity=".5" stroke-linecap="round"/>
+    <path d="M258 160 Q310 160 310 230 Q310 300 258 300" fill="none" stroke="${PIK}" stroke-width="14"/>
+    <g class="jstraw"><path d="M170 380 L170 40 Q170 10 200 4 L330 -30" fill="none" stroke="${PIK}" stroke-width="26" stroke-linecap="round"/>
+      <path d="M170 380 L170 40 Q170 10 200 4 L330 -30" fill="none" stroke="#ff5fa2" stroke-width="14" stroke-linecap="round" stroke-dasharray="22 16"/></g>`);
+}
+// tea cup on a saucer, viewBox 0 0 220 160
+function cupSVG(id) {
+  return psv('0 0 220 160', `<ellipse cx="110" cy="140" rx="100" ry="16" fill="#fff" stroke="${PIK}" stroke-width="7"/>
+    <path d="M40 40 L180 40 Q178 128 110 132 Q42 128 40 40 Z" fill="#fff" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/>
+    <ellipse cx="110" cy="42" rx="70" ry="12" fill="#43f0ff" stroke="${PIK}" stroke-width="6"/>
+    <path d="M178 58 Q214 60 206 88 Q198 110 170 104" fill="none" stroke="${PIK}" stroke-width="9"/>
+    <path d="M70 70 Q74 100 96 112" fill="none" stroke="#ff5fa2" stroke-width="7" stroke-linecap="round"/>`);
+}
+// phone in x-ray / cutaway: glass outline, board on top, battery block. viewBox 0 0 300 560.
+// Rig: .xbat (sy from the bottom, origin 150 510), .xglow (o)
+function xrayPhoneSVG(id, col = '#43f0ff') {
+  return psv('0 0 300 560', `<defs><linearGradient id="xb${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${col}"/><stop offset="1" stop-color="#1a6a9a"/></linearGradient></defs>
+    <rect x="16" y="16" width="268" height="528" rx="46" fill="#0c1a2a" fill-opacity=".85" stroke="#bfefff" stroke-width="10"/>
+    <rect x="16" y="16" width="268" height="528" rx="46" fill="none" stroke="${PIK}" stroke-width="4" opacity=".6"/>
+    <rect x="40" y="44" width="220" height="80" rx="14" fill="#1f5a3a" stroke="#7dff8a" stroke-width="5"/>
+    <rect x="70" y="62" width="44" height="44" rx="6" fill="#2b3446" stroke="#7dff8a" stroke-width="4"/><rect x="130" y="66" width="30" height="16" rx="3" fill="#ffd34d"/><rect x="176" y="62" width="60" height="20" rx="4" fill="#9aa6b2"/>
+    <path d="M60 140 L240 140" stroke="#7dff8a" stroke-width="4" opacity=".5" stroke-dasharray="10 8"/>
+    <g class="xbat" style="transform-origin:150px 510px"><rect x="44" y="156" width="212" height="354" rx="20" fill="url(#xb${id})" stroke="${PIK}" stroke-width="8"/>
+      <rect x="60" y="172" width="22" height="320" rx="11" fill="#fff" opacity=".3"/>
+      <path d="M162 250 L124 342 L152 342 L138 420 L184 318 L156 318 Z" fill="#ffe14d" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/></g>
+    <g class="xglow" opacity="0"><rect x="10" y="10" width="280" height="540" rx="50" fill="none" stroke="${col}" stroke-width="14" opacity=".6"/></g>`);
+}
