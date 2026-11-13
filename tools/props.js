@@ -1185,3 +1185,78 @@ function noiseBugSVG(id, col = '#ff3b5c') {
     <path d="M66 54 L112 68 M176 54 L130 68" stroke="${PIK}" stroke-width="10" stroke-linecap="round"/>
     <path d="M62 60 Q80 40 110 38" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".5"/>`);
 }
+
+// ---------- sausage (ролик 032), viewBox 0 0 520 200: plump sausage lying horizontally, twisted ends with string.
+// face=true: eyes and a smile. Rig: .ssEye (sy blink, origin 260 92), .sspup (x/y), .ssMouth (sy, origin 260 128),
+// .ssx (x-ray: water drops and salt cubes inside, o 0..1), .ssglow (contact glow at the right tip ~ (505,100), o), .ssbite (bite mark, o)
+function sausageSVG(id, face = true) {
+  const drop = (x, y, s) => `<path d="M${x} ${y - 16 * s} Q${x + 12 * s} ${y} ${x + 12 * s} ${y + 6 * s} Q${x + 12 * s} ${y + 18 * s} ${x} ${y + 18 * s} Q${x - 12 * s} ${y + 18 * s} ${x - 12 * s} ${y + 6 * s} Q${x - 12 * s} ${y} ${x} ${y - 16 * s} Z" fill="#7fd8ff" stroke="${PIK}" stroke-width="4"/>`;
+  const salt = (x, y, r) => `<rect x="${x - 9}" y="${y - 9}" width="18" height="18" rx="3" fill="#fff" stroke="${PIK}" stroke-width="4" transform="rotate(${r} ${x} ${y})"/>`;
+  return psv('0 0 520 200', `<defs>${lg('ss' + id, '#ffb2a0', '#d9483b')}${rg('ssg' + id, '#fff6b0', 'rgba(255,225,77,0)', '50%', '50%')}</defs>
+    <ellipse cx="260" cy="186" rx="220" ry="12" fill="#000" opacity=".28"/>
+    <path d="M20 100 l-14 -14 M20 100 l-16 8 M500 100 l14 -14 M500 100 l16 8" stroke="#f4e3c0" stroke-width="7" stroke-linecap="round"/>
+    <path d="M40 100 Q30 40 110 34 L410 34 Q490 40 480 100 Q490 160 410 166 L110 166 Q30 160 40 100 Z" fill="url(#ss${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M36 100 Q26 84 20 100 Q26 116 36 100 M484 100 Q494 84 500 100 Q494 116 484 100" fill="#c23a2f" stroke="${PIK}" stroke-width="7"/>
+    <path d="M110 56 Q260 46 410 56" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" opacity=".55"/>
+    <path d="M150 150 Q260 158 380 150" fill="none" stroke="#8a1f18" stroke-width="7" stroke-linecap="round" opacity=".35"/>
+    <g fill="#fff" opacity=".35"><circle cx="90" cy="120" r="5"/><circle cx="430" cy="78" r="4"/><circle cx="400" cy="130" r="5"/><circle cx="120" cy="80" r="3"/></g>
+    <g class="ssx" opacity="0"><path d="M60 100 Q54 52 112 50 L408 50 Q466 52 460 100 Q466 148 408 150 L112 150 Q54 148 60 100 Z" fill="#26324f" opacity=".72"/>
+      ${drop(110, 90, 1)}${drop(205, 112, .8)}${drop(330, 86, 1)}${drop(420, 112, .85)}${salt(160, 120, 15)}${salt(270, 82, -10)}${salt(380, 128, 30)}${salt(455, 82, 5)}${salt(80, 128, -20)}</g>
+    ${face ? `<g class="ssEye" style="transform-origin:260px 92px"><ellipse cx="224" cy="92" rx="17" ry="20" fill="#fff" stroke="${PIK}" stroke-width="6"/><ellipse cx="296" cy="92" rx="17" ry="20" fill="#fff" stroke="${PIK}" stroke-width="6"/>
+      <g class="sspup"><circle cx="228" cy="96" r="8" fill="${PIK}"/><circle cx="300" cy="96" r="8" fill="${PIK}"/><circle cx="231" cy="92" r="3" fill="#fff"/><circle cx="303" cy="92" r="3" fill="#fff"/></g></g>
+      <g class="ssMouth" style="transform-origin:260px 128px"><path d="M238 122 Q260 146 282 122 Q260 130 238 122 Z" fill="#7a1f24" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/></g>
+      <ellipse cx="196" cy="122" rx="12" ry="7" fill="#ff6a5a" opacity=".55"/><ellipse cx="324" cy="122" rx="12" ry="7" fill="#ff6a5a" opacity=".55"/>` : ''}
+    <g class="ssbite" opacity="0"><path d="M470 34 Q440 50 452 72 Q430 86 446 108 Q428 124 450 146 Q444 160 470 166 L520 166 L520 34 Z" fill="#163240"/></g>
+    <circle class="ssglow" cx="500" cy="100" r="60" fill="url(#ssg${id})" opacity="0"/>`);
+}
+// ---------- knitted mitten (ролик 032), viewBox 0 0 300 380, thumb on the left, fingertip at the top (~150,20), cuff at the bottom.
+// conductive=true: silver conductive patch on the tip (.mtip) that can glow (.mglow, o). Rig: .mthumb (r, origin 92 230)
+function mittenSVG(id, col = '#ff5f6d', conductive = false) {
+  let knit = ''; for (let y = 70; y < 290; y += 34) knit += `<path d="M64 ${y} Q150 ${y + 14} 236 ${y}" fill="none" stroke="#fff" stroke-width="5" stroke-dasharray="10 9" opacity=".35"/>`;
+  let rib = ''; for (let x = 64; x <= 236; x += 22) rib += `<path d="M${x} 300 L${x} 368" stroke="${PIK}" stroke-width="4" opacity=".35"/>`;
+  return psv('0 0 300 380', `<defs>${lg('mt' + id, '#ff9aa2', col)}${lg('mc' + id, '#f4f7fb', '#b9c6d6')}${lg('ms' + id, '#ffffff', '#8d9bb0')}</defs>
+    <g class="mthumb" style="transform-origin:92px 230px"><path d="M92 230 Q30 220 24 160 Q22 120 52 120 Q76 122 86 170 L104 196" fill="url(#mt${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/></g>
+    <path d="M64 300 L60 110 Q60 20 150 20 Q240 20 240 110 L236 300 Z" fill="url(#mt${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+    ${knit}
+    <path d="M150 120 l-14 22 l14 22 l14 -22 Z M150 190 l-14 22 l14 22 l14 -22 Z" fill="#fff" opacity=".55" stroke="${PIK}" stroke-width="4"/>
+    <path d="M86 70 Q100 40 140 34" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".5"/>
+    ${conductive ? `<path class="mtip" d="M92 70 Q100 24 150 24 Q200 24 208 70 Q150 86 92 70 Z" fill="url(#ms${id})" stroke="${PIK}" stroke-width="6"/>
+      <circle class="mglow" cx="150" cy="30" r="60" fill="#bff6ff" opacity="0"/>` : ''}
+    <rect x="52" y="290" width="196" height="84" rx="18" fill="url(#mc${id})" stroke="${PIK}" stroke-width="10"/>${rib}`);
+}
+// ---------- pointing hand from above (ролик 032), viewBox 0 0 300 640: sleeve at the top, index finger pointing down, tip at (150,628).
+// Rig: .hx (x-ray inside the finger: water drops and salt, o), .hglow (contact glow at the tip, o), .hknuck (other fingers, sy)
+function pointHandSVG(id, sleeve = '#4a7dff', skin = '#f2c29b') {
+  const drop = (x, y) => `<path d="M${x} ${y - 14} Q${x + 10} ${y} ${x + 10} ${y + 5} Q${x + 10} ${y + 15} ${x} ${y + 15} Q${x - 10} ${y + 15} ${x - 10} ${y + 5} Q${x - 10} ${y} ${x} ${y - 14} Z" fill="#7fd8ff" stroke="${PIK}" stroke-width="4"/>`;
+  const salt = (x, y, r) => `<rect x="${x - 8}" y="${y - 8}" width="16" height="16" rx="3" fill="#fff" stroke="${PIK}" stroke-width="4" transform="rotate(${r} ${x} ${y})"/>`;
+  return psv('0 0 300 640', `<defs>${lg('hs' + id, '#8fb0ff', sleeve, false)}${rg('hk' + id, '#ffe2c8', skin)}${rg('hg' + id, '#fff6b0', 'rgba(255,225,77,0)', '50%', '50%')}</defs>
+    <path d="M70 -40 L230 -40 L224 210 L76 210 Z" fill="url(#hs${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M100 -30 L104 196" stroke="#fff" stroke-width="9" opacity=".3" stroke-linecap="round"/>
+    <rect x="66" y="196" width="168" height="40" rx="14" fill="#fff" stroke="${PIK}" stroke-width="9"/>
+    <path d="M78 230 Q60 300 84 360 Q100 400 150 404 Q206 400 222 356 Q240 296 222 230 Z" fill="url(#hk${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <g class="hknuck" style="transform-origin:150px 360px"><path d="M170 356 Q178 392 204 386 Q226 378 220 340 M110 360 Q104 396 84 388 Q66 378 76 340" fill="url(#hk${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/></g>
+    <path d="M124 380 L122 600 Q122 632 150 632 Q178 632 178 600 L176 380 Z" fill="url(#hk${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M132 596 Q150 610 168 596 L166 616 Q150 626 134 616 Z" fill="#ffd9c6" stroke="${PIK}" stroke-width="4"/>
+    <path d="M134 400 L134 560" stroke="#fff" stroke-width="7" opacity=".45" stroke-linecap="round"/>
+    <path d="M128 470 Q150 478 172 470 M128 530 Q150 538 172 530" fill="none" stroke="#c98a66" stroke-width="5" stroke-linecap="round"/>
+    <g class="hx" opacity="0"><path d="M132 392 L130 598 Q130 622 150 622 Q170 622 170 598 L168 392 Z" fill="#26324f" opacity=".78"/>${drop(150, 430)}${salt(146, 478, 20)}${drop(152, 522)}${salt(150, 570, -15)}${drop(148, 604)}</g>
+    <circle class="hglow" cx="150" cy="630" r="70" fill="url(#hg${id})" opacity="0"/>`);
+}
+// ---------- snowy bus stop (ролик 032), viewBox 0 0 620 560: shelter with a snow cap, glass back wall, bench, sign pole on the right.
+// Rig: .bsnow (snow cap, sy origin 300 40), .bsign (sign plate, r origin 560 120), .blamp (light, o)
+function busStopSVG(id, col = '#3a8fd8') {
+  return psv('0 0 620 560', `<defs>${lg('bsr' + id, '#7cc0ff', col)}${lg('bsg' + id, 'rgba(210,240,255,.55)', 'rgba(120,190,230,.25)')}${lg('bsb' + id, '#d99a5c', '#9a5a2a')}</defs>
+    <ellipse cx="300" cy="548" rx="300" ry="14" fill="#000" opacity=".25"/>
+    <rect x="40" y="70" width="20" height="470" fill="#5a6478" stroke="${PIK}" stroke-width="8"/><rect x="420" y="70" width="20" height="470" fill="#5a6478" stroke="${PIK}" stroke-width="8"/>
+    <rect x="62" y="96" width="356" height="330" rx="8" fill="url(#bsg${id})" stroke="${PIK}" stroke-width="8"/>
+    <path d="M90 120 L180 400 M150 120 L200 260" stroke="#fff" stroke-width="10" opacity=".35" stroke-linecap="round"/>
+    <rect x="18" y="52" width="444" height="40" rx="10" fill="url(#bsr${id})" stroke="${PIK}" stroke-width="9"/>
+    <g class="bsnow" style="transform-origin:240px 52px"><path d="M10 56 Q20 22 80 26 Q140 10 210 24 Q290 8 360 24 Q440 14 470 52 Q460 66 440 58 Q400 70 350 58 Q280 72 220 58 Q150 70 90 58 Q40 70 10 56 Z" fill="#f4fbff" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/></g>
+    <rect x="100" y="400" width="280" height="30" rx="10" fill="url(#bsb${id})" stroke="${PIK}" stroke-width="8"/>
+    <rect x="120" y="428" width="16" height="70" fill="#5a6478" stroke="${PIK}" stroke-width="6"/><rect x="344" y="428" width="16" height="70" fill="#5a6478" stroke="${PIK}" stroke-width="6"/>
+    <path d="M100 404 Q240 392 380 404" fill="none" stroke="#f4fbff" stroke-width="10" stroke-linecap="round"/>
+    <rect x="550" y="110" width="16" height="430" fill="#5a6478" stroke="${PIK}" stroke-width="7"/>
+    <g class="bsign" style="transform-origin:558px 112px"><circle cx="558" cy="150" r="52" fill="#ffd34d" stroke="${PIK}" stroke-width="9"/>
+      <rect x="530" y="128" width="56" height="38" rx="9" fill="#2b74c9" stroke="${PIK}" stroke-width="5"/><circle cx="542" cy="172" r="7" fill="${PIK}"/><circle cx="574" cy="172" r="7" fill="${PIK}"/><rect x="536" y="134" width="44" height="14" rx="3" fill="#bfe6ff"/></g>
+    <circle class="blamp" cx="240" cy="110" r="70" fill="#fff3c4" opacity=".0"/>`);
+}

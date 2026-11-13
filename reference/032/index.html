@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#0b2433;--acc:#ff8a6b;--accd:#d9583b;--paper:#f4ecd9;--red:#ff3b5c;--dim:#9cc2d0;--cy:#5fe8ff;--pk:#ff5fa2;--gr:#7dff8a;--yl:#ffe14d;--ice:#e8f8ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: winter evening in town */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#081a2a 0%,#10344a 30%,#1f5f74 52%,#3b8c9a 64%,#183c4e 68.6%,#12303f 100%)}
+#aur{position:absolute;left:-600px;top:0;width:2400px;height:900px;will-change:transform}
+#hills{position:absolute;left:-700px;top:620px;width:3400px;height:720px;will-change:transform}
+#town{position:absolute;left:-700px;top:700px;width:3400px;height:640px;will-change:transform}
+#ground{position:absolute;left:0;top:1318px;width:1080px;height:602px;background:linear-gradient(180deg,#d7eef7 0%,#9cc4d4 8%,#4f8296 30%,#22495b 100%)}
+#snow{position:absolute;left:0;top:0;width:1080px;height:1920px;will-change:transform}
+.flake{border-radius:50%;background:#fff;will-change:transform}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(95,232,255,.13) 0%,rgba(95,232,255,.04) 45%,rgba(95,232,255,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(255,138,107,.12) 0%,rgba(255,138,107,.03) 45%,rgba(255,138,107,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,8,16,.58) 100%)}
+#shake{position:absolute;inset:0}
+#morph *{position:absolute}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+/* shared */
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel{border-left-color:var(--acc);border-color:rgba(255,138,107,.45);background:linear-gradient(180deg,rgba(12,40,56,.95),rgba(7,24,36,.95))}
+.nb-chip{border-color:rgba(255,138,107,.8);background:rgba(8,26,38,.93)}
+.nb-chip.c{border-color:rgba(95,232,255,.8)}.nb-chip.r{border-color:rgba(255,59,92,.85)}.nb-chip.g{border-color:rgba(125,255,138,.85)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:var(--acc);text-align:center;white-space:nowrap}
+.chipL.c{color:var(--cy)}.chipL.r{color:#ff7a90}.chipL.g{color:var(--gr)}
+.chipS{height:76px;padding:0 34px;font:700 34px/70px JB;letter-spacing:2px;color:var(--ice);white-space:nowrap}
+.big{font:900 150px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i{position:static;font-style:normal;color:var(--acc)}
+.lbl{font:900 80px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.lbl i{position:static;font-style:normal;color:var(--acc)}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,10,20,.62),rgba(0,10,20,0));transform-origin:center}
+.stt{border-radius:30px;text-align:center;background:rgba(6,22,32,.94);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.qm{font:900 120px/1 Unb;color:var(--yl);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.zz{font:900 90px/1 Unb;color:var(--ice);-webkit-text-stroke:10px var(--ink);paint-order:stroke fill}
+.ring{border:10px solid #fff;border-radius:50%}
+.chg{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle,#fff 0 22%,#5fe8ff 45%,rgba(95,232,255,0) 72%)}
+.chgB{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#fff 0 22%,#ffe14d 45%,rgba(255,225,77,0) 72%)}
+.panel{border-radius:40px;background:linear-gradient(160deg,#16465c,#0a2232);box-shadow:0 0 0 10px var(--ink),inset 0 0 0 6px rgba(255,255,255,.08),0 40px 90px rgba(0,0,0,.5);overflow:hidden}
+.wr{background:linear-gradient(90deg,rgba(95,232,255,.15),rgba(95,232,255,.55),rgba(95,232,255,.15));border-radius:4px}
+.wc{background:linear-gradient(180deg,rgba(255,138,107,.15),rgba(255,138,107,.5),rgba(255,138,107,.15));border-radius:4px}
+.scan{background:linear-gradient(180deg,rgba(255,225,77,0),rgba(255,225,77,.55),rgba(255,225,77,0))}
+.xh{width:120px;height:120px;border:9px solid var(--red);border-radius:50%;box-shadow:0 0 0 6px var(--ink)}
+.xh::before,.xh::after{content:'';position:absolute;background:var(--red)}
+.xh::before{left:46px;top:-34px;width:10px;height:170px}.xh::after{top:46px;left:-34px;height:10px;width:170px}
+.feedc{border-radius:16px;border:5px solid var(--ink)}
+.drop{width:22px;height:30px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#9fe6ff;border:4px solid var(--ink)}
+.crate{border-radius:14px;border:8px solid var(--ink);background:linear-gradient(180deg,#e0a86a,#a8642c);box-shadow:inset 0 8px 0 rgba(255,255,255,.3)}
+.arrowUp{width:0;height:0;border-left:70px solid transparent;border-right:70px solid transparent;border-bottom:110px solid var(--gr);filter:drop-shadow(0 0 0 var(--ink))}
+.flash{left:0;top:0;width:1080px;height:1920px;background:#fff}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="aur"></div><div id="hills"></div><div id="town"></div><div id="ground"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"></div></div>
+<div id="B" class="scene"><div class="cam"></div></div>
+<div id="C" class="scene"><div class="cam"></div></div>
+<div id="D" class="scene"><div class="cam"></div></div>
+<div id="E" class="scene"><div class="cam"></div></div>
+<div id="F" class="scene"><div class="cam"></div></div>
+<div id="G" class="scene"><div class="cam"></div></div>
+<div id="H" class="scene"><div class="cam"></div></div>
+<div id="V" class="scene"><div class="cam"></div></div>
+<div id="A2" class="scene"><div class="cam"></div></div>
+  </div>
+  <div id="snow"></div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
