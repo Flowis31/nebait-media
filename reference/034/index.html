@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#22101a;--acc:#ffd23f;--accd:#e0a800;--paper:#f4ecd9;--red:#ff3b5c;--dim:#d9b6c0;--cy:#5fe8ff;--pk:#ff5fa2;--gr:#7dff8a;--yl:#ffe14d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: a flat at night, windows onto the city */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#120a26 0%,#24123e 40%,#3a1a4a 70%,#22101a 100%)}
+#city{position:absolute;left:-700px;top:160px;width:3400px;height:900px;will-change:transform}
+#day{position:absolute;left:0;top:0;width:1080px;height:1300px;background:linear-gradient(180deg,#8fd0ff,#ffe6b0);opacity:0}
+#wall{position:absolute;left:-700px;top:0;width:3400px;height:1400px;will-change:transform}
+#floor{position:absolute;left:0;top:1320px;width:1080px;height:640px}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(255,210,63,.12) 0%,rgba(255,210,63,.04) 45%,rgba(255,210,63,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(255,95,162,.12) 0%,rgba(255,95,162,.03) 45%,rgba(255,95,162,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(10,0,10,.6) 100%)}
+#shake{position:absolute;inset:0}
+#morph *{position:absolute}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel{border-left-color:var(--acc);border-color:rgba(255,210,63,.45);background:linear-gradient(180deg,rgba(46,20,40,.95),rgba(26,10,24,.95))}
+.nb-chip{border-color:rgba(255,210,63,.8);background:rgba(30,12,26,.93)}
+.nb-chip.c{border-color:rgba(95,232,255,.8)}.nb-chip.r{border-color:rgba(255,59,92,.85)}.nb-chip.g{border-color:rgba(125,255,138,.85)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:var(--acc);text-align:center;white-space:nowrap}
+.chipL.c{color:var(--cy)}.chipL.r{color:#ff7a90}.chipL.g{color:var(--gr)}
+.chipS{height:76px;padding:0 34px;font:700 34px/70px JB;letter-spacing:2px;color:#fff;white-space:nowrap}
+.big{font:900 150px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i{position:static;font-style:normal;color:var(--acc)}
+.lbl{font:900 80px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.lbl i{position:static;font-style:normal;color:var(--acc)}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(10,0,10,.6),rgba(10,0,10,0));transform-origin:center}
+.stt{border-radius:30px;text-align:center;background:rgba(30,8,20,.94);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.qm{font:900 120px/1 Unb;color:var(--yl);-webkit-text-stroke:12px var(--ink);paint-order:stroke fill}
+.ring{border:10px solid #fff;border-radius:50%}
+.pin{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,#fff 0 20%,#ffd23f 45%,rgba(255,210,63,0) 72%)}
+.pout{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#fff 0 22%,#5fe8ff 48%,rgba(95,232,255,0) 74%)}
+.coin{width:70px;height:70px}
+.inpanel{border-radius:44px;background:linear-gradient(170deg,#2d1a3c,#140a20);box-shadow:0 0 0 12px var(--ink),inset 0 0 0 6px rgba(255,255,255,.06),0 40px 90px rgba(0,0,0,.5);overflow:hidden}
+.dark{left:0;top:0;width:100%;height:100%;background:#05020a}
+.xr{width:130px;height:130px}
+.xr::before,.xr::after{content:'';position:absolute;left:55px;top:-10px;width:20px;height:150px;border-radius:10px;background:var(--red);box-shadow:0 0 0 6px var(--ink)}
+.xr::before{transform:rotate(45deg)}.xr::after{transform:rotate(-45deg)}
+.ok{width:120px;height:120px;border-radius:50%;background:var(--gr);border:8px solid var(--ink);font:900 80px/104px Unb;color:var(--ink);text-align:center}
+.flag{width:16px;height:220px;background:#e9e3d8;border:5px solid var(--ink)}
+.flag::after{content:'';position:absolute;left:10px;top:0;width:90px;height:60px;background:repeating-conic-gradient(#111 0 25%,#fff 0 50%) 0 0/30px 30px;border:5px solid var(--ink)}
+.ledge{border-radius:18px;background:linear-gradient(180deg,#e8c9a8,#a8785a);border:8px solid var(--ink)}
+.drip{width:40px;height:52px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#ffd23f;border:6px solid var(--ink)}
+.sweat{width:24px;height:34px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#9fe6ff;border:4px solid var(--ink)}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="city"></div><div id="day"></div><div id="wall"></div><div id="floor"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"></div></div>
+<div id="B" class="scene"><div class="cam"></div></div>
+<div id="C" class="scene"><div class="cam"></div></div>
+<div id="D" class="scene"><div class="cam"></div></div>
+<div id="E" class="scene"><div class="cam"></div></div>
+<div id="F" class="scene"><div class="cam"></div></div>
+<div id="G" class="scene"><div class="cam"></div></div>
+<div id="H" class="scene"><div class="cam"></div></div>
+<div id="V" class="scene"><div class="cam"></div></div>
+<div id="A2" class="scene"><div class="cam"></div></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
