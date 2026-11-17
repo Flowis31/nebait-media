@@ -1395,3 +1395,85 @@ function chipGuardSVG(id) {
     <rect x="262" y="178" width="34" height="26" rx="6" fill="#ffd23f" stroke="${ink}" stroke-width="6"/><circle cx="272" cy="206" r="13" fill="#fff" stroke="${ink}" stroke-width="5"/></g>
   <g class="cgzz" style="opacity:0"><text x="224" y="60" style="font:900 44px Unb" fill="#cfe3ff" stroke="${ink}" stroke-width="3">z</text><text x="250" y="20" style="font:900 58px Unb" fill="#cfe3ff" stroke="${ink}" stroke-width="3">Z</text></g>`);
 }
+
+// ---------- 033 (17.11.2026): camera sensor props ----------
+// pixelSVG(id, filt): one photosite as a character — a glass bucket under a colour filter (red/green/blue) that catches light.
+//   viewBox 0 0 300 380. Rig: .pxfill light level inside (sy 0..1, origin bottom), .pxmouth open mouth (sy 0..1, for talking),
+//   .pxsmile smile line (sy -1 = sad), .pxpup pupils (x/y), .pxlid lids (sy 0 open .. 1 closed), .pxbrL/.pxbrR brows (y/r),
+//   .pxarmL/.pxarmR arms (r around the shoulders), .pxlegL/.pxlegR legs (r), .pxglow light glow above the rim (o), .pxtear tear (o/y).
+function pixelSVG(id, filt = '#ff4d5e') {
+  const arm = (cls, ox, hx, hy) => `<g class="${cls}" style="transform-origin:${ox}px 210px"><path d="M${ox} 210 Q${(ox + hx) / 2} ${hy + 30} ${hx} ${hy}" fill="none" stroke="${PIK}" stroke-width="24" stroke-linecap="round"/><path d="M${ox} 210 Q${(ox + hx) / 2} ${hy + 30} ${hx} ${hy}" fill="none" stroke="#8a97ad" stroke-width="11" stroke-linecap="round"/>
+    <circle cx="${hx}" cy="${hy}" r="22" fill="#fff" stroke="${PIK}" stroke-width="8"/><path d="M${hx - 8} ${hy - 8} q6 -6 14 -2" stroke="#d6dce6" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
+  const leg = (cls, x, dx) => `<g class="${cls}" style="transform-origin:${x}px 318px"><path d="M${x} 318 L${x + dx * 0.3} 352" stroke="${PIK}" stroke-width="22" stroke-linecap="round"/><path d="M${x} 318 L${x + dx * 0.3} 352" stroke="#8a97ad" stroke-width="10" stroke-linecap="round"/>
+    <path d="M${x + dx * 0.3 - 26} 366 Q${x + dx * 0.3} 338 ${x + dx * 0.3 + 26} 366 Z" fill="#2d3550" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/></g>`;
+  const B = 'M46 96 L254 96 L236 312 Q150 330 64 312 Z';
+  return psv('0 0 300 380', `<defs>${lg('pxb' + id, 'rgba(220,236,255,.55)', 'rgba(120,150,200,.35)')}${lg('pxf' + id, '#fff7c2', '#ffb43d')}${rg('pxg' + id, 'rgba(255,240,170,.9)', 'rgba(255,220,120,0)', '50%', '50%')}
+    ${lg('pxr' + id, filt, '#1a1f33')}<clipPath id="pxc${id}"><path d="${B}"/></clipPath></defs>
+    ${leg('pxlegL', 120, -1)}${leg('pxlegR', 180, 1)}
+    ${arm('pxarmL', 62, 6, 250)}${arm('pxarmR', 238, 294, 250)}
+    <path d="${B}" fill="#1b2440"/>
+    <g clip-path="url(#pxc${id})"><rect class="pxfill" x="30" y="96" width="240" height="240" fill="url(#pxf${id})" style="transform-origin:150px 330px;transform:scaleY(.5)"/>
+      ${[0, 1, 2, 3, 4].map(k => `<circle cx="${80 + k * 36}" cy="${300 - (k % 2) * 40}" r="${5 + (k % 3) * 2}" fill="#fff" opacity=".55"/>`).join('')}</g>
+    <path d="${B}" fill="url(#pxb${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M70 120 L84 290" stroke="#fff" stroke-width="10" opacity=".45" stroke-linecap="round"/><path d="M96 118 L102 170" stroke="#fff" stroke-width="6" opacity=".35" stroke-linecap="round"/>
+    <ellipse class="pxglow" cx="150" cy="70" rx="150" ry="70" fill="url(#pxg${id})" style="opacity:0"/>
+    <ellipse cx="150" cy="96" rx="114" ry="26" fill="url(#pxr${id})" stroke="${PIK}" stroke-width="10"/>
+    <ellipse cx="150" cy="93" rx="96" ry="15" fill="${filt}" opacity=".75"/><path d="M84 88 Q120 80 160 82" stroke="#fff" stroke-width="6" opacity=".6" fill="none" stroke-linecap="round"/>
+    <g class="pxface">
+      <path class="pxbrL" d="M94 150 Q114 138 134 148" stroke="${PIK}" stroke-width="9" fill="none" stroke-linecap="round" style="transform-origin:114px 146px"/>
+      <path class="pxbrR" d="M166 148 Q186 138 206 150" stroke="${PIK}" stroke-width="9" fill="none" stroke-linecap="round" style="transform-origin:186px 146px"/>
+      <circle cx="114" cy="184" r="26" fill="#fff" stroke="${PIK}" stroke-width="8"/><circle cx="186" cy="184" r="26" fill="#fff" stroke="${PIK}" stroke-width="8"/>
+      <g class="pxpup"><circle cx="118" cy="187" r="12" fill="${PIK}"/><circle cx="190" cy="187" r="12" fill="${PIK}"/><circle cx="122" cy="182" r="4" fill="#fff"/><circle cx="194" cy="182" r="4" fill="#fff"/></g>
+      <g class="pxlid" style="transform-origin:150px 158px;transform:scaleY(0)"><path d="M86 184 A28 28 0 0 1 142 184 Z" fill="#9fb2d6" stroke="${PIK}" stroke-width="7"/><path d="M158 184 A28 28 0 0 1 214 184 Z" fill="#9fb2d6" stroke="${PIK}" stroke-width="7"/></g>
+      <g class="pxmouth" style="transform-origin:150px 232px;transform:scaleY(0)"><path d="M122 232 Q150 236 178 232 Q172 270 150 272 Q128 270 122 232 Z" fill="#5a0f1c" stroke="${PIK}" stroke-width="7"/><ellipse cx="150" cy="260" rx="14" ry="7" fill="#ff7a8a"/></g>
+      <path class="pxsmile" d="M118 230 Q150 254 182 230" stroke="${PIK}" stroke-width="9" fill="none" stroke-linecap="round" style="transform-origin:150px 238px"/>
+      <path class="pxtear" d="M210 206 Q220 222 214 232 Q204 236 202 224 Q202 214 210 206 Z" fill="#8fdcff" stroke="${PIK}" stroke-width="5" style="opacity:0"/>
+    </g>`);
+}
+// sensorSVG(id, n): the camera's image sensor — a chip with gold pins and an n x n Bayer grid (RGGB). viewBox 0 0 600 600. .sngrid = the grid group.
+function sensorSVG(id, n = 12) {
+  const c = 90, w = 420 / n; let g = '';
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) { const col = (r % 2 === 0) ? (k % 2 === 0 ? '#ff4d5e' : '#4dff88') : (k % 2 === 0 ? '#4dff88' : '#4d8cff');
+    g += `<rect x="${(c + k * w + 1.5).toFixed(1)}" y="${(c + r * w + 1.5).toFixed(1)}" width="${(w - 3).toFixed(1)}" height="${(w - 3).toFixed(1)}" rx="${(w * 0.18).toFixed(1)}" fill="${col}" opacity=".85"/>`; }
+  let pins = ''; for (let k = 0; k < 10; k++) { const p = 80 + k * 49; pins += `<rect x="${p}" y="4" width="22" height="40" rx="4" fill="#ffcf4d" stroke="${PIK}" stroke-width="5"/><rect x="${p}" y="556" width="22" height="40" rx="4" fill="#ffcf4d" stroke="${PIK}" stroke-width="5"/><rect x="4" y="${p}" width="40" height="22" rx="4" fill="#ffcf4d" stroke="${PIK}" stroke-width="5"/><rect x="556" y="${p}" width="40" height="22" rx="4" fill="#ffcf4d" stroke="${PIK}" stroke-width="5"/>`; }
+  return psv('0 0 600 600', `<defs>${lg('snb' + id, '#3a4258', '#151927')}${lg('sng' + id, 'rgba(255,255,255,.35)', 'rgba(255,255,255,0)')}</defs>${pins}
+    <rect x="34" y="34" width="532" height="532" rx="40" fill="url(#snb${id})" stroke="${PIK}" stroke-width="12"/>
+    <rect x="${c - 14}" y="${c - 14}" width="${420 + 28}" height="${420 + 28}" rx="16" fill="#0b0e18" stroke="#6f7a96" stroke-width="5"/>
+    <g class="sngrid">${g}</g><path d="M${c} ${c} L${c + 420} ${c} L${c} ${c + 260} Z" fill="url(#sng${id})" opacity=".55"/>
+    <circle cx="70" cy="70" r="10" fill="#6f7a96"/>`);
+}
+// photoSVG(id): an instant photo of a little scene (sky, sun, hills, a tree). .phnoise = colour noise overlay (o 0..1), .phimg = the picture group.
+function photoSVG(id) {
+  let nz = ''; for (let k = 0; k < 260; k++) { const x = 30 + hash(k * 1.7 + 3) * 330, y = 30 + hash(k * 2.3 + 11) * 330, s = 8 + hash(k * 5.1) * 14, cols = ['#ff4d5e', '#4dff88', '#4d8cff', '#ffffff', '#111522', '#ffcf4d'];
+    nz += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${s.toFixed(1)}" height="${s.toFixed(1)}" fill="${cols[k % 6]}" opacity="${(0.45 + hash(k) * 0.5).toFixed(2)}"/>`; }
+  return psv('0 0 400 480', `<defs>${lg('phs' + id, '#7fd0ff', '#ffe0b0')}${lg('phh' + id, '#5fd47a', '#2e8f4e')}<clipPath id="phc${id}"><rect x="30" y="30" width="340" height="340" rx="6"/></clipPath></defs>
+    <rect x="8" y="8" width="384" height="464" rx="18" fill="#fbf8f1" stroke="${PIK}" stroke-width="10"/>
+    <g clip-path="url(#phc${id})"><g class="phimg"><rect x="30" y="30" width="340" height="340" fill="url(#phs${id})"/><circle cx="290" cy="110" r="44" fill="#ffd84d" stroke="${PIK}" stroke-width="6"/>
+      <path d="M30 300 Q120 200 220 280 Q290 230 370 270 L370 370 L30 370 Z" fill="url(#phh${id})" stroke="${PIK}" stroke-width="6"/>
+      <rect x="110" y="220" width="16" height="60" fill="#8a5a3a" stroke="${PIK}" stroke-width="5"/><circle cx="118" cy="205" r="38" fill="#3fbf5f" stroke="${PIK}" stroke-width="6"/></g>
+      <g class="phnoise" style="opacity:0"><rect x="30" y="30" width="340" height="340" fill="#1a1d2a" opacity=".55"/>${nz}</g></g>
+    <rect x="30" y="30" width="340" height="340" rx="6" fill="none" stroke="${PIK}" stroke-width="6"/>
+    <path d="M40 410 L200 410" stroke="#c9c2b4" stroke-width="10" stroke-linecap="round"/>`);
+}
+// sunSVG(id): a sun with a face. viewBox 0 0 300 300. .sunrays rotate (origin centre).
+function sunSVG(id) {
+  let r = ''; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; r += `<path d="M${(150 + 92 * Math.cos(a)).toFixed(1)} ${(150 + 92 * Math.sin(a)).toFixed(1)} L${(150 + 140 * Math.cos(a + 0.12)).toFixed(1)} ${(150 + 140 * Math.sin(a + 0.12)).toFixed(1)} L${(150 + 140 * Math.cos(a - 0.12)).toFixed(1)} ${(150 + 140 * Math.sin(a - 0.12)).toFixed(1)} Z" fill="#ffcf3d" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>`; }
+  return psv('0 0 300 300', `<defs>${rg('sun' + id, '#fff6b0', '#ffb32d')}</defs><g class="sunrays" style="transform-origin:150px 150px">${r}</g>
+    <circle cx="150" cy="150" r="88" fill="url(#sun${id})" stroke="${PIK}" stroke-width="10"/>
+    <circle cx="122" cy="140" r="10" fill="${PIK}"/><circle cx="178" cy="140" r="10" fill="${PIK}"/><path d="M118 172 Q150 196 182 172" stroke="${PIK}" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="104" cy="168" rx="14" ry="8" fill="#ff8a5a" opacity=".6"/><ellipse cx="196" cy="168" rx="14" ry="8" fill="#ff8a5a" opacity=".6"/>`);
+}
+// phoneBackSVG(id, label): the back of a phone with a big camera block (main lens + two small + flash). viewBox 0 0 440 840.
+//   .lensMain = main lens group (centre 150,190), .lensGlow = glow inside it (o), .flash (o).
+function phoneBackSVG(id, label = '200 MP') {
+  const lens = (cx, cy, r, cls = '') => `<g class="${cls}"><circle cx="${cx}" cy="${cy}" r="${r + 16}" fill="#2a2f3d" stroke="${PIK}" stroke-width="9"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#plr${id})" stroke="#56607a" stroke-width="6"/>
+    <circle cx="${cx}" cy="${cy}" r="${r * 0.55}" fill="url(#plc${id})"/><circle cx="${cx}" cy="${cy}" r="${r * 0.22}" fill="#05060a"/><path d="M${cx - r * 0.55} ${cy - r * 0.25} A${r * 0.6} ${r * 0.6} 0 0 1 ${cx - r * 0.1} ${cy - r * 0.6}" stroke="#fff" stroke-width="${Math.max(4, r * 0.1)}" fill="none" opacity=".6" stroke-linecap="round"/></g>`;
+  return psv('0 0 440 840', `<defs>${lg('pbb' + id, '#5b6688', '#232838', false)}${rg('plr' + id, '#3b4a7a', '#090b14')}${rg('plc' + id, '#7a5cff', '#10142a', '40%', '35%')}${rg('plg' + id, 'rgba(255,240,170,.95)', 'rgba(255,190,80,0)', '50%', '50%')}</defs>
+    <rect x="10" y="10" width="420" height="820" rx="66" fill="url(#pbb${id})" stroke="${PIK}" stroke-width="12"/>
+    <path d="M40 120 L40 740" stroke="#fff" stroke-width="10" opacity=".18" stroke-linecap="round"/>
+    <rect x="44" y="60" width="300" height="330" rx="58" fill="#1a1e2b" stroke="${PIK}" stroke-width="10"/>
+    <g class="lensMain">${lens(150, 190, 74)}<circle class="lensGlow" cx="150" cy="190" r="70" fill="url(#plg${id})" style="opacity:0"/></g>
+    ${lens(286, 130, 32)}${lens(286, 270, 32)}<circle class="flash" cx="150" cy="338" r="18" fill="#fff4c2" stroke="${PIK}" stroke-width="6"/>
+    <text x="220" y="372" font-family="JB" font-weight="800" font-size="28" fill="#c9d2ea" letter-spacing="2">${label}</text>
+    <circle cx="220" cy="620" r="44" fill="none" stroke="#7d88a8" stroke-width="8" opacity=".55"/>`);
+}

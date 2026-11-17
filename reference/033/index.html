@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#0d1233;--acc:#ff9f43;--accd:#e07a1a;--paper:#f4ecd9;--red:#ff3b5c;--dim:#d9b6c0;--cy:#5fe8ff;--pk:#ff5fa2;--gr:#7dff8a;--yl:#ffe14d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* world: a night photo studio */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#0a0f2e 0%,#141a4a 45%,#2a1a52 75%,#140c26 100%)}
+#far{position:absolute;left:-700px;top:120px;width:3400px;height:1100px;will-change:transform}
+#mid{position:absolute;left:-700px;top:0;width:3400px;height:1400px;will-change:transform}
+#night{position:absolute;inset:0;background:#02030c;opacity:0}
+#floor{position:absolute;left:0;top:1320px;width:1080px;height:640px}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(255,159,67,.14) 0%,rgba(255,159,67,.05) 45%,rgba(255,159,67,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(77,201,255,.13) 0%,rgba(77,201,255,.04) 45%,rgba(77,201,255,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(2,0,12,.6) 100%)}
+#shake{position:absolute;inset:0}
+#morph *{position:absolute}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:var(--acc)}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.nb-panel{border-left-color:var(--acc);border-color:rgba(255,159,67,.45);background:linear-gradient(180deg,rgba(24,28,66,.95),rgba(12,14,38,.95))}
+.nb-chip{border-color:rgba(255,159,67,.8);background:rgba(14,16,42,.93)}
+.nb-chip.c{border-color:rgba(77,201,255,.85)}.nb-chip.r{border-color:rgba(255,59,92,.85)}.nb-chip.g{border-color:rgba(77,255,136,.85)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:var(--acc);text-align:center;white-space:nowrap}
+.chipL.c{color:#7fdcff}.chipL.r{color:#ff7a90}.chipL.g{color:#7dff9a}
+.big{font:900 150px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i{position:static;font-style:normal;color:var(--acc)}
+.lbl{font:900 80px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.lbl i{position:static;font-style:normal;color:var(--acc)}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(2,0,12,.65),rgba(2,0,12,0));transform-origin:center}
+.stt{border-radius:30px;text-align:center;background:rgba(14,6,20,.94);white-space:nowrap}
+.conf{width:18px;height:28px;border-radius:4px}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.qm{font:900 150px/1 Unb;color:var(--acc);-webkit-text-stroke:14px var(--ink);paint-order:stroke fill}
+.ring{border:10px solid #fff;border-radius:50%}
+.ldrop{width:30px;height:44px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(circle at 40% 60%,#fffbe0,#ffc93d 60%,#ff9f43);border:5px solid var(--ink)}
+.mini{width:30px;height:30px;border-radius:7px;border:4px solid var(--ink)}
+.toggle{width:300px;height:130px;border-radius:65px;background:#2a2f48;border:10px solid var(--ink)}
+.knob{left:10px;top:10px;width:90px;height:90px;border-radius:50%;background:#fff;border:8px solid var(--ink)}
+.cross{height:36px;background:var(--red);border:6px solid var(--ink);border-radius:12px;transform-origin:0 50%}
+.moon{width:160px;height:160px;border-radius:50%;box-shadow:inset 46px -22px 0 0 #f5f0ff,0 0 60px rgba(220,220,255,.35)}
+.moonc{width:160px;height:160px;border-radius:50%;background:#141a4a}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="far"></div><div id="mid"></div><div id="night"></div><div id="floor"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam"></div></div>
+<div id="B" class="scene"><div class="cam"></div></div>
+<div id="C" class="scene"><div class="cam"></div></div>
+<div id="D" class="scene"><div class="cam"></div></div>
+<div id="E" class="scene"><div class="cam"></div></div>
+<div id="F" class="scene"><div class="cam"></div></div>
+<div id="G" class="scene"><div class="cam"></div></div>
+<div id="H" class="scene"><div class="cam"></div></div>
+<div id="V" class="scene"><div class="cam"></div></div>
+<div id="A2" class="scene"><div class="cam"></div></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
