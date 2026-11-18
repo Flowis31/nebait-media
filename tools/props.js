@@ -1477,3 +1477,72 @@ function phoneBackSVG(id, label = '200 MP') {
     <text x="220" y="372" font-family="JB" font-weight="800" font-size="28" fill="#c9d2ea" letter-spacing="2">${label}</text>
     <circle cx="220" cy="620" r="44" fill="none" stroke="#7d88a8" stroke-width="8" opacity=".55"/>`);
 }
+
+// ---------- added 18.11.2026 (ролик 035 «Мороз и батарея») ----------
+// heating radiator (батарея отопления), viewBox 0 0 560 360. Rig: .rglow (red-hot overlay, o), .rheat (heat waves above, o / y),
+// .rvalve (valve knob, r origin 512 96). n fins.
+function radiatorSVG(id, n = 8) {
+  let fins = ''; const w = 420 / n;
+  for (let k = 0; k < n; k++) { const x = 60 + k * w;
+    fins += `<rect x="${(x + 4).toFixed(1)}" y="70" width="${(w - 8).toFixed(1)}" height="230" rx="${(w * 0.35).toFixed(1)}" fill="url(#rd${id})" stroke="${PIK}" stroke-width="8"/>
+      <path d="M${(x + w * 0.32).toFixed(1)} 96 L${(x + w * 0.32).toFixed(1)} 270" stroke="#fff" stroke-width="6" opacity=".55" stroke-linecap="round"/>
+      <path d="M${(x + w * 0.7).toFixed(1)} 100 L${(x + w * 0.7).toFixed(1)} 276" stroke="#8a96a6" stroke-width="5" opacity=".5" stroke-linecap="round"/>`; }
+  let waves = ''; for (let k = 0; k < 4; k++) { const x = 120 + k * 100; waves += `<path d="M${x} 52 q-18 -20 0 -40 q18 -20 0 -40" fill="none" stroke="#ffb07a" stroke-width="9" stroke-linecap="round" opacity=".85"/>`; }
+  return psv('0 0 560 360', `<defs>${lg('rd' + id, '#ffffff', '#c9d2de', false)}${lg('rh' + id, 'rgba(255,90,40,.0)', 'rgba(255,70,30,.55)')}</defs>
+  <g class="rheat">${waves}</g>
+  <rect x="40" y="96" width="480" height="26" rx="13" fill="#b9c3d0" stroke="${PIK}" stroke-width="8"/><rect x="40" y="250" width="480" height="26" rx="13" fill="#b9c3d0" stroke="${PIK}" stroke-width="8"/>
+  ${fins}
+  <rect class="rglow" x="56" y="66" width="428" height="238" rx="20" fill="url(#rh${id})" opacity="0"/>
+  <path d="M60 300 L60 340 M480 300 L480 340" stroke="${PIK}" stroke-width="14" stroke-linecap="round"/>
+  <path d="M484 109 L512 109 L512 70" fill="none" stroke="#9aa6b4" stroke-width="18" stroke-linecap="round"/><path d="M484 109 L512 109 L512 70" fill="none" stroke="${PIK}" stroke-width="4" stroke-linecap="round" opacity=".4"/>
+  <g class="rvalve" style="transform-origin:512px 60px"><circle cx="512" cy="60" r="24" fill="#ff5f6d" stroke="${PIK}" stroke-width="8"/><path d="M496 60 L528 60" stroke="${PIK}" stroke-width="6"/></g>`);
+}
+// honey jar, viewBox 0 0 360 440. Rig: .hjfill (honey level, sy origin bottom), .hjdrip (drip from the dipper, y/o), .hjdip (dipper, r origin 250 60)
+function honeyJarSVG(id) {
+  return psv('0 0 360 440', `<defs>${lg('hj' + id, '#ffd76a', '#d88a10')}${lg('hg' + id, 'rgba(230,245,255,.55)', 'rgba(180,210,235,.25)', false)}</defs>
+  <path d="M60 110 Q40 120 40 170 L40 380 Q40 420 90 420 L270 420 Q320 420 320 380 L320 170 Q320 120 300 110 Z" fill="url(#hg${id})" stroke="${PIK}" stroke-width="11"/>
+  <g class="hjfill" style="transform-origin:180px 414px"><path d="M50 190 Q180 170 310 190 L310 380 Q310 412 270 412 L90 412 Q50 412 50 380 Z" fill="url(#hj${id})"/>
+    <path d="M70 200 Q180 186 290 200" fill="none" stroke="#fff3c0" stroke-width="7" opacity=".7" stroke-linecap="round"/></g>
+  <path d="M64 150 L64 380" stroke="#fff" stroke-width="12" opacity=".45" stroke-linecap="round"/>
+  <rect x="120" y="250" width="120" height="90" rx="14" fill="#fff6dc" stroke="${PIK}" stroke-width="7"/>
+  <path d="M150 300 l15 -26 l30 0 l15 26 l-15 26 l-30 0 z" fill="#ffb21f" stroke="${PIK}" stroke-width="6"/>
+  <path d="M50 92 L310 92 L300 128 L60 128 Z" fill="#c9824a" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M40 70 Q180 40 320 70 L320 98 Q180 80 40 98 Z" fill="#ff5f6d" stroke="${PIK}" stroke-width="9"/><path d="M60 80 L120 70 M150 66 L210 66 M240 70 L300 80" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-dasharray="2 22"/>
+  <g class="hjdip" style="transform-origin:250px 60px"><path d="M250 60 L250 -110" stroke="#a8743c" stroke-width="16" stroke-linecap="round"/><path d="M250 60 L250 -110" stroke="${PIK}" stroke-width="4" opacity=".3"/>
+    <ellipse cx="250" cy="70" rx="26" ry="18" fill="url(#hj${id})" stroke="${PIK}" stroke-width="7"/><path d="M226 66 L274 66 M228 78 L272 78" stroke="${PIK}" stroke-width="4"/></g>
+  <g class="hjdrip"><path d="M250 92 q-14 30 0 42 q14 -12 0 -42" fill="#ffc23a" stroke="${PIK}" stroke-width="5"/></g>`);
+}
+// battery cross-section, viewBox 0 0 680 420. Left plate (minus, graphite), right plate (plus, blue), separator in the middle,
+// liquid between them. Rig: .bcliq (liquid, recolour/o), .bchoney (thick honey overlay, o), .bcfrost (frost on the case, o), .bcsep (separator dashes).
+// Particles are HTML elements placed over it (run between x ~150 and ~530 at y ~120..320 of the viewBox).
+function batteryCutSVG(id) {
+  let stripes = ''; for (let k = 0; k < 9; k++) stripes += `<path d="M${84 + k * 7} 70 L${84 + k * 7} 350" stroke="#2a2f38" stroke-width="2" opacity=".5"/>`;
+  let ice = ''; for (let k = 0; k < 14; k++) { const x = 30 + k * 46; ice += `<path d="M${x} 24 l12 18 l12 -18" fill="#eaf8ff" stroke="#9fd8ff" stroke-width="4"/>`; }
+  return psv('0 0 680 420', `<defs>${lg('bcs' + id, '#59657a', '#232a36')}${lg('bcl' + id, 'rgba(120,220,255,.55)', 'rgba(60,140,220,.45)')}${lg('bch' + id, 'rgba(255,200,70,.85)', 'rgba(220,130,20,.9)')}
+    ${lg('bca' + id, '#6a6f78', '#3a3f48', false)}${lg('bcc' + id, '#5fa8ff', '#2a5fc8', false)}</defs>
+  <rect x="12" y="20" width="656" height="380" rx="48" fill="url(#bcs${id})" stroke="${PIK}" stroke-width="12"/>
+  <rect x="40" y="48" width="600" height="324" rx="28" fill="#0e1622"/>
+  <rect class="bcliq" x="140" y="56" width="400" height="308" fill="url(#bcl${id})"/>
+  <rect class="bchoney" x="140" y="56" width="400" height="308" fill="url(#bch${id})" opacity="0"/>
+  <rect x="70" y="56" width="72" height="308" rx="10" fill="url(#bca${id})" stroke="${PIK}" stroke-width="7"/>${stripes}
+  <rect x="538" y="56" width="72" height="308" rx="10" fill="url(#bcc${id})" stroke="${PIK}" stroke-width="7"/>
+  <path class="bcsep" d="M340 60 L340 360" stroke="#e8f0ff" stroke-width="6" stroke-dasharray="18 14" opacity=".6"/>
+  <circle cx="106" cy="16" r="0"/><text x="94" y="-14" font-family="Unb" font-weight="900" font-size="60" fill="#fff" stroke="${PIK}" stroke-width="10" paint-order="stroke">−</text>
+  <text x="556" y="-14" font-family="Unb" font-weight="900" font-size="60" fill="#fff" stroke="${PIK}" stroke-width="10" paint-order="stroke">+</text>
+  <path d="M40 70 Q40 48 64 48 L200 48" stroke="#fff" stroke-width="8" opacity=".3" fill="none" stroke-linecap="round"/>
+  <g class="bcfrost" opacity="0">${ice}<rect x="12" y="20" width="656" height="380" rx="48" fill="none" stroke="#c9f0ff" stroke-width="10" opacity=".8"/></g>`);
+}
+// charge particle with a face (a lithium ion), viewBox 0 0 100 110. Rig: .ilegL/.ilegR (r origin 40/60 82, running), .ieye (sy blink), .ibody (fill)
+function ionSVG(id, col = '#ffe14d') {
+  return psv('0 0 100 110', `<defs>${rg('io' + id, '#ffffff', col)}</defs>
+  <g class="ilegL" style="transform-origin:40px 82px"><path d="M40 80 L32 104" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/></g>
+  <g class="ilegR" style="transform-origin:60px 82px"><path d="M60 80 L68 104" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/></g>
+  <circle class="ibody" cx="50" cy="50" r="38" fill="url(#io${id})" stroke="${PIK}" stroke-width="7"/>
+  <g class="ieye" style="transform-origin:50px 46px"><circle cx="38" cy="46" r="7" fill="${PIK}"/><circle cx="62" cy="46" r="7" fill="${PIK}"/></g>
+  <path d="M40 64 Q50 70 60 64" fill="none" stroke="${PIK}" stroke-width="5" stroke-linecap="round"/><text x="70" y="30" font-family="Unb" font-weight="900" font-size="26" fill="${PIK}">+</text>`);
+}
+// snowflake, viewBox 0 0 100 100
+function snowflakeSVG(col = '#eaf8ff') {
+  let a = ''; for (let k = 0; k < 6; k++) a += `<g transform="rotate(${k * 60} 50 50)"><path d="M50 50 L50 8 M50 22 L40 12 M50 22 L60 12 M50 34 L42 27 M50 34 L58 27" stroke="${col}" stroke-width="6" stroke-linecap="round" fill="none"/></g>`;
+  return psv('0 0 100 100', a + `<circle cx="50" cy="50" r="7" fill="${col}"/>`);
+}
