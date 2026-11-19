@@ -45,77 +45,54 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .stt{border-radius:30px;text-align:center;background:rgba(40,6,14,.92);white-space:nowrap;border:16px solid var(--red);color:var(--red);font:900 120px/170px Unb;padding:0 40px}
 .stt.g{border-color:#7dff8a;color:#7dff8a;background:rgba(6,30,14,.92)}
 .mm{width:380px;height:380px}
-/* A — hook (3D) */
-.a-t{left:0;top:230px;width:1080px}
-.a-n{left:0;top:420px;width:1080px;font-size:84px;-webkit-text-stroke:12px var(--ink)}
-/* B — 2013 -> today */
-.b-cal{left:300px;top:330px;width:480px;height:554px}
-.b-yr{left:0;top:200px;width:1080px;font-size:120px}
-.b-m{left:350px;top:860px}
-.b-beard{left:470px;top:1070px;width:140px;height:230px;transform-origin:70px 0}
-/* C — phones pile */
-.c-m{left:60px;top:880px}
-.c-ph{width:150px;height:270px}
-.c-chip{left:560px;top:300px}
-/* D — question */
-.d-q{left:0;top:250px;width:1080px;font-size:64px;line-height:1.2;-webkit-text-stroke:11px var(--ink)}
-.d-chip{left:150px;top:560px}
-.d-gp{left:560px;top:850px;width:420px;height:260px}
-.d-m{left:90px;top:800px}
-/* E — trailer in the city (3D) */
-.e-n{left:0;top:200px;width:1080px;font-size:118px}
-.e-l{left:0;top:340px;width:1080px;font-size:64px}
-.e-chip{left:60px;top:440px}
-/* F — record */
-.f-c1{left:190px;top:420px;width:240px;height:820px}
-.f-c2{left:640px;top:420px;width:240px;height:820px}
-.f-l1{left:110px;top:1060px;width:400px;text-align:center;font:900 46px/1.1 Unb;color:#fff;-webkit-text-stroke:8px var(--ink);paint-order:stroke fill}
-.f-l2{left:560px;top:1060px;width:400px;text-align:center;font:900 40px/1.1 Unb;color:#fff;-webkit-text-stroke:8px var(--ink);paint-order:stroke fill}
-.f-tv{left:160px;top:250px;width:300px;height:220px}
-.f-pop{left:650px;top:500px;width:220px;height:260px}
-.f-crown{left:250px;top:150px}
-.f-m{left:380px;top:760px;width:330px;height:330px}
-.f-src{left:60px;top:200px}
-/* G — delays */
-.g-cal{width:280px;height:323px}
-.g-st{font-size:38px;line-height:76px;padding:0 10px;border-width:9px;border-radius:20px}
-.g-sn{left:120px;top:1130px;width:200px;height:160px}
-.g-m{left:640px;top:880px;width:360px;height:360px}
-/* H — verdict */
-.h-q{left:0;top:240px;width:1080px;font-size:58px;-webkit-text-stroke:10px var(--ink)}
-.h-st{left:150px;top:420px;width:780px}
-.h-m{left:350px;top:820px}
-.h-c1{left:60px;top:780px;width:250px;height:250px}
-.h-c2{left:770px;top:780px;width:250px;height:250px}
-/* I — download */
-.i-bar{left:110px;top:520px;width:860px;height:110px;border-radius:55px;background:#1d1838;border:10px solid var(--ink);overflow:hidden}
-.i-fill{left:0;top:0;width:100%;height:100%;background:linear-gradient(90deg,#5fe0ff,#ff5fb0);transform-origin:0 50%}
-.i-n{left:0;top:270px;width:1080px;font-size:150px}
-.i-l{left:0;top:660px;width:1080px;font-size:58px}
-.i-bed{left:300px;top:860px;width:520px;height:390px}
-.i-m{left:380px;top:770px;width:330px;height:330px}
-.i-moon{left:780px;top:170px;width:180px;height:180px}
-.i-z{font:900 80px/1 Unb;color:#fff;-webkit-text-stroke:8px var(--ink);paint-order:stroke fill}
-/* J — question */
-.j-gp{left:540px;top:860px;width:440px;height:272px}
-.j-q{left:0;top:260px;width:1080px;font-size:96px;line-height:1.15}
-.j-m{left:90px;top:860px}
-.j-qm{left:760px;top:600px;font:900 220px/1 Unb;color:#ffd34d;-webkit-text-stroke:14px var(--ink);paint-order:stroke fill}
+
+.rays{left:-460px;top:-500px;width:2000px;height:2000px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,220,140,.22) 0 6deg,rgba(255,220,140,0) 6deg 18deg);-webkit-mask-image:radial-gradient(closest-side,#000 20%,transparent 75%);mask-image:radial-gradient(closest-side,#000 20%,transparent 75%)}
+.title{font:900 150px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap;text-shadow:0 0 40px rgba(255,95,176,.7)}
+.title i{position:static;font-style:normal;color:#ffd34d}
+.vhs{left:0;top:0;width:1080px;height:1920px;background:repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 3px,transparent 3px 7px);mix-blend-mode:overlay}
+.rec{left:80px;top:180px;font:700 48px/1 JB;color:#fff;letter-spacing:4px}
+.rec b{position:static;color:#ff3b5c}
+.pol{width:330px;height:390px;background:#f4ecd9;border:8px solid var(--ink);border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.pol .ph{left:18px;top:18px;width:278px;height:250px;background:linear-gradient(180deg,#ffb36b,#ff5fb0 60%,#6a3cff);border:5px solid var(--ink)}
+.pol .pt{left:0;top:290px;width:314px;text-align:center;font:900 34px/1.1 Unb;color:var(--ink)}
+.bub{padding:14px 34px;border-radius:40px;border:7px solid var(--ink);background:#fff;font:900 46px/1 Unb;color:var(--ink);white-space:nowrap}
+.bub.r{background:#ff5f6d;color:#fff}.bub.y{background:#ffd34d}.bub.c{background:#5fe0ff}
+.dig{font:900 520px/1 Unb;color:#fff;-webkit-text-stroke:22px var(--ink);paint-order:stroke fill;text-align:center;width:1080px;left:0}
+.dig.n{color:#ffd34d;text-shadow:0 0 60px rgba(255,211,77,.9)}
+.piece{width:90px;height:90px;background:#fff;border:8px solid var(--ink)}
+/* scene boxes */
+.a-t{left:0;top:230px;width:1080px}.a-t2{left:0;top:400px;width:1080px}
+.b-crt{left:190px;top:470px;width:700px;height:608px}.b-yr{left:0;top:230px;width:1080px;font-size:170px}.b-con{left:420px;top:1040px;width:260px;height:216px}
+.c-k{width:300px;height:250px}.c-l{left:0;top:250px;width:1080px;font-size:96px}
+.d-n{left:0;top:220px;width:1080px;font-size:100px}.d-l{left:0;top:360px;width:1080px;font-size:66px}.d-grid{left:0;top:0;width:1080px;height:1920px}.d-case{width:120px;height:156px}
+.e-chip{left:60px;top:200px}
+.f-tower{left:640px;top:180px;width:300px;height:1120px;background:linear-gradient(90deg,#3b2f6a,#2a2046);border:10px solid var(--ink);border-radius:14px}
+.f-para{left:150px;top:200px;width:400px;height:420px}.f-hs{left:640px;top:940px;width:300px;height:260px}
+.g-chip{left:60px;top:200px}
+.h-m{left:330px;top:820px}.h-q{left:780px;top:560px;font:900 200px/1 Unb;color:#ffd34d;-webkit-text-stroke:14px var(--ink);paint-order:stroke fill}
+.i-m{left:380px;top:900px;width:330px;height:330px}
+.j-t{left:0;top:300px;width:1080px;font-size:230px}.j-d{left:0;top:540px;width:1080px;font-size:56px}
+.k-q{left:0;top:240px;width:1080px;font-size:66px;-webkit-text-stroke:11px var(--ink)}.k-st{left:150px;top:470px;width:780px}.k-m{left:350px;top:860px}
+.l-5{top:330px}.l-6{top:330px}.l-cap{left:0;top:920px;width:1080px;font-size:70px}
+.m-q{left:0;top:250px;width:1080px;font-size:84px;line-height:1.15}.m-m{left:90px;top:860px}.m-case{left:640px;top:820px;width:300px;height:390px}
 </style></head>
 <body>
 <div id="stage">
   <div id="bg"><div id="sun"></div><div id="stars"></div><div id="sky2"></div><div id="palms"></div><div id="road"></div><div id="lines"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
   <div id="shake">
-<div id="A" class="scene"><div class="cam a-cam"></div><div class="a-t big">GTA <i>6</i></div><div class="a-n big">ЖДАЛИ <i>13</i> ЛЕТ</div></div>
-<div id="B" class="scene"><div class="cam"><div class="b-yr big"><i class="yr">2013</i></div><div class="b-cal"></div><div class="shd" style="left:370px;top:1210px;width:340px;height:60px"></div><div class="b-m mm"></div><div class="b-beard"></div></div></div>
-<div id="C" class="scene"><div class="cam"><div class="c-pile"></div><div class="shd" style="left:80px;top:1220px;width:340px;height:60px"></div><div class="c-m mm"></div></div></div>
-<div id="D" class="scene"><div class="cam"><div class="d-q big">САМАЯ <i>ОЖИДАЕМАЯ</i><br>ИГРА?</div><div class="d-chip nb-chip chipL">БАЙТ ИЛИ НЕ БАЙТ?</div><div class="shd" style="left:600px;top:1100px;width:340px;height:50px"></div><div class="d-gp"></div><div class="shd" style="left:110px;top:1210px;width:340px;height:60px"></div><div class="d-m mm"></div></div></div>
-<div id="E" class="scene"><div class="cam e-cam"></div><div class="e-n big"><span class="cnt" style="position:static">0</span></div><div class="e-l lbl">ПРОСМОТРОВ ЗА <i>СУТКИ</i></div><div class="e-chip nb-chip chipL">ТРЕЙЛЕР №2</div></div>
-<div id="F" class="scene"><div class="cam"><div class="f-c1"></div><div class="f-c2"></div><div class="f-l1">ТРЕЙЛЕР<br>GTA 6</div><div class="f-l2">«ДЭДПУЛ<br>И РОСОМАХА»</div><div class="f-pop"></div><div class="f-crown">👑</div><div class="f-m mm"></div></div></div>
-<div id="G" class="scene"><div class="cam g-cam"><div class="g-sn"></div><div class="shd" style="left:660px;top:1200px;width:320px;height:56px"></div><div class="g-m mm"></div></div></div>
-<div id="H" class="scene"><div class="cam"><div class="h-c1"></div><div class="h-c2"></div><div class="shd" style="left:370px;top:1170px;width:340px;height:60px"></div><div class="h-m mm"></div><div class="h-q big">САМАЯ <i>ОЖИДАЕМАЯ?</i></div><div class="h-st stt g">НЕ БАЙТ</div><div class="v-fx"></div></div></div>
-<div id="I" class="scene"><div class="cam"><div class="i-moon"></div><div class="i-n big"><span class="gb" style="position:static">0</span> <i>ГБ</i></div><div class="i-bar"><div class="i-fill"></div></div><div class="i-l lbl">ЗАГРУЗКА…</div><div class="i-bed"></div><div class="i-m mm"></div><div class="zz"></div></div></div>
-<div id="J" class="scene"><div class="cam"><div class="j-q big">А ТЫ УЖЕ<br><i>КАЧАЕШЬ?</i></div><div class="shd" style="left:580px;top:1120px;width:360px;height:50px"></div><div class="j-gp"></div><div class="j-qm">?</div><div class="shd" style="left:110px;top:1210px;width:340px;height:60px"></div><div class="j-m mm"></div></div></div>
+<div id="A" class="scene"><div class="cam a-cam"></div><div class="a-t title">КОНЕЦ</div><div class="a-t2 title"><i>ЭПОХИ</i></div></div>
+<div id="B" class="scene"><div class="cam"><div class="b-yr big"><i class="yr">2026</i></div><div class="b-crt"></div><div class="b-con"></div><div class="rec">◀◀ <b>REW</b></div></div><div class="vhs"></div></div>
+<div id="C" class="scene"><div class="cam"><div class="c-l lbl"><i>3</i> ПОКОЛЕНИЯ</div></div></div>
+<div id="D" class="scene"><div class="cam"><div class="d-grid"></div><div class="d-n big"><span class="cnt" style="position:static">0</span></div><div class="d-l lbl">КОПИЙ <i>GTA 5</i></div></div></div>
+<div id="E" class="scene"><div class="cam e-cam"></div><div class="e-chip nb-chip chipL">ЗАЕЗДЫ С ДРУЗЬЯМИ</div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-tower"></div><div class="f-para"></div><div class="f-m mm" style="left:240px;top:560px;width:220px;height:220px"></div><div class="shd" style="left:660px;top:1170px;width:280px;height:50px"></div><div class="f-hs"></div></div></div>
+<div id="G" class="scene"><div class="cam g-cam"></div><div class="g-chip nb-chip chipL">RP-СЕРВЕРЫ</div></div>
+<div id="H" class="scene"><div class="cam"><div class="shd" style="left:350px;top:1180px;width:340px;height:60px"></div><div class="h-m mm"></div><div class="h-q">?</div></div></div>
+<div id="I" class="scene"><div class="cam"><div class="shd" style="left:390px;top:1210px;width:300px;height:50px"></div><div class="i-m mm"></div></div></div>
+<div id="J" class="scene"><div class="cam j-cam"></div><div class="rays"></div><div class="j-t title">GTA <i>6</i></div><div class="j-d lbl">ВЫШЛА <i>СЕГОДНЯ</i></div></div>
+<div id="K" class="scene"><div class="cam"><div class="k-q big">ГЛАВНОЕ СОБЫТИЕ<br><i>ДЕСЯТИЛЕТИЯ?</i></div><div class="shd" style="left:370px;top:1210px;width:340px;height:60px"></div><div class="k-m mm"></div><div class="k-st stt g">НЕ БАЙТ</div></div></div>
+<div id="L" class="scene"><div class="cam"><div class="l-5 dig">5</div><div class="l-6 dig n">6</div><div class="l-cap lbl">НОВАЯ <i>ЭПОХА</i></div></div></div>
+<div id="M" class="scene"><div class="cam"><div class="m-q big">А ЧТО ТЫ<br><i>ЗАПОМНИЛ?</i></div><div class="m-case"></div><div class="shd" style="left:110px;top:1210px;width:340px;height:60px"></div><div class="m-m mm"></div></div></div>
 <div id="A2" class="scene"></div>
   </div>
   <div id="vig"></div>

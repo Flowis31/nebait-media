@@ -65,3 +65,62 @@ function columnSVG(id, c0, c1) {
 function skyCSS() {
   return 'linear-gradient(180deg,#0d0730 0%,#2b0f5c 28%,#7a1f7a 42%,#ff4f8a 50%,#ff9a5c 55%,#ffd07a 58%,#ff9a5c 58.6%,#2b1450 59%)';
 }
+
+// ---------- v2 additions ----------
+// old CRT TV, viewBox 0 0 460 400. .scr holds content
+function crtSVG(id) {
+  return sv('0 0 460 400', `<defs>${lgr('ct' + id, '#8a6a4a', '#5a3e26')}<radialGradient id="cs${id}" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#6fd0ff"/><stop offset="1" stop-color="#14365a"/></radialGradient></defs>
+  <path d="M150 20 L230 70 L310 20" fill="none" stroke="${AK}" stroke-width="8" stroke-linecap="round"/>
+  <rect x="10" y="66" width="440" height="300" rx="34" fill="url(#ct${id})" stroke="${AK}" stroke-width="10"/>
+  <rect x="34" y="90" width="300" height="250" rx="40" fill="url(#cs${id})" stroke="${AK}" stroke-width="9"/>
+  <g class="scr"></g>
+  ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(k => `<rect x="44" y="${100 + k * 24}" width="280" height="6" fill="rgba(255,255,255,.08)"/>`).join('')}
+  <circle cx="392" cy="130" r="22" fill="#2a1a10" stroke="${AK}" stroke-width="7"/><circle cx="392" cy="196" r="22" fill="#2a1a10" stroke="${AK}" stroke-width="7"/>
+  <rect x="360" y="250" width="64" height="64" rx="8" fill="#2a1a10"/>${[0, 1, 2, 3].map(k => `<rect x="366" y="${256 + k * 15}" width="52" height="6" fill="#7a5a3a"/>`).join('')}
+  <rect x="60" y="366" width="40" height="26" fill="${AK}"/><rect x="360" y="366" width="40" height="26" fill="${AK}"/>`);
+}
+// generic console box by generation (1: fat black, 2: slim matte, 3: tall white), viewBox 0 0 360 300
+function consoleSVG(id, gen = 1) {
+  const c = gen === 1 ? ['#3a3f4a', '#16191f'] : gen === 2 ? ['#2a2f3a', '#0e1116'] : ['#ffffff', '#cfd6e2'];
+  const body = gen === 1 ? `<rect x="20" y="90" width="320" height="150" rx="40" fill="url(#cn${id})" stroke="${AK}" stroke-width="10"/><rect x="60" y="150" width="240" height="10" rx="5" fill="#000" opacity=".6"/><circle cx="300" cy="125" r="9" fill="#5fe0ff"/>`
+    : gen === 2 ? `<path d="M30 120 L330 100 L330 220 L30 240 Z" fill="url(#cn${id})" stroke="${AK}" stroke-width="10" stroke-linejoin="round"/><path d="M40 180 L320 162" stroke="#5fe0ff" stroke-width="6" opacity=".9"/>`
+    : `<path d="M110 20 Q180 6 250 20 L270 270 Q180 290 90 270 Z" fill="url(#cn${id})" stroke="${AK}" stroke-width="10" stroke-linejoin="round"/><path d="M150 30 L150 260 L210 260 L210 30" fill="#1d2230" stroke="${AK}" stroke-width="6"/><path d="M180 40 L180 250" stroke="#5f8cff" stroke-width="5" opacity=".9"/>`;
+  return sv('0 0 360 300', `<defs>${lgr('cn' + id, c[0], c[1])}</defs><ellipse cx="180" cy="285" rx="160" ry="12" fill="rgba(0,0,0,.35)"/>${body}`);
+}
+// generic game case (no real cover art), viewBox 0 0 200 260
+function caseSVG(id, c0 = '#ff5fb0', c1 = '#6a3cff', big = '5') {
+  return sv('0 0 200 260', `<defs>${lgr('gc' + id, c0, c1)}</defs><rect x="8" y="8" width="184" height="244" rx="12" fill="#1d2230" stroke="${AK}" stroke-width="8"/>
+  <rect x="20" y="20" width="160" height="220" rx="6" fill="url(#gc${id})"/><rect x="20" y="20" width="160" height="34" fill="#0e1116"/>
+  <text x="100" y="180" text-anchor="middle" style="font:900 140px Unb" fill="#fff" stroke="${AK}" stroke-width="8" paint-order="stroke">${big}</text>`);
+}
+// parachute with a rider slot, viewBox 0 0 400 420 (canopy top, harness at 200,400)
+function parachuteSVG(id) {
+  return sv('0 0 400 420', `<defs>${lgr('pc' + id, '#ff5fb0', '#ff9a3d')}</defs>
+  <path d="M20 170 Q200 -40 380 170 Q335 140 290 170 Q245 140 200 170 Q155 140 110 170 Q65 140 20 170 Z" fill="url(#pc${id})" stroke="${AK}" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M110 170 Q140 40 200 20 M290 170 Q260 40 200 20" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="6"/>
+  ${[20, 110, 200, 290, 380].map(x => `<path d="M${x} 170 L200 400" stroke="${AK}" stroke-width="4"/>`).join('')}`);
+}
+// headset, viewBox 0 0 300 260
+function headsetSVG(id) {
+  return sv('0 0 300 260', `<path d="M50 150 Q50 30 150 30 Q250 30 250 150" fill="none" stroke="${AK}" stroke-width="26" stroke-linecap="round"/><path d="M50 150 Q50 30 150 30 Q250 30 250 150" fill="none" stroke="#3a3f4a" stroke-width="14" stroke-linecap="round"/>
+  <rect x="20" y="130" width="70" height="100" rx="30" fill="#ff5fb0" stroke="${AK}" stroke-width="9"/><rect x="210" y="130" width="70" height="100" rx="30" fill="#ff5fb0" stroke="${AK}" stroke-width="9"/>
+  <path d="M60 220 Q80 260 150 250" fill="none" stroke="${AK}" stroke-width="9"/><circle cx="156" cy="248" r="14" fill="#3a3f4a" stroke="${AK}" stroke-width="6"/>`);
+}
+// police light bar, viewBox 0 0 260 110. Rig: .lr .lb (o)
+function sirenSVG(id) {
+  return sv('0 0 260 110', `<rect x="10" y="60" width="240" height="40" rx="14" fill="#2a2f3a" stroke="${AK}" stroke-width="8"/>
+  <path class="lr" d="M24 62 Q24 12 76 12 L122 12 L122 62 Z" fill="#ff3b5c" stroke="${AK}" stroke-width="8"/><path class="lb" d="M138 62 L138 12 L184 12 Q236 12 236 62 Z" fill="#3b7bff" stroke="${AK}" stroke-width="8"/>
+  <path d="M40 30 Q50 20 70 20" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".7"/><path d="M160 22 Q180 20 200 26" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".7"/>`);
+}
+// graduation cap, viewBox 0 0 300 220
+function gradCapSVG() {
+  return sv('0 0 300 220', `<path d="M150 20 L290 80 L150 140 L10 80 Z" fill="#1d2230" stroke="${AK}" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M70 108 L70 170 Q150 210 230 170 L230 108 L150 140 Z" fill="#2a2f3a" stroke="${AK}" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M150 80 L250 110 L250 170" fill="none" stroke="#ffd34d" stroke-width="7"/><circle cx="250" cy="178" r="12" fill="#ffd34d" stroke="${AK}" stroke-width="5"/>`);
+}
+// two wedding rings, viewBox 0 0 300 220
+function ringsSVG() {
+  return sv('0 0 300 220', `<circle cx="115" cy="120" r="70" fill="none" stroke="${AK}" stroke-width="30"/><circle cx="115" cy="120" r="70" fill="none" stroke="#ffd34d" stroke-width="18"/>
+  <circle cx="190" cy="120" r="70" fill="none" stroke="${AK}" stroke-width="30"/><circle cx="190" cy="120" r="70" fill="none" stroke="#ffd34d" stroke-width="18"/>
+  <path d="M150 30 L165 10 L180 30 L165 48 Z" fill="#bff6ff" stroke="${AK}" stroke-width="6"/>`);
+}
