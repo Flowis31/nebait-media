@@ -20,6 +20,7 @@ MUSIC_BELOW_VOICE_LU = 17.0     # ducked music sits this many LU under the voice
 
 args = sys.argv[1:]
 STYLE = args[args.index('--style') + 1] if '--style' in args else DEFAULT_STYLE
+DRUMS_AT = float(args[args.index('--drums-at') + 1]) if '--drums-at' in args else None   # synthwave: drums enter at this second
 MUSIC_LU = float(args[args.index('--music-lu') + 1]) if '--music-lu' in args else MUSIC_BELOW_VOICE_LU   # smaller = louder music
 SR = 48000; TOTAL = json.load(open('voice.json'))['total']; N = int(round(TOTAL * SR)); rng = np.random.default_rng(7)
 tt = lambda d: np.arange(int(d * SR)) / SR
@@ -120,6 +121,10 @@ STYLES = {
                  chords=[(53, 57, 60, 64), (52, 55, 59, 62), (50, 53, 57, 60), (48, 52, 55, 59)],
                  arp=[[72, 76, 77, 81], [71, 74, 76, 79], [69, 72, 74, 77], [67, 71, 72, 76]]),
     # upbeat "explainer" marimba house, vi-IV-I-V in C major
+    # epic 80s synthwave (special episodes only, e.g. 037 GTA 6, owner's request 19.11.2026): i-VI-III-VII in A minor
+    'synthwave': dict(bpm=96, roots=[33, 29, 36, 31],
+                 chords=[(57, 60, 64, 69), (53, 57, 60, 65), (55, 60, 64, 67), (55, 59, 62, 67)],
+                 arp=[[69, 72, 76, 81], [65, 69, 72, 77], [67, 72, 76, 79], [67, 71, 74, 79]]),
     'tech': dict(bpm=118, roots=[45, 41, 36, 43],
                  chords=[(60, 64, 69), (60, 65, 69), (60, 64, 67), (59, 62, 67)],
                  arp=[[69, 72, 76, 81], [69, 72, 77, 81], [67, 72, 76, 79], [67, 71, 74, 79]]),
@@ -208,7 +213,56 @@ def bar_tech(b, t0, intro, last, fill, lift):
     if fill:
         for i, s in enumerate((12, 13, 14, 15)): music.add(clap(), t0 + s * ST, 0.25 + 0.12 * i)
 
-BAR_FN = dict(pop=bar_pop, lofi=bar_lofi, tech=bar_tech)[STYLE]
+
+@functools.lru_cache(None)
+def sawlead(m, d, cut=2400):
+    t = tt(d); f = hz(m); x = sum(signal.sawtooth(2 * np.pi * f * 2 ** (c / 1200) * t + c) for c in (-9, 0, 9)) / 3
+    env = (1 - np.exp(-t / 0.004)) * np.exp(-t / 0.22)
+    return fade(lp(x * env, cut, 4) * 0.6, 0.002, 0.03)
+@functools.lru_cache(None)
+def bigpad(chord, d):
+    t = tt(d); x = np.zeros(len(t)); r = np.random.default_rng(sum(chord) + 7)
+    for m in chord + (chord[0] - 12,):
+        for c in (-11, -4, 4, 11): x += signal.sawtooth(2 * np.pi * hz(m) * 2 ** (c / 1200) * t + r.uniform(0, 6.28))
+    x = lp(x / (4 * (len(chord) + 1)), 2200, 4)
+    env = np.minimum(1, t / 0.6) * np.minimum(1, np.maximum(0, d - t) / 0.4)
+    return x * env
+@functools.lru_cache(None)
+def gatesnare():
+    t = tt(0.55); body = np.sin(2 * np.pi * np.cumsum(190 - 40 * t) / SR) * np.exp(-t / 0.05) * 0.6
+    tail = bp(noise(t), 700, 7000) * np.where(t < 0.32, np.exp(-t / 0.5), np.exp(-0.64) * np.exp(-(t - 0.32) / 0.02)) * 0.55
+    return fade(body + tail, 0.0008, 0.03)
+@functools.lru_cache(None)
+def sawbass(m, d):
+    t = tt(d); x = signal.sawtooth(2 * np.pi * hz(m) * t) * 0.7 + np.sin(2 * np.pi * hz(m) * t) * 0.5
+    env = (1 - np.exp(-t / 0.004)) * np.exp(-t / max(0.12, d))
+    return fade(lp(x * env, 700, 4) * 0.9, 0.002, 0.02)
+def bar_synthwave(b, t0, intro, last, fill, lift):
+    k = chord_of(b); ch = S['chords'][k]; ar = S['arp'][k]
+    drums = DRUMS_AT is not None and t0 >= DRUMS_AT - 0.01 or (DRUMS_AT is None and not intro)
+    music.add(bigpad(ch, BAR * 1.04), t0, 0.32 if drums else 0.4, pan=0)
+    pat = [0, 1, 2, 3, 2, 1, 2, 3, 0, 2, 1, 3, 2, 3, 1, 2]
+    for i, a in enumerate(pat):                                    # 16th saw arpeggio, filter opens when the drums are in
+        if last and i >= 8: continue
+        music.add(sawlead(ar[a] + (12 if (i % 8 == 7 and drums) else 0), 1.6 * ST, 3200 if drums else 1600), t0 + i * ST, (0.16 if drums else 0.1) * (1 if i % 4 == 0 else 0.75), pan=0.4 * (-1) ** i)
+    if not drums: return
+    r = S['roots'][k]
+    for s in range(0, 16, 2):                                      # driving octave bass 8ths
+        if last and s >= 8: continue
+        music.add(sawbass(r + (12 if s % 4 == 2 else 0), 1.8 * ST), t0 + s * ST, 0.5)
+    for s in (0, 8) + ((10,) if b % 2 else ()):
+        if last and s > 8: continue
+        music.add(kick(), t0 + s * ST, 0.9)
+    for s in (4, 12):
+        if last and s > 8: continue
+        music.add(gatesnare(), t0 + s * ST, 0.85)
+    for s in range(0, 16, 2):
+        if last and s >= 8: continue
+        music.add(hat(s % 3), t0 + s * ST, 0.5 if s % 4 else 0.3, pan=0.3)
+    if fill:
+        for i, s in enumerate((13, 14, 15)): music.add(gatesnare(), t0 + s * ST, 0.3 + 0.15 * i)
+
+BAR_FN = dict(pop=bar_pop, lofi=bar_lofi, tech=bar_tech, synthwave=bar_synthwave)[STYLE]
 for b in range(BARS):
     intro = b < 2                         # first two bars without drums so the hook line is clean
     last = b == BARS - 1                  # drums drop out halfway through the last bar before the loop point
