@@ -1546,3 +1546,69 @@ function snowflakeSVG(col = '#eaf8ff') {
   let a = ''; for (let k = 0; k < 6; k++) a += `<g transform="rotate(${k * 60} 50 50)"><path d="M50 50 L50 8 M50 22 L40 12 M50 22 L60 12 M50 34 L42 27 M50 34 L58 27" stroke="${col}" stroke-width="6" stroke-linecap="round" fill="none"/></g>`;
   return psv('0 0 100 100', a + `<circle cx="50" cy="50" r="7" fill="${col}"/>`);
 }
+
+// ---------- added 19.11.2026 (ролик 036 «Пароль из 13 букв»: пароли, перебор, словарь) ----------
+// login card with a password field, viewBox 0 0 900 300. Characters are separate <text class="pwc pwcK"> (monospace JB, 38 px pitch),
+// so they can pop in one by one (o / y). Rig: .pwcaret (o, blink), .pwbox (stroke colour via fill override), .pweye (s).
+// text: the password ('•' for hidden), max ~18 characters. label: the field caption.
+function pwFieldSVG(id, text = '', label = 'ПАРОЛЬ', col = '#5fe0ff') {
+  const ch = [...text]; let cs = '';
+  ch.forEach((c, k) => { cs += `<text class="pwc pwc${k}" x="${86 + k * 38.4}" y="196" style="font:800 64px JB;transform-box:fill-box;transform-origin:center" fill="${PIK}">${c}</text>`; });
+  return psv('0 0 900 300', `<defs>${lg('pwf' + id, '#ffffff', '#dfe6ee')}${lg('pwh' + id, col, '#2a7fd8', false)}</defs>
+    <rect x="14" y="18" width="872" height="270" rx="42" fill="rgba(0,0,0,.35)" transform="translate(0 14)"/>
+    <rect x="10" y="10" width="880" height="270" rx="42" fill="url(#pwf${id})" stroke="${PIK}" stroke-width="10"/>
+    <rect x="10" y="10" width="880" height="64" rx="32" fill="url(#pwh${id})" stroke="${PIK}" stroke-width="10"/>
+    <circle cx="56" cy="42" r="12" fill="#ff5f6d" stroke="${PIK}" stroke-width="5"/><circle cx="92" cy="42" r="12" fill="#ffd34d" stroke="${PIK}" stroke-width="5"/>
+    <text x="140" y="56" style="font:900 34px Mont" fill="#fff" stroke="${PIK}" stroke-width="6" paint-order="stroke">${label}</text>
+    <rect class="pwbox" x="50" y="112" width="800" height="128" rx="26" fill="#ffffff" stroke="${PIK}" stroke-width="8"/>
+    <path d="M70 128 L250 128" stroke="#dfe6ee" stroke-width="8" stroke-linecap="round"/>
+    ${cs}
+    <rect class="pwcaret" x="${90 + ch.length * 38.4}" y="140" width="7" height="74" rx="3" fill="#2a7fd8"/>
+    <g class="pweye" style="transform-box:fill-box;transform-origin:center"><path d="M770 176 Q800 146 830 176 Q800 206 770 176 Z" fill="#fff" stroke="${PIK}" stroke-width="6"/><circle cx="800" cy="176" r="11" fill="${PIK}"/></g>`);
+}
+// combination lock with letter wheels, viewBox 0 0 (n*66+80) 600, n = letters.length. Rig: .lshack (y: -70 = open), .lw{k} (wheel group,
+// sy flick), .lwl{k} (the letter <text>; change textContent to spin), .lglow (o, green window when solved)
+function letterLockSVG(id, letters = 'abc', col = '#ffd34d') {
+  const ch = [...letters], n = ch.length, Wd = n * 66 + 80, cx = Wd / 2; let wh = '';
+  ch.forEach((c, k) => { const x = 40 + k * 66;
+    wh += `<g class="lw lw${k}" style="transform-box:fill-box;transform-origin:center"><rect x="${x + 3}" y="336" width="60" height="128" rx="12" fill="url(#lwg${id})" stroke="${PIK}" stroke-width="6"/>
+      <path d="M${x + 10} 350 L${x + 56} 350 M${x + 10} 450 L${x + 56} 450" stroke="#9aa4b0" stroke-width="5" stroke-linecap="round"/>
+      <text class="lwl lwl${k}" x="${x + 33}" y="422" text-anchor="middle" style="font:800 58px JB" fill="${PIK}">${c}</text></g>`; });
+  return psv(`0 0 ${Wd} 600`, `<defs>${lg('lkb' + id, '#fff3b0', col)}${lg('lkd' + id, '#d39a12', '#8a5a08')}${lg('lwg' + id, '#ffffff', '#c9d2dc')}</defs>
+    <g class="lshack"><path d="M${cx - 190} 250 L${cx - 190} 170 Q${cx - 190} 40 ${cx} 40 Q${cx + 190} 40 ${cx + 190} 170 L${cx + 190} 250" fill="none" stroke="${PIK}" stroke-width="58" stroke-linecap="round"/>
+      <path d="M${cx - 190} 250 L${cx - 190} 170 Q${cx - 190} 40 ${cx} 40 Q${cx + 190} 40 ${cx + 190} 170 L${cx + 190} 250" fill="none" stroke="#c9d2dc" stroke-width="34" stroke-linecap="round"/>
+      <path d="M${cx - 178} 170 Q${cx - 170} 66 ${cx - 40} 54" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".7"/></g>
+    <rect x="16" y="226" width="${Wd - 32}" height="360" rx="56" fill="url(#lkb${id})" stroke="${PIK}" stroke-width="12"/>
+    <path d="M50 262 Q60 246 120 246 L${Wd - 300} 246" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".6" fill="none"/>
+    <rect x="28" y="318" width="${Wd - 56}" height="164" rx="22" fill="url(#lkd${id})" stroke="${PIK}" stroke-width="8"/>
+    <rect class="lglow" x="28" y="318" width="${Wd - 56}" height="164" rx="22" fill="#7dff8a" opacity="0"/>
+    ${wh}
+    <path d="M28 400 L${Wd - 28} 400" stroke="#ff3b5c" stroke-width="4" opacity=".25"/>
+    <circle cx="${cx}" cy="530" r="20" fill="${PIK}"/><rect x="${cx - 7}" y="530" width="14" height="36" rx="6" fill="${PIK}"/>`);
+}
+// thick closed dictionary standing upright, viewBox 0 0 420 560. Rig: .dtab0/.dtab1/.dtab2 (bookmark tabs on the right edge, x/o),
+// .dcover (whole front cover, sx flip from the spine at x 60). title on the gold plate.
+function dictBookSVG(id, title = 'СЛОВАРЬ', cover = '#c8323f') {
+  const tab = (k, c, y) => `<g class="dtab dtab${k}"><path d="M360 ${y} L410 ${y} Q420 ${y} 420 ${y + 10} L420 ${y + 50} Q420 ${y + 60} 410 ${y + 60} L360 ${y + 60} Z" fill="${c}" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/></g>`;
+  return psv('0 0 420 560', `<defs>${lg('dbc' + id, '#ff7a7a', cover)}${lg('dbg' + id, '#fff1a8', '#d39a12')}${lg('dbs' + id, '#7a1420', '#4a0a12', false)}</defs>
+    ${tab(0, '#5fe0ff', 110)}${tab(1, '#ff5fd2', 210)}${tab(2, '#7dff8a', 310)}
+    <path d="M60 30 L384 30 L384 530 L60 530 Z" fill="#fbf3e0" stroke="${PIK}" stroke-width="9"/>
+    <path d="M384 50 L384 520 M376 50 L376 520 M368 50 L368 520" stroke="#d6c9a8" stroke-width="3"/>
+    <g class="dcover" style="transform-origin:60px 280px">
+      <rect x="40" y="16" width="336" height="520" rx="22" fill="url(#dbc${id})" stroke="${PIK}" stroke-width="11"/>
+      <rect x="40" y="16" width="56" height="520" rx="18" fill="url(#dbs${id})" stroke="${PIK}" stroke-width="9"/>
+      <path d="M44 90 L94 90 M44 110 L94 110 M44 440 L94 440 M44 460 L94 460" stroke="#ffd34d" stroke-width="7"/>
+      <rect x="130" y="150" width="216" height="120" rx="16" fill="url(#dbg${id})" stroke="${PIK}" stroke-width="8"/>
+      <text x="238" y="226" text-anchor="middle" style="font:900 ${title.length > 7 ? 30 : 36}px Unb" fill="${PIK}">${title}</text>
+      <rect x="150" y="320" width="176" height="14" rx="7" fill="#ff9a9a" opacity=".6"/><rect x="170" y="350" width="136" height="14" rx="7" fill="#ff9a9a" opacity=".6"/>
+      <path d="M110 40 L110 510" stroke="#fff" stroke-width="8" opacity=".25" stroke-linecap="round"/></g>`);
+}
+// ballpoint-style highlighter marker, viewBox 0 0 120 420 (cap at top, chisel tip at (60, 410)). col = ink colour
+function highlighterSVG(id, col = '#ffe14d') {
+  return psv('0 0 120 420', `<defs>${lg('hlb' + id, '#ffffff', col, false)}</defs>
+    <rect x="22" y="20" width="76" height="300" rx="20" fill="url(#hlb${id})" stroke="${PIK}" stroke-width="9"/>
+    <rect x="22" y="20" width="76" height="90" rx="20" fill="${col}" stroke="${PIK}" stroke-width="9"/>
+    <path d="M30 320 L90 320 L78 380 L42 380 Z" fill="#e9eef2" stroke="${PIK}" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M44 380 L76 380 L68 412 L46 404 Z" fill="${col}" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M38 130 L38 300" stroke="#fff" stroke-width="8" opacity=".6" stroke-linecap="round"/>`);
+}
