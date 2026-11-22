@@ -1612,3 +1612,76 @@ function highlighterSVG(id, col = '#ffe14d') {
     <path d="M44 380 L76 380 L68 412 L46 404 Z" fill="${col}" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>
     <path d="M38 130 L38 300" stroke="#fff" stroke-width="8" opacity=".6" stroke-linecap="round"/>`);
 }
+
+// ---------- added 22.11.2026 (ролик 038 «Кабель по дну», 3D-пилот) ----------
+// cell tower (lattice mast with antenna panels and a blinking light), viewBox 0 0 300 700, base at (150,690).
+// Rig: .tlight (top lamp, o), .twave (radio arcs group, o/s, origin 150 120)
+function cellTowerSVG(id, col = '#d7dde6') {
+  let lat = '';
+  for (let k = 0; k < 9; k++) { const y0 = 170 + k * 58, y1 = y0 + 58, w0 = 28 + k * 9, w1 = 28 + (k + 1) * 9;
+    lat += `<path d="M${150 - w0} ${y0} L${150 + w1} ${y1} M${150 + w0} ${y0} L${150 - w1} ${y1} M${150 - w1} ${y1} L${150 + w1} ${y1}" stroke="#7b8597" stroke-width="6"/>`; }
+  const pan = (x, s) => `<rect x="${x}" y="150" width="34" height="96" rx="8" fill="url(#tp${id})" stroke="${PIK}" stroke-width="7"/><path d="M${x + 8} 162 L${x + 8} 232" stroke="#fff" stroke-width="4" opacity=".5"/>`;
+  return psv('0 0 300 700', `<defs>${lg('tm' + id, '#ffffff', col)}${lg('tp' + id, '#f4f6fa', '#a9b3c4', false)}${rg('tl' + id, '#fff3a0', 'rgba(255,80,80,0)', '50%', '50%')}</defs>
+  <ellipse cx="150" cy="690" rx="120" ry="16" fill="rgba(0,0,0,.35)"/>
+  <path d="M122 170 L60 690 L240 690 L178 170 Z" fill="none" stroke="${PIK}" stroke-width="16" stroke-linejoin="round"/>
+  <path d="M122 170 L60 690 M178 170 L240 690" stroke="url(#tm${id})" stroke-width="8"/>${lat}
+  <rect x="136" y="70" width="28" height="110" rx="6" fill="url(#tm${id})" stroke="${PIK}" stroke-width="7"/>
+  ${pan(86)}${pan(180)}<rect x="132" y="140" width="36" height="110" rx="8" fill="url(#tp${id})" stroke="${PIK}" stroke-width="7"/>
+  <rect x="40" y="672" width="220" height="22" rx="6" fill="#5a6478" stroke="${PIK}" stroke-width="7"/>
+  <circle cx="150" cy="58" r="16" fill="#ff3b5c" stroke="${PIK}" stroke-width="6"/><g class="tlight"><circle cx="150" cy="58" r="44" fill="url(#tl${id})"/></g>
+  <g class="twave" style="transform-origin:150px 120px" fill="none" stroke="#7df9ff" stroke-width="9" stroke-linecap="round">
+   <path d="M70 70 Q40 120 70 170"/><path d="M40 40 Q-6 120 40 200" opacity=".6"/><path d="M230 70 Q260 120 230 170"/><path d="M260 40 Q306 120 260 200" opacity=".6"/></g>`);
+}
+// cartoon shark (side view, facing left), viewBox 0 0 600 300. Rig: .shjaw (lower jaw, r origin 150 175), .sheye (sy blink, origin 170 125),
+// .shtail (tail fin, r origin 470 150), .shbrow (y), face expression via .shjaw; teeth on the jaw
+function sharkSVG(id, col = '#7f93b2') {
+  return psv('0 0 600 300', `<defs>${lg('sk' + id, '#b9c8de', col)}${lg('sb' + id, '#ffffff', '#dfe7f1')}</defs>
+  <g class="shtail" style="transform-origin:470px 150px"><path d="M460 150 L580 50 Q560 150 585 250 Z" fill="url(#sk${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/></g>
+  <path d="M300 70 L340 -10 Q360 40 390 90 Z" fill="url(#sk${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M40 150 Q90 70 260 70 Q420 70 480 150 Q420 230 260 232 Q120 232 70 190 Z" fill="url(#sk${id})" stroke="${PIK}" stroke-width="11" stroke-linejoin="round"/>
+  <path d="M90 180 Q200 225 360 210 Q300 232 200 228 Q120 222 90 180 Z" fill="url(#sb${id})"/>
+  <path d="M270 200 L320 270 L340 200 Z" fill="url(#sk${id})" stroke="${PIK}" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M230 120 Q236 150 230 180 M252 118 Q258 150 252 182 M274 120 Q280 150 274 180" fill="none" stroke="${PIK}" stroke-width="6" stroke-linecap="round" opacity=".6"/>
+  <path d="M120 96 Q200 76 290 82" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".6"/>
+  <g class="sheye" style="transform-origin:170px 125px"><ellipse cx="170" cy="125" rx="20" ry="22" fill="#fff" stroke="${PIK}" stroke-width="6"/><circle cx="164" cy="128" r="10" fill="${PIK}"/><circle cx="160" cy="123" r="3.5" fill="#fff"/></g>
+  <path class="shbrow" d="M146 96 Q170 88 194 100" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/>
+  <path d="M60 168 Q110 176 160 170" fill="none" stroke="${PIK}" stroke-width="8" stroke-linecap="round"/>
+  <g class="shjaw" style="transform-origin:150px 172px"><path d="M62 172 Q110 200 160 178" fill="#7a1d2c" stroke="${PIK}" stroke-width="8"/>
+   <path d="M78 176 l8 12 l8 -12 l8 12 l8 -12 l8 12 l8 -12 l8 12 l8 -12" fill="#fff" stroke="${PIK}" stroke-width="3" stroke-linejoin="round"/></g>`);
+}
+// ship anchor on a chain, viewBox 0 0 300 520 (chain from (150,0) down to the ring at (150,120)); flukes at the bottom y ~ 480.
+function anchorSVG(id, col = '#5a6478') {
+  let ch = ''; for (let k = 0; k < 5; k++) ch += `<rect x="${k % 2 ? 140 : 136}" y="${-200 + k * 62}" width="${k % 2 ? 20 : 28}" height="60" rx="12" fill="none" stroke="${PIK}" stroke-width="14"/><rect x="${k % 2 ? 140 : 136}" y="${-200 + k * 62}" width="${k % 2 ? 20 : 28}" height="60" rx="12" fill="none" stroke="#9aa5b8" stroke-width="6"/>`;
+  return psv('0 0 300 520', `<defs>${lg('an' + id, '#aab5c8', col, false)}</defs>${ch}
+  <circle cx="150" cy="122" r="26" fill="none" stroke="${PIK}" stroke-width="22"/><circle cx="150" cy="122" r="26" fill="none" stroke="url(#an${id})" stroke-width="10"/>
+  <rect x="134" y="146" width="32" height="320" rx="10" fill="url(#an${id})" stroke="${PIK}" stroke-width="9"/>
+  <rect x="80" y="190" width="140" height="28" rx="12" fill="url(#an${id})" stroke="${PIK}" stroke-width="9"/>
+  <path d="M30 360 Q40 470 150 480 Q260 470 270 360 L300 380 L262 300 L240 380 L250 370 Q240 440 150 448 Q60 440 50 370 L60 380 L38 300 L0 380 Z" fill="url(#an${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M142 170 L142 300" stroke="#fff" stroke-width="5" opacity=".45" stroke-linecap="round"/>`);
+}
+// coiled garden hose with a nozzle, viewBox 0 0 520 360 (coil centre 230,200). Rig: .hspray (water drops at the nozzle, o)
+function gardenHoseSVG(id, col = '#3fc46a') {
+  let coil = ''; for (let k = 0; k < 4; k++) coil += `<ellipse cx="230" cy="${200 - k * 6}" rx="${190 - k * 18}" ry="${120 - k * 10}" fill="none" stroke="${PIK}" stroke-width="40"/><ellipse cx="230" cy="${200 - k * 6}" rx="${190 - k * 18}" ry="${120 - k * 10}" fill="none" stroke="url(#gh${id})" stroke-width="24"/>`;
+  return psv('0 0 520 360', `<defs>${lg('gh' + id, '#9cf5b6', col)}</defs>${coil}
+  <path d="M410 180 Q470 170 480 120" fill="none" stroke="${PIK}" stroke-width="40" stroke-linecap="round"/><path d="M410 180 Q470 170 480 120" fill="none" stroke="url(#gh${id})" stroke-width="24" stroke-linecap="round"/>
+  <rect x="456" y="40" width="48" height="90" rx="10" fill="#ffb84d" stroke="${PIK}" stroke-width="9"/><rect x="462" y="20" width="36" height="26" rx="6" fill="#ff7a3d" stroke="${PIK}" stroke-width="8"/>
+  <g class="hspray" fill="#7fd8ff" stroke="${PIK}" stroke-width="4"><circle cx="470" cy="0" r="9"/><circle cx="492" cy="-24" r="7"/><circle cx="460" cy="-30" r="6"/></g>`);
+}
+// submarine cable cut-away (round section, layers + glass fibres glowing), viewBox 0 0 500 500, centre (250,250), outer r 220.
+// Rig: .cfib (each fibre core, o/s pulse), .cglow (centre light, o), layer rings .cl0 .. .cl4 (outer → inner) can be exploded with s
+function cableCutSVG(id) {
+  const rings = [[220, '#2b2f3a', 'ПОЛИЭТИЛЕН'], [180, '#c98a3a', ''], [150, '#9aa5b8', ''], [118, '#e0b33a', ''], [86, '#3a404c', '']];
+  let s = rings.map(([r, c], k) => `<circle class="cl${k}" style="transform-origin:250px 250px" cx="250" cy="250" r="${r}" fill="${c}" stroke="${PIK}" stroke-width="9"/>`).join('');
+  let wires = ''; for (let k = 0; k < 18; k++) { const a = k / 18 * 6.283; wires += `<circle cx="${250 + Math.cos(a) * 134}" cy="${250 + Math.sin(a) * 134}" r="12" fill="#c7ced9" stroke="${PIK}" stroke-width="4"/>`; }
+  let fib = ''; for (let k = 0; k < 8; k++) { const a = k / 8 * 6.283 + 0.3, r = k % 2 ? 22 : 46; fib += `<circle class="cfib" style="transform-origin:${250 + Math.cos(a) * r}px ${250 + Math.sin(a) * r}px" cx="${250 + Math.cos(a) * r}" cy="${250 + Math.sin(a) * r}" r="9" fill="#bff8ff" stroke="#7df9ff" stroke-width="3"/>`; }
+  return psv('0 0 500 500', `<defs>${rg('cc' + id, 'rgba(160,250,255,.9)', 'rgba(125,249,255,0)', '50%', '50%')}</defs>${s}${wires}
+  <circle cx="250" cy="250" r="70" fill="#1a1e26" stroke="${PIK}" stroke-width="6"/><g class="cglow"><circle cx="250" cy="250" r="110" fill="url(#cc${id})"/></g>${fib}
+  <path d="M110 120 Q150 70 220 52" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".35"/>`);
+}
+// small cartoon fish, viewBox 0 0 200 120 (faces left). Rig: .ftail (r origin 150 60)
+function fishSVG(id, col = '#ffb84d') {
+  return psv('0 0 200 120', `<defs>${lg('fi' + id, '#fff3c4', col)}</defs>
+  <g class="ftail" style="transform-origin:150px 60px"><path d="M146 60 L196 20 L186 60 L196 100 Z" fill="${col}" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/></g>
+  <ellipse cx="88" cy="60" rx="66" ry="42" fill="url(#fi${id})" stroke="${PIK}" stroke-width="8"/><path d="M96 30 Q110 60 96 90" fill="none" stroke="${PIK}" stroke-width="5" opacity=".5"/>
+  <circle cx="54" cy="50" r="11" fill="#fff" stroke="${PIK}" stroke-width="4"/><circle cx="51" cy="51" r="5" fill="${PIK}"/><path d="M26 70 Q34 74 42 70" fill="none" stroke="${PIK}" stroke-width="5" stroke-linecap="round"/>`);
+}
