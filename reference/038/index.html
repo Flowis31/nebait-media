@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>short</title>
+<style>
+@font-face{font-family:Unb;src:url(fonts/Unb.ttf);font-weight:200 900}
+@font-face{font-family:PF;src:url(fonts/PF.ttf);font-weight:400 900;font-style:normal}
+@font-face{font-family:PF;src:url(fonts/PFi.ttf);font-weight:400 900;font-style:italic}
+@font-face{font-family:JB;src:url(fonts/JB.ttf);font-weight:100 800}
+@font-face{font-family:Mont;src:url(fonts/Mont.ttf);font-weight:100 900}
+:root{--ink:#0a130d;--bg:#04263a;--acc:#43f0ff;--accd:#1fa9c8;--paper:#f4ecd9;--red:#ff3b5c;--yl:#ffd34d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Mont;color:var(--paper)}
+/* own world: deep ocean — light shafts, two bubble layers (parallax), sand */
+#bg{position:absolute;inset:0;background:linear-gradient(180deg,#0b5a7a 0%,#06395a 34%,#04263a 70%,#031a28 100%)}
+#shafts{position:absolute;left:-300px;top:-200px;width:1700px;height:1600px;will-change:transform;background:repeating-linear-gradient(105deg,rgba(160,240,255,0) 0 120px,rgba(160,240,255,.07) 120px 190px,rgba(160,240,255,0) 190px 330px);-webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 80%);mask-image:linear-gradient(180deg,#000 0%,transparent 80%)}
+#bub1,#bub2{position:absolute;left:-300px;top:0;width:1700px;height:1920px;will-change:transform}
+.bb{position:absolute;border-radius:50%;border:4px solid rgba(190,245,255,.45);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.5),rgba(255,255,255,0) 45%)}
+.blob{position:absolute;width:1240px;height:1240px;border-radius:50%;will-change:transform}
+#blob1{left:-500px;top:-120px;background:radial-gradient(closest-side,rgba(67,240,255,.14) 0%,rgba(67,240,255,.05) 45%,rgba(67,240,255,0) 100%)}
+#blob2{left:320px;top:860px;background:radial-gradient(closest-side,rgba(255,211,77,.08) 0%,rgba(255,211,77,.02) 45%,rgba(255,211,77,0) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(90% 62% at 50% 46%,transparent 55%,rgba(0,10,20,.6) 100%)}
+#shake{position:absolute;inset:0}
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px;will-change:transform}
+.scene *{position:absolute}
+#cap{position:absolute;left:90px;top:1338px;width:900px;height:240px}
+.chunk{position:absolute;left:0;top:0;width:900px;text-align:center;font:900 80px/1.06 Mont;text-transform:uppercase;letter-spacing:-1px;display:none;transform-origin:50% 40%}
+.chunk span{display:inline-block;margin:0 11px;color:#fff;-webkit-text-stroke:18px #040705;paint-order:stroke fill;text-shadow:0 9px 0 rgba(0,0,0,.55)}
+.chunk span.on{color:#ffd34d}
+.cam{left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}
+.scene .nb-panel{border-left-color:var(--acc);border-color:rgba(67,240,255,.4);background:linear-gradient(180deg,rgba(6,40,60,.95),rgba(3,22,36,.95))}
+.scene .nb-chip{border-color:rgba(67,240,255,.8);background:rgba(3,26,40,.93)}
+.chipL{height:96px;padding:0 44px;font:700 46px/90px JB;letter-spacing:4px;color:#ffd34d;text-align:center;white-space:nowrap}
+.chipS{height:70px;padding:0 34px;font:700 30px/64px JB;letter-spacing:2px;color:#bfefff;white-space:nowrap}
+.panT{padding:20px 40px 22px 46px;font:800 58px/1.2 Mont;color:var(--paper);white-space:nowrap}
+.panT b{position:static;color:#ffd34d;font-weight:900}
+.big{font:900 170px/1 Unb;color:#fff;-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.big i,.lbl i,.title i{position:static;font-style:normal;color:#43f0ff}
+.lbl{font:900 92px/1 Unb;color:#fff;-webkit-text-stroke:12px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap}
+.title{font:900 300px/1 Unb;color:#ffd34d;-webkit-text-stroke:20px var(--ink);paint-order:stroke fill;text-align:center;white-space:nowrap;text-shadow:0 0 50px rgba(67,240,255,.6)}
+.shd{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0))}
+.spark{width:36px;height:36px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.stt{border-radius:30px;text-align:center;background:rgba(6,30,14,.92);white-space:nowrap;border:16px solid #7dff8a;color:#7dff8a;font:900 120px/170px Unb;padding:0 40px}
+.mm{width:360px;height:360px}
+.pulse{width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,#fff 0 18%,#bff8ff 30%,rgba(67,240,255,.6) 50%,rgba(67,240,255,0) 72%)}
+.vid{width:150px;height:110px;border-radius:24px;background:linear-gradient(180deg,#ff6b7a,#e0304a);border:8px solid var(--ink);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.vid:after{content:'';position:absolute;left:52px;top:26px;border-left:42px solid #fff;border-top:24px solid transparent;border-bottom:24px solid transparent}
+/* scene boxes */
+.a-t{left:0;top:170px;width:1080px}.a-t2{left:0;top:470px;width:1080px;font-size:84px}
+.a-chip{left:60px;top:200px}
+.b-drop{left:700px;top:520px;width:170px;height:210px}.b-l{left:0;top:230px;width:1080px;font-size:80px}
+.c-chip{left:60px;top:200px}
+.d-chip{left:60px;top:200px}
+.e-chip{left:60px;top:200px}
+.f-hose{left:30px;top:460px;width:480px;height:330px}.f-cab{left:570px;top:380px;width:470px;height:470px}.f-eq{left:478px;top:540px;font-size:110px}
+.f-m{left:30px;top:900px}.f-hair{left:430px;top:900px;width:610px;height:250px}
+.f-fib{left:0;top:240px;width:1080px;height:26px;border-radius:13px;background:linear-gradient(180deg,#e9fdff,#43f0ff 50%,#0f7c95);border:6px solid var(--ink);box-shadow:0 0 40px rgba(67,240,255,.8);transform-origin:0 50%}
+.g-sand{left:-100px;top:1000px;width:1280px;height:900px;background:linear-gradient(180deg,#c9a46a,#8a6a3e 40%,#3a2c1a);border-top:10px solid var(--ink);border-radius:60% 60% 0 0/60px 60px 0 0}
+.g-cab{left:-60px;top:1060px;width:1200px;height:60px;border-radius:30px;background:linear-gradient(180deg,#5b6577,#232a36 60%,#11151c);border:8px solid var(--ink)}
+.g-cab .core{left:0;top:16px;width:1184px;height:12px;border-radius:6px;background:#43f0ff;opacity:.7;box-shadow:0 0 18px #43f0ff}
+.g-shark{left:1100px;top:700px;width:600px;height:300px}.g-m{left:40px;top:690px}.g-n{left:0;top:200px;width:1080px;font-size:220px}.g-nl{left:0;top:420px;width:1080px;font-size:70px}
+.g-anc{left:600px;top:-560px;width:230px;height:400px}.g-net{left:300px;top:-500px;width:300px;height:330px}.g-src{left:60px;top:1230px}
+.h-map{left:0;top:600px;width:1080px;height:700px}.h-n{left:0;top:180px;width:1080px;font-size:92px}.h-st{left:170px;top:315px;width:740px}
+.h-m{left:30px;top:800px;width:330px;height:330px}.h-p{left:790px;top:770px;width:250px;height:300px}.h-q{left:60px;top:1110px}
+</style></head>
+<body>
+<div id="stage">
+  <div id="bg"><div id="shafts"></div><div id="bub2"></div><div id="bub1"></div><div class="blob" id="blob1"></div><div class="blob" id="blob2"></div></div>
+  <div id="shake">
+<div id="A" class="scene"><div class="cam a-cam"></div><div class="a-t title">99%</div><div class="a-t2 lbl">ИНТЕРНЕТА —<br><i>ОДНИМ ПУТЁМ</i></div><div class="a-chip nb-chip chipL">ДРУГУ ЗА ОКЕАН</div></div>
+<div id="B" class="scene"><div class="cam b-cam"></div><div class="b-drop"></div><div class="b-l lbl">ВСЕГО <i>КАПЕЛЬКА</i></div></div>
+<div id="C" class="scene"><div class="cam c-cam"></div><div class="c-chip nb-chip chipL">КАБЕЛЬ ПОД ЗЕМЛЁЙ</div></div>
+<div id="D" class="scene"><div class="cam d-cam"></div><div class="d-chip nb-chip chipL">К БЕРЕГУ</div></div>
+<div id="E" class="scene"><div class="cam e-cam"></div><div class="e-chip nb-chip chipL">ТЫСЯЧИ КМ ПО ДНУ</div></div>
+<div id="F" class="scene"><div class="cam"><div class="f-hose"></div><div class="f-eq lbl">=</div><div class="f-cab"></div><div class="shd" style="left:60px;top:1210px;width:300px;height:50px"></div><div class="f-m mm"></div><div class="f-fib"></div><div class="f-hair nb-panel"></div></div></div>
+<div id="G" class="scene"><div class="cam"><div class="g-sand"></div><div class="g-cab"><div class="core"></div></div><div class="g-net"></div><div class="g-anc"></div><div class="shd" style="left:70px;top:1020px;width:300px;height:50px"></div><div class="g-m mm"></div><div class="g-shark"></div><div class="g-n big"><span class="cnt" style="position:static">0</span></div><div class="g-nl lbl">РАЗ В <i>ГОД</i></div><div class="g-src nb-chip chipS">TeleGeography · ICPC, 2026</div></div></div>
+<div id="H" class="scene"><div class="cam"><div class="h-map"></div><div class="h-m mm"></div><div class="h-p"></div><div class="h-n big">99% — <i>ПО ДНУ</i></div><div class="h-st stt">НЕ БАЙТ</div><div class="h-q nb-panel panT">А ты думал — <b>через спутники?</b></div></div></div>
+<div id="A2" class="scene"></div>
+  </div>
+  <div id="vig"></div>
+  <div id="cap"></div>
+</div>
+<script src="timing.js"></script>
+<script src="env.js"></script>
+<script src="engine.js"></script>
+<script src="mascot.js"></script>
+<script src="props.js"></script>
+<script src="world3d.js"></script>
+<script src="art.js"></script>
+<script src="scenes.js"></script>
+</body></html>
