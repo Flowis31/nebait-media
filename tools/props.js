@@ -1685,3 +1685,125 @@ function fishSVG(id, col = '#ffb84d') {
   <ellipse cx="88" cy="60" rx="66" ry="42" fill="url(#fi${id})" stroke="${PIK}" stroke-width="8"/><path d="M96 30 Q110 60 96 90" fill="none" stroke="${PIK}" stroke-width="5" opacity=".5"/>
   <circle cx="54" cy="50" r="11" fill="#fff" stroke="${PIK}" stroke-width="4"/><circle cx="51" cy="51" r="5" fill="${PIK}"/><path d="M26 70 Q34 74 42 70" fill="none" stroke="${PIK}" stroke-width="5" stroke-linecap="round"/>`);
 }
+
+// ---------- added 27.11.2026 (ролик 039 «Рис 2: рис против 6 сушилок») ----------
+// kitchen sponge with a face, viewBox 0 0 300 200 (body 20..280 x 50..190, green scrub layer on top 30..70). Rig: .speye (sy blink,
+// origin 150 120), .sppup (x/y), .spmouth (sy 0..1, origin 150 150), .spwet (blue wet layer, o), .spdrip (three drops under it, o / y),
+// .spsweat (o). col = sponge colour; wet=true draws it soaked from the start (.spwet opacity 1)
+function spongeSVG(id, face = true, col = '#ffd84d', wet = false) {
+  let pores = ''; for (let k = 0; k < 26; k++) { const x = 40 + hash(k * 3.1 + 1) * 220, y = 86 + hash(k * 5.7 + 2) * 92, r = 4 + hash(k * 1.3) * 7;
+    pores += `<ellipse cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" rx="${r.toFixed(1)}" ry="${(r * 0.8).toFixed(1)}" fill="#c98f12" opacity=".55"/>`; }
+  return psv('0 0 300 200', `<defs>${lg('spb' + id, '#fff2a8', col)}${lg('spw' + id, 'rgba(80,170,255,.55)', 'rgba(30,110,220,.7)')}${lg('spg' + id, '#7fe07a', '#2f9e4a')}</defs>
+    <path d="M24 70 Q20 50 44 48 L258 44 Q282 44 280 68 L278 176 Q278 192 260 192 L40 194 Q22 194 22 176 Z" fill="url(#spb${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    ${pores}
+    <path class="spwet" d="M24 70 Q20 50 44 48 L258 44 Q282 44 280 68 L278 176 Q278 192 260 192 L40 194 Q22 194 22 176 Z" fill="url(#spw${id})" opacity="${wet ? 1 : 0}"/>
+    <path d="M26 74 Q22 30 50 30 L254 26 Q282 26 280 60 L280 74 Q150 84 26 74 Z" fill="url(#spg${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M50 44 L120 40 M150 39 L200 37" stroke="#c8ffc0" stroke-width="7" stroke-linecap="round" opacity=".6"/>
+    <path d="M40 100 Q44 170 60 182" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".35"/>
+    ${face ? `<g class="speye" style="transform-origin:150px 120px"><ellipse cx="118" cy="118" rx="20" ry="23" fill="#fff" stroke="${PIK}" stroke-width="6"/><ellipse cx="182" cy="118" rx="20" ry="23" fill="#fff" stroke="${PIK}" stroke-width="6"/>
+      <g class="sppup"><circle cx="121" cy="122" r="9" fill="${PIK}"/><circle cx="185" cy="122" r="9" fill="${PIK}"/><circle cx="124" cy="117" r="3.5" fill="#fff"/><circle cx="188" cy="117" r="3.5" fill="#fff"/></g></g>
+      <g class="spmouth" style="transform-origin:150px 152px;transform:scaleY(0.2)"><path d="M128 148 Q150 146 172 148 Q168 178 150 178 Q132 178 128 148 Z" fill="#6a1a1a" stroke="${PIK}" stroke-width="6" stroke-linejoin="round"/></g>
+      <path d="M130 150 Q150 158 170 150" fill="none" stroke="${PIK}" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="88" cy="146" rx="12" ry="7" fill="#ff8a6a" opacity=".45"/><ellipse cx="212" cy="146" rx="12" ry="7" fill="#ff8a6a" opacity=".45"/>
+      <g class="spsweat" opacity="0"><path d="M232 82 Q244 104 232 112 Q220 104 232 82 Z" fill="#8fd8ff" stroke="${PIK}" stroke-width="5"/></g>` : ''}
+    <g class="spdrip">${[70, 150, 228].map((x, k) => `<path d="M${x} ${200 + k * 6} q10 16 0 24 q-10 -8 0 -24 Z" fill="#5fc8ff" stroke="${PIK}" stroke-width="5"/>`).join('')}</g>`);
+}
+// shallow dish with a mound of a drying material, viewBox 0 0 400 240 (rim y 120, mound peak y ~50). kind: rice | couscous | oats |
+// litter | gel (silica beads) | instant | empty. Rig: .dmound (sy squash, origin 200 130), .dgrains (o), .dhole (dark pit where a sponge
+// is buried, o). Grains are seeded with hash(), so every instance of a kind looks the same.
+function dishSVG(id, kind = 'rice', rim = '#e85d5d') {
+  const K = { rice: ['#fbf6ea', '#e4dcc8', 'grain'], couscous: ['#f2cf6a', '#d9a93a', 'dot'], oats: ['#e8cf9e', '#c49c5c', 'flake'], litter: ['#a9adb5', '#7d828c', 'pebble'],
+    gel: ['#dff4ff', '#9fd4f0', 'bead'], instant: ['#f4ead2', '#d8c49a', 'grain'], empty: ['#00000000', '#00000000', 'none'] }[kind];
+  let g = ''; if (K[2] !== 'none') for (let k = 0; k < 46; k++) { const a = hash(k * 2.1 + 5), b = hash(k * 4.3 + 1), x = 70 + a * 260, y = 120 - 60 * Math.sin(Math.PI * a) * (0.35 + b * 0.65) + 6;
+    const r = hash(k * 7.7) * 180, c = k % 3 ? K[1] : '#ffffff';
+    g += K[2] === 'grain' ? `<ellipse cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" rx="9" ry="4" fill="${c}" stroke="${PIK}" stroke-width="2" transform="rotate(${r.toFixed(0)} ${x.toFixed(0)} ${y.toFixed(0)})"/>`
+      : K[2] === 'dot' ? `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="4" fill="${c}" opacity=".9"/>`
+      : K[2] === 'flake' ? `<path d="M${(x - 10).toFixed(0)} ${y.toFixed(0)} q10 -8 20 0 q-10 8 -20 0 Z" fill="${c}" stroke="#8a6a3a" stroke-width="2" transform="rotate(${r.toFixed(0)} ${x.toFixed(0)} ${y.toFixed(0)})"/>`
+      : K[2] === 'pebble' ? `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(5 + hash(k) * 4).toFixed(1)}" fill="${c}" stroke="#555a62" stroke-width="2"/>`
+      : `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="7" fill="#ffffff" opacity=".8" stroke="#6fb8e0" stroke-width="2"/>`; }
+  return psv('0 0 400 240', `<defs>${lg('dm' + id, K[0], K[1])}${lg('dr' + id, rim, '#7a2030')}</defs>
+    ${K[2] !== 'none' ? `<g class="dmound" style="transform-origin:200px 130px"><path d="M50 128 Q90 40 200 36 Q310 40 350 128 Z" fill="url(#dm${id})" stroke="${PIK}" stroke-width="8"/><g class="dgrains">${g}</g>
+      <ellipse class="dhole" cx="200" cy="96" rx="70" ry="22" fill="#3a2a1a" opacity="0"/></g>` : ''}
+    <path d="M24 120 L376 120 Q368 214 200 220 Q32 214 24 120 Z" fill="url(#dr${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <ellipse cx="200" cy="120" rx="178" ry="14" fill="none" stroke="${PIK}" stroke-width="8"/>
+    <path d="M60 140 Q90 190 150 200" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".4"/>`);
+}
+// desk fan, viewBox 0 0 360 460 (hub centre 180 170, r 140; blowing toward the viewer/right). Rig: .fblades (r origin 180 170),
+// .fwind (air lines on the right, o / x), .fhead (r origin 180 300, oscillate), .fbtn (y press). col = frame colour
+function fanSVG(id, col = '#5fd4ff') {
+  const blade = a => `<path d="M180 170 Q${180 + 120 * Math.cos(a - 0.5)} ${170 + 120 * Math.sin(a - 0.5)} ${180 + 125 * Math.cos(a + 0.15)} ${170 + 125 * Math.sin(a + 0.15)} Q${180 + 60 * Math.cos(a + 0.5)} ${170 + 60 * Math.sin(a + 0.5)} 180 170 Z" fill="url(#fb${id})" stroke="${PIK}" stroke-width="7" stroke-linejoin="round"/>`;
+  let grill = ''; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; grill += `<path d="M180 170 L${(180 + 140 * Math.cos(a)).toFixed(0)} ${(170 + 140 * Math.sin(a)).toFixed(0)}" stroke="${PIK}" stroke-width="4" opacity=".55"/>`; }
+  return psv('0 0 360 460', `<defs>${lg('fb' + id, '#ffffff', '#bfe9ff')}${lg('ff' + id, col, '#2a7fb0')}</defs>
+    <path d="M100 440 Q180 400 260 440 Z" fill="url(#ff${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <rect x="166" y="290" width="28" height="130" rx="12" fill="url(#ff${id})" stroke="${PIK}" stroke-width="9"/>
+    <rect class="fbtn" x="208" y="418" width="34" height="16" rx="6" fill="#ff5f6d" stroke="${PIK}" stroke-width="5"/>
+    <g class="fhead" style="transform-origin:180px 300px">
+      <circle cx="180" cy="170" r="146" fill="rgba(200,240,255,.18)" stroke="${PIK}" stroke-width="10"/>
+      <g class="fblades" style="transform-origin:180px 170px">${blade(0)}${blade(2.094)}${blade(4.189)}</g>
+      ${grill}<circle cx="180" cy="170" r="100" fill="none" stroke="${PIK}" stroke-width="4" opacity=".5"/><circle cx="180" cy="170" r="56" fill="none" stroke="${PIK}" stroke-width="4" opacity=".5"/>
+      <circle cx="180" cy="170" r="30" fill="url(#ff${id})" stroke="${PIK}" stroke-width="8"/><circle cx="172" cy="162" r="8" fill="#fff" opacity=".6"/>
+      <path d="M70 100 Q100 50 160 36" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".5"/></g>
+    <g class="fwind">${[110, 170, 230].map((y, k) => `<path d="M${340 + k * 6} ${y} q40 -18 80 0 t80 0" fill="none" stroke="#bfefff" stroke-width="10" stroke-linecap="round" opacity=".85"/>`).join('')}</g>`);
+}
+// generic sitting cat (an original drawing, not any known character), viewBox 0 0 360 420 (sits on y 400). Rig: .chead (r origin 180 190),
+// .ceye (sy blink, origin 180 150), .cpup (x/y), .cmouth (sy), .ctail (r origin 260 370), .cearL/.cearR (r), .cbrow (y / r: angry frown)
+function catSVG(id, col = '#ff9a3d', stripe = '#c8601a') {
+  return psv('0 0 360 420', `<defs>${lg('cb' + id, '#ffd09a', col)}</defs>
+    <g class="ctail" style="transform-origin:260px 370px"><path d="M260 370 Q340 360 330 280 Q324 230 350 210" fill="none" stroke="${PIK}" stroke-width="34" stroke-linecap="round"/><path d="M260 370 Q340 360 330 280 Q324 230 350 210" fill="none" stroke="${col}" stroke-width="20" stroke-linecap="round"/></g>
+    <path d="M110 400 Q90 300 130 230 L230 230 Q270 300 250 400 Z" fill="url(#cb${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M150 260 Q180 290 210 260" fill="none" stroke="#fff3e0" stroke-width="22" stroke-linecap="round" opacity=".8"/>
+    <path d="M118 300 L140 300 M114 330 L138 328 M244 300 L222 300 M248 330 L224 328" stroke="${stripe}" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="146" cy="398" rx="26" ry="14" fill="url(#cb${id})" stroke="${PIK}" stroke-width="8"/><ellipse cx="214" cy="398" rx="26" ry="14" fill="url(#cb${id})" stroke="${PIK}" stroke-width="8"/>
+    <g class="chead" style="transform-origin:180px 200px">
+      <g class="cearL" style="transform-origin:110px 100px"><path d="M92 120 L96 30 L160 80 Z" fill="url(#cb${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/><path d="M104 96 L106 54 L140 80 Z" fill="#ffb0a8"/></g>
+      <g class="cearR" style="transform-origin:250px 100px"><path d="M268 120 L264 30 L200 80 Z" fill="url(#cb${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/><path d="M256 96 L254 54 L220 80 Z" fill="#ffb0a8"/></g>
+      <ellipse cx="180" cy="150" rx="104" ry="88" fill="url(#cb${id})" stroke="${PIK}" stroke-width="10"/>
+      <path d="M160 70 L164 96 M180 66 L180 94 M200 70 L196 96" stroke="${stripe}" stroke-width="8" stroke-linecap="round"/>
+      <g class="ceye" style="transform-origin:180px 146px"><ellipse cx="140" cy="146" rx="22" ry="26" fill="#d8ff7a" stroke="${PIK}" stroke-width="6"/><ellipse cx="220" cy="146" rx="22" ry="26" fill="#d8ff7a" stroke="${PIK}" stroke-width="6"/>
+        <g class="cpup"><ellipse cx="142" cy="148" rx="7" ry="18" fill="${PIK}"/><ellipse cx="222" cy="148" rx="7" ry="18" fill="${PIK}"/><circle cx="146" cy="138" r="4" fill="#fff"/><circle cx="226" cy="138" r="4" fill="#fff"/></g></g>
+      <g class="cbrow"><path d="M112 112 L162 124 M248 112 L198 124" stroke="${PIK}" stroke-width="9" stroke-linecap="round"/></g>
+      <path d="M170 178 L190 178 L180 190 Z" fill="#ff7a8a" stroke="${PIK}" stroke-width="5" stroke-linejoin="round"/>
+      <g class="cmouth" style="transform-origin:180px 196px"><path d="M162 196 Q172 208 180 196 Q188 208 198 196" fill="none" stroke="${PIK}" stroke-width="6" stroke-linecap="round"/></g>
+      <path d="M120 186 L60 176 M120 196 L62 204 M240 186 L300 176 M240 196 L298 204" stroke="${PIK}" stroke-width="4" stroke-linecap="round"/>
+      <path d="M100 120 Q110 86 140 74" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".45"/></g>`);
+}
+// cat litter tray seen from the front, viewBox 0 0 520 220 (litter surface y ~70). Rig: .ltlitter (o), .ltpebbles (fly-out bits, o / y)
+function litterBoxSVG(id, col = '#5fb0ff') {
+  let p = ''; for (let k = 0; k < 30; k++) { const x = 50 + hash(k * 3.9 + 2) * 420, y = 64 + hash(k * 1.7) * 18; p += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(5 + hash(k * 6.1) * 4).toFixed(1)}" fill="${k % 3 ? '#9aa0a8' : '#c8ccd2'}" stroke="#5a5f68" stroke-width="2"/>`; }
+  return psv('0 0 520 220', `<defs>${lg('lb' + id, col, '#2a6fb0')}</defs>
+    <path class="ltlitter" d="M40 80 Q260 50 480 80 L470 100 L50 100 Z" fill="#a9adb5" stroke="${PIK}" stroke-width="6"/>${p}
+    <path d="M20 70 L500 70 L470 210 Q260 222 50 210 Z" fill="url(#lb${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M60 100 Q70 170 90 196" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".4"/>
+    <path d="M150 130 q20 -14 40 0 q-20 14 -40 0 M330 130 q20 -14 40 0 q-20 14 -40 0" fill="#ffffff" opacity=".35"/>`);
+}
+// digital kitchen scale, viewBox 0 0 460 260 (plate top y 40..70, display window x 140..320, y 150..216 — put a text div over it).
+// Rig: .ksplate (y press, small), .ksled (display glow, o)
+function kitchenScaleSVG(id, col = '#e9eef2') {
+  return psv('0 0 460 260', `<defs>${lg('ks' + id, '#ffffff', col)}${lg('kp' + id, '#d7f2ff', '#8fc3dc')}</defs>
+    <path d="M30 100 L430 100 Q446 100 444 118 L432 236 Q430 250 414 250 L46 250 Q30 250 28 236 L16 118 Q14 100 30 100 Z" fill="url(#ks${id})" stroke="${PIK}" stroke-width="10" stroke-linejoin="round"/>
+    <rect class="ksled" x="140" y="150" width="180" height="66" rx="14" fill="#1a2a20" stroke="${PIK}" stroke-width="7"/>
+    <circle cx="90" cy="184" r="16" fill="#ff5f6d" stroke="${PIK}" stroke-width="6"/><circle cx="370" cy="184" r="16" fill="#7dff8a" stroke="${PIK}" stroke-width="6"/>
+    <g class="ksplate"><path d="M40 44 L420 44 Q436 44 432 60 L428 80 Q426 92 410 92 L50 92 Q34 92 32 80 L28 60 Q24 44 40 44 Z" fill="url(#kp${id})" stroke="${PIK}" stroke-width="9"/>
+    <path d="M60 58 L200 56" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".7"/></g>`);
+}
+// big glass of water, two layers so an object can sit inside: part 'back' (back wall + water body) and part 'front' (front glass, rim,
+// highlights, water surface line). viewBox 0 0 520 760 (rim y 40, water surface y 200, bottom y 730). Rig (front): .gsurf (wave y/sy)
+function glassSVG(id, part = 'back') {
+  if (part === 'back') return psv('0 0 520 760', `<defs>${lg('gw' + id, 'rgba(110,210,255,.55)', 'rgba(20,90,190,.8)')}</defs>
+    <path d="M44 40 L476 40 L440 724 Q438 740 420 740 L100 740 Q82 740 80 724 Z" fill="rgba(220,245,255,.10)"/>
+    <path d="M52 200 Q260 180 468 200 L440 724 Q438 740 420 740 L100 740 Q82 740 80 724 Z" fill="url(#gw${id})"/>`);
+  return psv('0 0 520 760', `<defs>${lg('gf' + id, 'rgba(120,220,255,.25)', 'rgba(40,120,220,.35)')}</defs>
+    <path d="M52 200 Q260 180 468 200 L440 724 Q438 740 420 740 L100 740 Q82 740 80 724 Z" fill="url(#gf${id})"/>
+    <g class="gsurf" style="transform-origin:260px 200px"><path d="M52 200 Q156 180 260 200 T468 200" fill="none" stroke="#e8fbff" stroke-width="9" stroke-linecap="round"/></g>
+    <path d="M44 40 L476 40 L440 724 Q438 740 420 740 L100 740 Q82 740 80 724 Z" fill="none" stroke="${PIK}" stroke-width="12" stroke-linejoin="round"/>
+    <ellipse cx="260" cy="40" rx="216" ry="16" fill="none" stroke="${PIK}" stroke-width="10"/>
+    <path d="M96 90 L126 680" stroke="#fff" stroke-width="16" stroke-linecap="round" opacity=".45"/><path d="M140 90 L152 300" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".3"/>`);
+}
+// USB-C cable plug lying horizontally, plug tip to the LEFT at x 0, viewBox 0 0 420 120 (cable runs off to the right). Rig: .uptip (metal tip)
+function usbPlugSVG(id, col = '#f4f6f8') {
+  return psv('0 0 420 120', `<defs>${lg('up' + id, '#ffffff', col === '#f4f6f8' ? '#c9d2dc' : col)}${lg('ut' + id, '#eef2f6', '#8a96a3')}</defs>
+    <path d="M200 60 Q300 60 330 80 T430 100" fill="none" stroke="${PIK}" stroke-width="30" stroke-linecap="round"/><path d="M200 60 Q300 60 330 80 T430 100" fill="none" stroke="url(#up${id})" stroke-width="16" stroke-linecap="round"/>
+    <rect class="uptip" x="4" y="40" width="70" height="40" rx="18" fill="url(#ut${id})" stroke="${PIK}" stroke-width="8"/><rect x="18" y="54" width="44" height="12" rx="6" fill="#3a4250"/>
+    <rect x="64" y="22" width="150" height="76" rx="22" fill="url(#up${id})" stroke="${PIK}" stroke-width="10"/>
+    <path d="M86 40 L180 38" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".8"/>`);
+}
